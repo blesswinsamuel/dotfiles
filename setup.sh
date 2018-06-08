@@ -1,19 +1,59 @@
 #!/usr/bin/env bash
-local dir=$PWD
-local backup_dir=~/dotfiles_old
+FILES_DIR="$PWD"
+BACKUP_DIR="$HOME/dotfiles_backup"
 
-mkdir $backup_dir
+FILES=("fish/config.fish" "fish/functions" "tmux.conf" ".hushlogin")
+DESTINATIONS=("$HOME/.config/fish/config.fish" "$HOME/.config/fish/functions" "$HOME/.tmux.conf" "$HOME/.hushlogin")
 
-mv ~/.config/fish ~/dotfiles_old/
-ln -s ./fish/config.fish ~/.config/fish/config.fish
-ln -s ./fish/functions ~/.config/fish/functions
+dry_run='false'
 
-mv ~/.config/tmux.conf $backup_dir
-ln -s ./tmux.conf ~/.tmux.conf
+error() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@" >&2
+}
 
-echo '# The mere presence of this file in the home directory disables the system
-# copyright notice, the date and time of the last login, the message of the
-# day as well as other information that may otherwise appear on login.
-# See `man login`.' > ~/.hushlogin
+main() {
+	while getopts 'n' flag; do
+		case "${flag}" in
+			n) dry_run='true' ;;
+			*) error "Unexpected option ${flag}"; exit 1 ;;
+		esac
+	done
 
+	if [ "$dry_run" = "true" ]; then
+		echo "Dry run"
+	fi
 
+	for ((i = 0; i < ${#FILES[@]}; ++i)); do
+		file="${FILES[$i]}"
+		source="$FILES_DIR/${FILES[$i]}"
+		destination=${DESTINATIONS[$i]}
+		backup="$BACKUP_DIR/$file"
+		echo "---- $file -----"
+		if [ -L $destination ]; then
+			echo "$destination is already a symlink"
+		else
+			echo "Creating directory $(dirname $backup)"
+			if [ "$dry_run" = "false" ]; then
+				mkdir -p $(dirname $backup)
+			fi
+			if [ -e "$destination" ]; then
+				if [ -e "$backup" ]; then
+				    echo "Backing file $backup already exists"
+				else
+				    echo "Backing up file $destination to $backup"
+					if [ "$dry_run" = "false" ]; then
+						mv "$destination" "$backup"
+					fi
+				fi
+			fi
+		    echo "Creating symlink for file $source in $destination"
+			if [ "$dry_run" = "false" ]; then
+				ln -s "$source" "$destination"
+			fi
+			echo "$file done."
+		fi
+		echo
+	done
+}
+
+main "$@"
