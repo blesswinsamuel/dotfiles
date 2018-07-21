@@ -1,20 +1,28 @@
+set -gx EDITOR "vim"
+set -gx LANG en_US.UTF-8
+set -gx LC_ALL en_US.UTF-8
+
 if status --is-interactive
     set -gx EDITOR "subl -nw"
 end
 
 set -g fish_prompt_pwd_dir_length 0
 
+set -g fish_prompt_show_git_prompt 1
+alias show_git_prompt "set -g fish_prompt_show_git_prompt 1"
+alias hide_git_prompt "set -e fish_prompt_show_git_prompt"
+
 set -gx PATH /usr/local/sbin $PATH
 
-alias vim nvim
-alias vi vim
 alias fix-dir-perms "find . -type d -exec chmod 755 '{}' \+"
 alias fix-file-perms "find . -type f -exec chmod 644 '{}' \+"
+
 alias dont-index "touch .metadata_never_index"
+
 alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
-set -gx LANG en_US.UTF-8
-set -gx LC_ALL en_US.UTF-8
+# Mac Quick Look
+alias ql "qlmanage -p"
 
 # My colors
 # set -g fish_color_autosuggestion 444444
