@@ -12,17 +12,24 @@ set -g fish_prompt_show_git_prompt 1
 alias show_git_prompt "set -g fish_prompt_show_git_prompt 1"
 alias hide_git_prompt "set -e fish_prompt_show_git_prompt"
 
-set -gx PATH /usr/local/sbin $PATH
-
 alias fix-dir-perms "find . -type d -exec chmod 755 '{}' \+"
 alias fix-file-perms "find . -type f -exec chmod 644 '{}' \+"
 
-alias dont-index "touch .metadata_never_index"
-
 alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
-# Mac Quick Look
-alias ql "qlmanage -p"
+switch (uname)
+case Darwin
+	set -gx PATH /usr/local/sbin $PATH
+
+	# Mac Quick Look
+    alias ql "qlmanage -p"
+	alias dont-index "touch .metadata_never_index"
+case '*'
+    alias pbcopy='xsel --clipboard --input'
+    alias pbpaste='xsel --clipboard --output'
+    # alias pbcopy='xclip -selection clipboard'
+    # alias pbpaste='xclip -selection clipboard -o'
+end
 
 # My colors
 # set -g fish_color_autosuggestion 444444
