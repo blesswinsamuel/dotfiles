@@ -97,6 +97,7 @@ bindsym $alt+a focus parent
 #bindsym $alt+d focus child
 
 # super + tab
+bindsym $super+Tab workspace back_and_forth
 bindsym $alt+Tab workspace next
 bindsym $alt+Shift+Tab workspace prev
 
@@ -125,6 +126,16 @@ bindsym $alt+7 workspace $ws7
 bindsym $alt+8 workspace $ws8
 bindsym $alt+9 workspace $ws9
 bindsym $alt+0 workspace $ws10
+bindsym $super+1 workspace $ws1
+bindsym $super+2 workspace $ws2
+bindsym $super+3 workspace $ws3
+bindsym $super+4 workspace $ws4
+bindsym $super+5 workspace $ws5
+bindsym $super+6 workspace $ws6
+bindsym $super+7 workspace $ws7
+bindsym $super+8 workspace $ws8
+bindsym $super+9 workspace $ws9
+bindsym $super+0 workspace $ws10
 
 # move focused container to workspace
 bindsym $alt+Shift+1 move container to workspace $ws1
@@ -137,16 +148,29 @@ bindsym $alt+Shift+7 move container to workspace $ws7
 bindsym $alt+Shift+8 move container to workspace $ws8
 bindsym $alt+Shift+9 move container to workspace $ws9
 bindsym $alt+Shift+0 move container to workspace $ws10
+bindsym $super+Shift+1 move container to workspace $ws1
+bindsym $super+Shift+2 move container to workspace $ws2
+bindsym $super+Shift+3 move container to workspace $ws3
+bindsym $super+Shift+4 move container to workspace $ws4
+bindsym $super+Shift+5 move container to workspace $ws5
+bindsym $super+Shift+6 move container to workspace $ws6
+bindsym $super+Shift+7 move container to workspace $ws7
+bindsym $super+Shift+8 move container to workspace $ws8
+bindsym $super+Shift+9 move container to workspace $ws9
+bindsym $super+Shift+0 move container to workspace $ws10
 
 # rename workspace to name in clipboard
-bindsym $alt+Shift+n exec i3-msg "rename workspace to $(xsel -b)"
+bindsym $super+$alt+r exec i3-msg "rename workspace to $(echo "$ws1\n$ws2\n$ws3\n$ws4\n$ws5\n$ws6\n$ws7\n$ws8\n$ws9\n$ws10" | dmenu -p "Rename workspace")"
 
 # reload the configuration file
-bindsym $alt+Shift+c reload
+bindsym $super+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $alt+Shift+r restart
+bindsym $super+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $alt+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $super+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $alt+r mode "resize"
+bindsym $super+r mode "resize"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -156,16 +180,16 @@ mode "resize" {
     # Pressing right will grow the window’s width.
     # Pressing up will shrink the window’s height.
     # Pressing down will grow the window’s height.
-    bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-    bindsym semicolon resize grow width 10 px or 10 ppt
+    bindsym j resize shrink width 5 px or 5 ppt
+    bindsym k resize grow height 5 px or 5 ppt
+    bindsym l resize shrink height 5 px or 5 ppt
+    bindsym semicolon resize grow width 5 px or 5 ppt
 
     # same bindings, but for the arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width 5 px or 5 ppt
+    bindsym Down resize grow height 5 px or 5 ppt
+    bindsym Up resize shrink height 5 px or 5 ppt
+    bindsym Right resize grow width 5 px or 5 ppt
 
     # back to normal: Enter or Escape or $alt+r
     bindsym Return mode "default"
@@ -173,9 +197,6 @@ mode "resize" {
     bindsym $alt+r mode "default"
     bindsym $super+r mode "default"
 }
-
-bindsym $alt+r mode "resize"
-bindsym $super+r mode "resize"
 
 # lock screen
 bindsym $super+l exec i3lock --color "#1f222d"
@@ -213,7 +234,7 @@ bar {
 # Set wallpaper
 exec_always feh --bg-scale $HOME/Pictures/wallpaper.jpg
 
-# Opacity effect for rofi
+# Trnaparency for rofi and urxvt terminal
 exec compton
 
 # Clipboard manager
