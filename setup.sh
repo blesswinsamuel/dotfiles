@@ -12,15 +12,11 @@ MAC_FILES=(
 LINUX_FILES=(
   "fish/config.fish" "$HOME/.config/fish/config.fish"
   "fish/functions" "$HOME/.config/fish/functions"
+  "i3" "$HOME/.config/i3"
+  "rofi" "$HOME/.config/rofi"
+  "dunst" "$HOME/.config/dunst"
 
   "tmux.conf" "$HOME/.tmux.conf"
-
-  "i3/config" "$HOME/.config/i3/config"
-  "i3/i3blocks.conf" "$HOME/.config/i3/i3blocks.conf"
-  "rofi/config.rasi" "$HOME/.config/rofi/config.rasi"
-  "rofi/theme.rasi" "$HOME/.config/rofi/theme.rasi"
-  "dunst/dunstrc" "$HOME/.config/dunst/dunstrc"
-
   ".Xresources" "$HOME/.Xresources"
 )
 
@@ -51,7 +47,14 @@ main() {
     source="$FILES_DIR/${FILES[$i]}"
     destination=${FILES[$i + 1]}
     backup="$BACKUP_DIR/$file"
-    echo "---- $file -----"
+    fileorfolder=""
+    if [[ -d $source ]]; then
+      fileorfolder="directory"
+    elif [[ -f $source ]]; then
+      fileorfolder="file"
+    fi
+
+    echo "---- $fileorfolder: $file -----"
     if [ -L $destination ]; then
       echo "$destination is already a symlink"
     else
@@ -61,9 +64,13 @@ main() {
       fi
       if [ -e "$destination" ]; then
         if [ -e "$backup" ]; then
-            echo "Backing file $backup already exists"
+          echo "Backup $fileorfolder $backup already exists"
+          echo "Removing $fileorfolder $destination"
+          if [ "$DRY_RUN" = "false" ]; then
+            rm -rf "$destination"
+          fi
         else
-            echo "Backing up file $destination to $backup"
+          echo "Backing up $fileorfolder $destination to $backup"
           if [ "$DRY_RUN" = "false" ]; then
             mv "$destination" "$backup"
           fi
@@ -73,7 +80,7 @@ main() {
       if [ "$DRY_RUN" = "false" ]; then
         mkdir -p $(dirname $destination)
       fi
-      echo "Creating symlink for file $source in $destination"
+      echo "Creating symlink for $fileorfolder $source in $destination"
       if [ "$DRY_RUN" = "false" ]; then
         ln -s "$source" "$destination"
       fi
