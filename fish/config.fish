@@ -2,7 +2,7 @@ set -gx EDITOR "vim"
 set -gx LANG en_US.UTF-8
 set -gx LC_ALL en_US.UTF-8
 
-if status --is-interactive
+if test -n "$DISPLAY"
     set -gx EDITOR "subl -nw"
 end
 
@@ -17,6 +17,8 @@ alias fix-file-perms "find . -type f -exec chmod 644 '{}' \+"
 
 alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
+alias ix "curl -F 'f:1=<-' ix.io"
+
 switch (uname)
 case Darwin
 	set -gx PATH /usr/local/sbin $PATH
@@ -29,6 +31,14 @@ case '*'
     alias pbpaste='xsel --clipboard --output'
     # alias pbcopy='xclip -selection clipboard'
     # alias pbpaste='xclip -selection clipboard -o'
+end
+
+switch (uname)
+case Darwin
+    alias o "open"
+case '*'
+    alias open "xdg-open"
+    alias o "xdg-open"
 end
 
 # My colors
