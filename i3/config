@@ -246,7 +246,8 @@ exec --no-startup-id compton -f -D 1 # Opacity effect for rofi
 exec --no-startup-id greenclip daemon # Clipboard manager
 exec --no-startup-id setxkbmap -option caps:escape # Map Caps Lock to escape
 exec --no-startup-id xmodmap -e 'keycode 135 = Control_R' # Map menu key to Ctrl
-exec --no-startup-id dunst -config ~/.config/i3/dunst.conf # Notifications - dunst
+exec --no-startup-id dunst # Notifications - dunst
+exec --no-startup-id nm-applet # Network manager
 
 # Window assignments
 for_window [class="Wine"] floating enable

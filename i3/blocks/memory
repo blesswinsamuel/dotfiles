@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 TYPE="${BLOCK_INSTANCE:-mem}"
 
 awk -v type=$TYPE '
