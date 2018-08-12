@@ -20,7 +20,8 @@ awk -v type=$TYPE '
 	swap_free=$2
 }
 END {
-	mem_used = mem_total - mem_free - cached
+	mem_free = mem_free + cached
+	mem_used = mem_total - mem_free
     printf("%.2fG S %.1fG\n", mem_used/1024/1024, (swap_total-swap_free)/1024/1024)
     printf("%.1fG\n", mem_used/1024/1024)
     if ((mem_free / mem_total) < 0.2)
