@@ -210,10 +210,10 @@ bindsym Control+Shift+Print exec maim -s | xclip -selection clipboard -t image/p
 
 # Window Colours
 #                       border   bg       text     indicator  child_border
-client.focused          $color19 $color19 $color07 $color04 $color04
+client.focused          $color00 $color00 $color07 $color04 $color04
 client.focused_inactive $color18 $color18 $color07 $color08 $color18
-client.unfocused        $color18 $color00 $color07 $color18 $color18
-client.urgent           $color01 $color01 $color00 $color01 $color01
+client.unfocused        $color18 $color19 $color20 $color18 $color18
+client.urgent           $color01 $color01 $color07 $color01 $color01
 client.placeholder      $color00 $color00 $color07 $color00 $color00
 client.background       $color15
 
