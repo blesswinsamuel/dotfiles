@@ -6,22 +6,45 @@ set $alt Mod1
 set $super Mod4
 
 # Colors
-set $base00 #101218
-set $base01 #1f222d
-set $base02 #252936
-set $base03 #7780a1
-set $base04 #C0C5CE
-set $base05 #d1d4e0
-set $base06 #C9CCDB
-set $base07 #ffffff
-set $base08 #ee829f
-set $base09 #f99170
-set $base0A #ffefcc
-set $base0B #a5ffe1
-set $base0C #97e0ff
-set $base0D #97bbf7
-set $base0E #c0b7f9
-set $base0F #fcc09e
+set_from_resource $color00 i3wm.color0 #000000
+set_from_resource $color01 i3wm.color1 #ff0000
+set_from_resource $color02 i3wm.color2 #00ff00
+set_from_resource $color03 i3wm.color3 #ffff00
+set_from_resource $color04 i3wm.color4 #0000ff
+set_from_resource $color05 i3wm.color5 #ff00ff
+set_from_resource $color06 i3wm.color6 #00ffff
+set_from_resource $color07 i3wm.color7 #ffffff
+set_from_resource $color08 i3wm.color8 #000000
+set_from_resource $color09 i3wm.color9 #ff0000
+set_from_resource $color10 i3wm.color10 #00ff00
+set_from_resource $color11 i3wm.color11 #ffff00
+set_from_resource $color12 i3wm.color12 #0000ff
+set_from_resource $color13 i3wm.color13 #ff00ff
+set_from_resource $color14 i3wm.color14 #00ffff
+set_from_resource $color15 i3wm.color15 #ffffff
+set_from_resource $color16 i3wm.color16 #ffffff
+set_from_resource $color17 i3wm.color17 #ffffff
+set_from_resource $color18 i3wm.color18 #ffffff
+set_from_resource $color19 i3wm.color19 #ffffff
+set_from_resource $color20 i3wm.color20 #ffffff
+set_from_resource $color21 i3wm.color21 #ffffff
+
+# set $color00 #101218
+# set $color18 #1f222d
+# set $color19 #252936
+# set $color08 #7780a1
+# set $base04 #C0C5CE
+# set $base05 #d1d4e0
+# set $base06 #C9CCDB
+# set $color15 #ffffff
+# set $color01 #ee829f
+# set $base09 #f99170
+# set $base0A #ffefcc
+# set $base0B #a5ffe1
+# set $base0C #97e0ff
+# set $base0D #97bbf7
+# set $base0E #c0b7f9
+# set $color17 #fcc09e
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -35,6 +58,7 @@ bindsym $super+Return exec i3-sensible-terminal
 
 # kill focused window
 bindsym $super+q kill
+bindsym --release Mod2+button2 kill
 
 # start dmenu (a program launcher)
 bindsym $alt+space exec "rofi -show"
@@ -104,9 +128,9 @@ bindsym $super+z focus child
 
 # super + tab
 bindsym $alt+Tab workspace back_and_forth
-bindsym $super+Tab exec rofi -show window -modi window
-# bindsym $super+Tab workspace next
-# bindsym $super+Shift+Tab workspace prev
+bindsym $super+Escape exec rofi -show window -modi window
+bindsym $super+Tab focus right
+bindsym $super+Shift+Tab focus left
 workspace_auto_back_and_forth yes
 
 # Define names for default workspaces for which we configure key bindings later on.
@@ -201,11 +225,13 @@ bindsym Shift+Print exec maim -s "$HOME/Pictures/Screenshots/$(date '+%Y-%m-%d %
 bindsym Control+Print exec maim | xclip -selection clipboard -t image/png
 bindsym Control+Shift+Print exec maim -s | xclip -selection clipboard -t image/png
 
-# Widow Colours
-client.focused          $base01 $base01    $base07 $base0F
-client.focused_inactive $base02 $base02    $base03 $base0F
-client.unfocused        $base02 $base02    $base03 $base0F
-client.urgent           $base02 $base08    $base00 $base0F
+# Window Colours
+#                       border   background  text     indicator  child_border
+client.focused          $color18 $color18    $color15 $color17
+client.focused_inactive $color19 $color19    $color07 $color17
+client.unfocused        $color19 $color19    $color20 $color17
+client.urgent           $color19 $color01    $color00 $color17
+
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -213,14 +239,14 @@ bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     strip_workspace_numbers yes
     colors {
-        separator $base03
-        background $base01
-        statusline $base05
-        #                  border  background text
-        focused_workspace  $base01 $base01    $base07
-        active_workspace   $base01 $base02    $base03
-        inactive_workspace $base01 $base01    $base03
-        urgent_workspace   $base01 $base01    $base08
+        separator $color08
+        background $color18
+        statusline $color15
+        #                  border   background  text
+        focused_workspace  $color18 $color18    $color15
+        active_workspace   $color18 $color19    $color08
+        inactive_workspace $color18 $color18    $color07
+        urgent_workspace   $color18 $color18    $color01
     }
 }
 
@@ -240,11 +266,10 @@ bindsym XF86AudioPlay exec --no-startup-id cmus-remote --pause && pkill -RTMIN+1
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
-exec_always feh --bg-scale $HOME/Pictures/wallpaper.jpg # Set wallpaper
+exec_always --no-startup-id feh --bg-scale $HOME/Pictures/wallpaper.jpg # Set wallpaper
 exec --no-startup-id compton -f -D 1 # Opacity effect for rofi
 exec --no-startup-id greenclip daemon # Clipboard manager
-exec --no-startup-id setxkbmap -option caps:escape # Map Caps Lock to escape
-exec --no-startup-id xmodmap ~/.Xmodmap
+exec --no-startup-id xmodmap ~/.Xmodmap # Key mapping
 exec --no-startup-id dunst # Notifications - dunst
 exec --no-startup-id nm-applet # Network manager
 
@@ -252,6 +277,7 @@ exec --no-startup-id nm-applet # Network manager
 for_window [class="Wine"] floating enable
 for_window [class="Lxappearance"] floating enable
 for_window [class="TeamViewer"] floating enable
+for_window [class="SimpleScreenRecorder"] floating enable
 for_window [class="Nm-connection-editor"] floating enable
 
 # System logout 

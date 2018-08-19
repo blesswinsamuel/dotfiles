@@ -1,35 +1,57 @@
-URxvt.font: xft:DejaVu Sans Mono:size=8
-
 ! Theme
 
-URxvt.depth: 32
-*background: [95]#1C1C1C
-*foreground: #DEDEDE
+#define background_opacity 95
+
+*foreground:   #c5c8c6
+*background:   [background_opacity]#1d1f21
+*cursorColor:  #c5c8c6
 
 ! black
-*color0  : #2E3436
-*color8  : #555753
+*color0:       #282a2e
+*color8:       #373b41
+
 ! red
-*color1  : #CC0000
-*color9  : #EF2929
+*color1:       #a54242
+*color9:       #cc6666
+
 ! green
-*color2  : #4E9A06
-*color10 : #8AE234
+*color2:       #8c9440
+*color10:      #b5bd68
+
 ! yellow
-*color3  : #C4A000
-*color11 : #FCE94F
+*color3:       #de935f
+*color11:      #f0c674
+
 ! blue
-*color4  : #3465A4
-*color12 : #729FCF
+*color4:       #5f819d
+*color12:      #81a2be
+
 ! magenta
-*color5  : #75507B
-*color13 : #AD7FA8
+*color5:       #85678f
+*color13:      #b294bb
+
 ! cyan
-*color6  : #06989A
-*color14 : #34E2E2
+*color6:       #5e8d87
+*color14:      #8abeb7
+
 ! white
-*color7  : #D3D7CF
-*color15 : #EEEEEC
+*color7:       #707880
+*color15:      #c5c8c6
+
+! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
+! use 'shell' template to set these if necessary
+*color16:      #de935f
+*color17:      #a3685a
+*color18:      #282a2e
+*color19:      #373b41
+*color20:      #b4b7b4
+*color21:      #e0e0e0
+
+
+! URxvt
+
+URxvt.font: xft:monospace:size=8
+URxvt.depth: 32
 
 !
 ! scrollbar
