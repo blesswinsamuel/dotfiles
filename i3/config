@@ -29,23 +29,6 @@ set_from_resource $color19 i3wm.color19 #ffffff
 set_from_resource $color20 i3wm.color20 #ffffff
 set_from_resource $color21 i3wm.color21 #ffffff
 
-# set $color00 #101218
-# set $color18 #1f222d
-# set $color19 #252936
-# set $color08 #7780a1
-# set $base04 #C0C5CE
-# set $base05 #d1d4e0
-# set $base06 #C9CCDB
-# set $color15 #ffffff
-# set $color01 #ee829f
-# set $base09 #f99170
-# set $base0A #ffefcc
-# set $base0B #a5ffe1
-# set $base0C #97e0ff
-# set $base0D #97bbf7
-# set $base0E #c0b7f9
-# set $color17 #fcc09e
-
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:DejaVu Sans Mono 10
@@ -226,11 +209,13 @@ bindsym Control+Print exec maim | xclip -selection clipboard -t image/png
 bindsym Control+Shift+Print exec maim -s | xclip -selection clipboard -t image/png
 
 # Window Colours
-#                       border   background  text     indicator  child_border
-client.focused          $color18 $color18    $color15 $color17
-client.focused_inactive $color19 $color19    $color07 $color17
-client.unfocused        $color19 $color19    $color20 $color17
-client.urgent           $color19 $color01    $color00 $color17
+#                       border   bg       text     indicator  child_border
+client.focused          $color07 $color04 $color00 $color04 $color04
+client.focused_inactive $color18 $color18 $color07 $color08 $color18
+client.unfocused        $color18 $color00 $color07 $color18 $color18
+client.urgent           $color01 $color01 $color00 $color01 $color01
+client.placeholder      $color00 $color00 $color07 $color00 $color00
+client.background       $color15
 
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -239,14 +224,16 @@ bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     strip_workspace_numbers yes
     colors {
-        separator $color08
-        background $color18
-        statusline $color15
-        #                  border   background  text
-        focused_workspace  $color18 $color18    $color15
-        active_workspace   $color18 $color19    $color08
-        inactive_workspace $color18 $color18    $color07
-        urgent_workspace   $color18 $color18    $color01
+        background $color00
+        separator  $color18
+        statusline $color20
+
+        #                   border   bg       text
+        focused_workspace   $color07 $color04 $color00
+        active_workspace    $color07 $color08 $color00
+        inactive_workspace  $color08 $color18 $color07
+        urgent_workspace    $color01 $color01 $color00
+        binding_mode        $color00 $color03 $color00
     }
 }
 
