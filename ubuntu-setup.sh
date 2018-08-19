@@ -14,8 +14,8 @@ echo 'deb http://download.virtualbox.org/virtualbox/debian bionic contrib' | sud
 sudo apt update
 
 sudo apt install -y \
-  openssh-server openssh-client net-tools x11vnc \
-  fish vim git curl tmux \
+  openssh-server openssh-client autossh net-tools x11vnc \
+  fish vim git curl tmux htop \
   imagemagick \
   i3 i3blocks \
   rofi dunst maim compton \
@@ -27,6 +27,12 @@ sudo apt install -y \
   arc-theme paper-icon-theme  \
 ;
 
+# VirtualBox extension pack
+LATEST_VBOX_VERSION=$(wget -qO - http://download.virtualbox.org/virtualbox/LATEST.TXT)
+wget -O "/tmp/Oracle_VM_VirtualBox_Extension_Pack-${LATEST_VBOX_VERSION}.vbox-extpack" "http://download.virtualbox.org/virtualbox/${LATEST_VBOX_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${LATEST_VBOX_VERSION}.vbox-extpack"
+sudo VBoxManage extpack install --accept-license=56be48f923303c8cababb0bb4c478284b688ed23f16d775d729b89a2e8e5f9eb --replace "/tmp/Oracle_VM_VirtualBox_Extension_Pack-${LATEST_VBOX_VERSION}.vbox-extpack"
+rm "/tmp/Oracle_VM_VirtualBox_Extension_Pack-${LATEST_VBOX_VERSION}.vbox-extpack"
+
 # greenclip
 sudo wget -O /usr/local/bin/greenclip https://github.com/erebe/greenclip/releases/download/3.0/greenclip && sudo chmod +x /usr/local/bin/greenclip
 
@@ -37,5 +43,3 @@ wget -O ~/Pictures/wallpaper.jpg http://www.wallpapers13.com/wp-content/uploads/
 
 sudo update-alternatives --set x-window-manager /usr/bin/i3
 # sudo update-alternatives --set x-terminal-emulator 
-
-# x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :0 -usepw
