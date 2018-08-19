@@ -6,8 +6,10 @@ sudo add-apt-repository -y ppa:snwh/ppa
 
 wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+wget -qO - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+wget -qO - http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc | sudo apt-key add -
+echo 'deb http://download.virtualbox.org/virtualbox/debian bionic contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.org.list
 
 sudo apt update
 
@@ -19,7 +21,7 @@ sudo apt install -y \
   rofi dunst maim compton \
   feh \
   ranger tig \
-  sublime-text \
+  sublime-text virtualbox-5.2 \
   fonts-font-awesome \
   lxappearance xbacklight thunar google-chrome-stable \
   arc-theme paper-icon-theme  \
