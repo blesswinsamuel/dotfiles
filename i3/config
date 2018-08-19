@@ -41,10 +41,6 @@ bindsym $alt+space exec "rofi -show"
 bindsym $super+space exec "rofi -show"
 bindsym $super+d exec "rofi -show run"
 bindsym $super+$alt+C exec "rofi -show clipboard"
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-# bindsym $alt+d exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $super+j focus left
@@ -61,6 +57,8 @@ bindsym $super+$alt+j workspace prev
 bindsym $super+$alt+semicolon workspace next
 bindsym $super+$alt+Left workspace prev
 bindsym $super+$alt+Right workspace next
+bindsym $super+$alt+Shift+Tab workspace prev
+bindsym $super+$alt+Tab workspace next
 
 # move focused window
 bindsym $super+Shift+j move left
@@ -88,6 +86,7 @@ bindsym $super+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $super+s layout stacking
+bindsym $super+w layout tabbed
 bindsym $super+t layout tabbed
 bindsym $super+e layout toggle split
 
@@ -95,7 +94,7 @@ bindsym $super+e layout toggle split
 bindsym $super+Shift+f floating toggle
 
 # change focus between tiling / floating windows
-#bindsym $super+space focus mode_toggle
+bindsym $super+$alt+space focus mode_toggle
 
 # focus the parent container
 bindsym $super+a focus parent
@@ -245,7 +244,7 @@ exec_always feh --bg-scale $HOME/Pictures/wallpaper.jpg # Set wallpaper
 exec --no-startup-id compton -f -D 1 # Opacity effect for rofi
 exec --no-startup-id greenclip daemon # Clipboard manager
 exec --no-startup-id setxkbmap -option caps:escape # Map Caps Lock to escape
-exec --no-startup-id xmodmap -e 'keycode 135 = Control_R' # Map menu key to Ctrl
+exec --no-startup-id xmodmap ~/.Xmodmap
 exec --no-startup-id dunst # Notifications - dunst
 exec --no-startup-id nm-applet # Network manager
 
@@ -253,6 +252,7 @@ exec --no-startup-id nm-applet # Network manager
 for_window [class="Wine"] floating enable
 for_window [class="Lxappearance"] floating enable
 for_window [class="TeamViewer"] floating enable
+for_window [class="Nm-connection-editor"] floating enable
 
 # System logout 
 set $mode_system System (l) Lock, (e) Logout, (s) Suspend, (r) Reboot, (Shift+s) Shutdown
