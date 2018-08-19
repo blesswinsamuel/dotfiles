@@ -62,3 +62,4 @@ URxvt*troughColor:        #FF0000
 URxvt*scrollBar_floating: true
 URxvt*scrollBar_right:    true
 URxvt*scrollstyle:        plain
+URxvt*urgentOnBell:       true

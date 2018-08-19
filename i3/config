@@ -210,7 +210,7 @@ bindsym Control+Shift+Print exec maim -s | xclip -selection clipboard -t image/p
 
 # Window Colours
 #                       border   bg       text     indicator  child_border
-client.focused          $color07 $color04 $color00 $color04 $color04
+client.focused          $color19 $color19 $color07 $color04 $color04
 client.focused_inactive $color18 $color18 $color07 $color08 $color18
 client.unfocused        $color18 $color00 $color07 $color18 $color18
 client.urgent           $color01 $color01 $color00 $color01 $color01
@@ -225,14 +225,14 @@ bar {
     strip_workspace_numbers yes
     colors {
         background $color00
-        separator  $color18
+        separator  $color08
         statusline $color20
 
         #                   border   bg       text
-        focused_workspace   $color07 $color04 $color00
+        focused_workspace   $color07 $color07 $color00
         active_workspace    $color07 $color08 $color00
-        inactive_workspace  $color08 $color18 $color07
-        urgent_workspace    $color01 $color01 $color00
+        inactive_workspace  $color00 $color00 $color07
+        urgent_workspace    $color01 $color01 $color07
         binding_mode        $color00 $color03 $color00
     }
 }
