@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo -v
+
 sudo apt install apt-transport-https
 
 sudo add-apt-repository -y ppa:papirus/papirus
@@ -16,13 +18,12 @@ sudo apt update
 sudo apt install -y \
   openssh-server openssh-client autossh net-tools x11vnc \
   fish vim git curl tmux htop \
-  imagemagick \
+  imagemagick fontforge \
   i3 i3blocks \
   rofi dunst maim compton \
   feh \
   ranger tig \
   sublime-text virtualbox-5.2 \
-  fonts-font-awesome \
   lxappearance xbacklight xclip thunar google-chrome-stable \
   arc-theme papirus-icon-theme \
 ;
@@ -40,3 +41,14 @@ chsh -s `which fish`
 
 sudo update-alternatives --set x-window-manager /usr/bin/i3
 # sudo update-alternatives --set x-terminal-emulator
+
+# fontawesome 5.2.0
+curl --create-dirs -Lo /tmp/fontawesome.zip https://github.com/FortAwesome/Font-Awesome/releases/download/5.2.0/fontawesome-free-5.2.0-desktop.zip \
+  && unzip /tmp/fontawesome.zip -d /tmp \
+  && rm -f /tmp/fontawesome.zip \
+  && find /tmp/fontawesome-free-5.2.0-desktop/otfs -iname '*.otf' -exec fontforge -lang=ff -c 'Print("Opening " + $1); Open($1); Print("Saving " + $1:r + ".ttf"); Generate($1:r + ".ttf"); Quit(0);' {} \; \
+  && mkdir -p ~/.fonts \
+  && mv /tmp/fontawesome-free-5.2.0-desktop/otfs/*.ttf ~/.fonts \
+  && rm -rf /tmp/fontawesome-free-5.2.0-desktop
+
+# sudo fc-cache -f -v
