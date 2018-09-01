@@ -15,7 +15,7 @@ sudo apt update
 
 sudo apt install -y \
   openssh-server openssh-client autossh net-tools x11vnc \
-  fish vim git curl tmux htop xclip \
+  fish vim git curl tmux htop \
   imagemagick \
   i3 i3blocks \
   rofi dunst maim compton \
@@ -23,7 +23,7 @@ sudo apt install -y \
   ranger tig \
   sublime-text virtualbox-5.2 \
   fonts-font-awesome \
-  lxappearance xbacklight thunar google-chrome-stable \
+  lxappearance xbacklight xclip thunar google-chrome-stable \
   arc-theme papirus-icon-theme \
 ;
 

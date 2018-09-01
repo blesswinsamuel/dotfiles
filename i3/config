@@ -257,6 +257,7 @@ bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
 exec_always --no-startup-id feh --bg-scale $HOME/Pictures/wallpaper.jpg # Set wallpaper
+exec_always --no-startup-id xrdb -merge ~/.Xresources
 exec --no-startup-id compton -f -D 1 # Opacity effect for rofi
 exec --no-startup-id greenclip daemon # Clipboard manager
 exec --no-startup-id xmodmap ~/.Xmodmap # Key mapping
