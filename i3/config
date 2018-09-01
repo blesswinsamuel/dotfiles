@@ -41,13 +41,14 @@ bindsym $super+Return exec i3-sensible-terminal
 
 # kill focused window
 bindsym $super+q kill
-bindsym --release Mod2+button2 kill
+# Kill with middle click
+bindsym --release button2 kill
 
 # start dmenu (a program launcher)
 bindsym $alt+space exec "rofi -show"
 bindsym $super+space exec "rofi -show"
 bindsym $super+d exec "rofi -show run"
-bindsym $super+$alt+C exec "rofi -show clipboard"
+bindsym $super+$alt+c exec "rofi -show clipboard -modi 'clipboard:greenclip print'"
 
 # change focus
 bindsym $super+j focus left
@@ -99,6 +100,8 @@ bindsym $super+e layout toggle split
 
 # toggle tiling / floating
 bindsym $super+Shift+f floating toggle
+# Right click to toggle floating
+bindsym button3 floating toggle
 
 # change focus between tiling / floating windows
 bindsym $super+$alt+space focus mode_toggle
@@ -111,9 +114,9 @@ bindsym $super+z focus child
 
 # super + tab
 bindsym $alt+Tab workspace back_and_forth
+bindsym $alt+grave focus right
+bindsym $alt+Shift+grave focus left
 bindsym $super+Escape exec rofi -show window -modi window
-bindsym $super+Tab focus right
-bindsym $super+Shift+Tab focus left
 workspace_auto_back_and_forth yes
 
 # Define names for default workspaces for which we configure key bindings later on.
@@ -210,9 +213,9 @@ bindsym Control+Shift+Print exec maim -s | xclip -selection clipboard -t image/p
 
 # Window Colours
 #                       border   bg       text     indicator  child_border
-client.focused          $color00 $color00 $color07 $color04 $color04
-client.focused_inactive $color18 $color18 $color07 $color08 $color18
-client.unfocused        $color18 $color19 $color20 $color18 $color18
+client.focused          $color00 $color00 $color07 $color00 $color00
+client.focused_inactive $color18 $color18 $color07 $color18 $color18
+client.unfocused        $color19 $color19 $color20 $color19 $color19
 client.urgent           $color01 $color01 $color07 $color01 $color01
 client.placeholder      $color00 $color00 $color07 $color00 $color00
 client.background       $color15
@@ -224,14 +227,14 @@ bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     strip_workspace_numbers yes
     colors {
-        background $color00
+        background $color18
         separator  $color08
         statusline $color20
 
         #                   border   bg       text
-        focused_workspace   $color07 $color07 $color00
-        active_workspace    $color07 $color08 $color00
-        inactive_workspace  $color00 $color00 $color07
+        focused_workspace   $color08 $color08 $color07
+        active_workspace    $color19 $color19 $color07
+        inactive_workspace  $color18 $color18 $color07
         urgent_workspace    $color01 $color01 $color07
         binding_mode        $color00 $color03 $color00
     }
@@ -242,7 +245,7 @@ bar {
 # bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $sink +5%
 # bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume $sink -5%
 # bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute $sink toggle
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q -D pulse sset Master 5%+ && pkill -RTMIN+10 i3blocks 
+bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q -D pulse sset Master 5%+ && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioLowerVolume exec --no-startup-id amixer -q -D pulse sset Master 5%- && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioMute exec --no-startup-id amixer -q -D pulse sset Master toggle && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioNext exec --no-startup-id cmus-remote --next && pkill -RTMIN+13 i3blocks
@@ -267,7 +270,7 @@ for_window [class="TeamViewer"] floating enable
 for_window [class="SimpleScreenRecorder"] floating enable
 for_window [class="Nm-connection-editor"] floating enable
 
-# System logout 
+# System logout
 set $mode_system System (l) Lock, (e) Logout, (s) Suspend, (r) Reboot, (Shift+s) Shutdown
 bindsym $super+Delete mode "$mode_system"
 mode "$mode_system" {
@@ -277,7 +280,7 @@ mode "$mode_system" {
     bindsym s exec --no-startup-id "i3-nagbar -t warning -m 'Confirm suspend' -b 'Yes, suspend' 'pm-suspend'", mode "default"
     bindsym r exec --no-startup-id "i3-nagbar -t warning -m 'Confirm reboot' -b 'Yes, reboot' 'systemctl reboot'", mode "default"
     bindsym Shift+s exec --no-startup-id "i3-nagbar -t warning -m 'Confirm poweroff' -b 'Yes, poweroff' 'systemctl poweroff -i'", mode "default"
- 
+
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
