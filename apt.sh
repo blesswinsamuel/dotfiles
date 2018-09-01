@@ -24,7 +24,7 @@ sudo apt install -y \
   feh \
   ranger tig \
   sublime-text virtualbox-5.2 \
-  lxappearance xbacklight xclip thunar google-chrome-stable \
+  lxappearance xbacklight xautolock xclip thunar google-chrome-stable \
   arc-theme papirus-icon-theme \
 ;
 
