@@ -38,8 +38,5 @@ sudo wget -O /usr/local/bin/greenclip https://github.com/erebe/greenclip/release
 
 chsh -s `which fish`
 
-# Set wallpaper
-wget -O ~/Pictures/wallpaper.jpg http://www.wallpapers13.com/wp-content/uploads/2016/03/Evening-on-the-blue-Lake-Tekapo-desktop-wallpaper-hd-widescreen-free-download.jpg
-
 sudo update-alternatives --set x-window-manager /usr/bin/i3
-# sudo update-alternatives --set x-terminal-emulator 
+# sudo update-alternatives --set x-terminal-emulator
