@@ -19,6 +19,8 @@ LINUX_FILES=(
   "tmux.conf" "$HOME/.tmux.conf"
   ".Xresources" "$HOME/.Xresources"
   ".Xmodmap" "$HOME/.Xmodmap"
+  ".xinitrc" "$HOME/.xinitrc"
+  ".xsessionrc" "$HOME/.xsessionrc"
 )
 
 FILES=()
