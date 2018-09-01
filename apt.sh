@@ -2,7 +2,7 @@
 
 sudo apt install apt-transport-https
 
-sudo add-apt-repository -y ppa:snwh/ppa
+sudo add-apt-repository -y ppa:papirus/papirus
 
 wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
 echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
@@ -15,7 +15,7 @@ sudo apt update
 
 sudo apt install -y \
   openssh-server openssh-client autossh net-tools x11vnc \
-  fish vim git curl tmux htop \
+  fish vim git curl tmux htop xclip \
   imagemagick \
   i3 i3blocks \
   rofi dunst maim compton \
@@ -24,7 +24,7 @@ sudo apt install -y \
   sublime-text virtualbox-5.2 \
   fonts-font-awesome \
   lxappearance xbacklight thunar google-chrome-stable \
-  arc-theme paper-icon-theme  \
+  arc-theme papirus-icon-theme \
 ;
 
 # VirtualBox extension pack
