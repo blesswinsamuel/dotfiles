@@ -245,16 +245,16 @@ bar {
 # bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $sink +5%
 # bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume $sink -5%
 # bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute $sink toggle
-bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q -D pulse sset Master 5%+ && pkill -RTMIN+10 i3blocks
-bindsym XF86AudioLowerVolume exec --no-startup-id amixer -q -D pulse sset Master 5%- && pkill -RTMIN+10 i3blocks
-bindsym XF86AudioMute exec --no-startup-id amixer -q -D pulse sset Master toggle && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioRaiseVolume exec --no-startup-id $HOME/.config/i3/scripts/volume.sh up && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioLowerVolume exec --no-startup-id $HOME/.config/i3/scripts/volume.sh down && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioMute exec --no-startup-id $HOME/.config/i3/scripts/volume.sh mute && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioNext exec --no-startup-id cmus-remote --next && pkill -RTMIN+13 i3blocks
 bindsym XF86AudioPrev exec --no-startup-id cmus-remote --prev && pkill -RTMIN+13 i3blocks
 bindsym XF86AudioPlay exec --no-startup-id cmus-remote --pause && pkill -RTMIN+13 i3blocks
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 5
-bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+bindsym XF86MonBrightnessUp exec $HOME/.config/i3/scripts/brightness.sh up && pkill -RTMIN+11 i3blocks
+bindsym XF86MonBrightnessDown exec $HOME/.config/i3/scripts/brightness.sh down && pkill -RTMIN+11 i3blocks
 
 exec_always --no-startup-id feh --bg-scale $HOME/Pictures/wallpaper.jpg # Set wallpaper
 exec --no-startup-id compton -f -D 1 # Opacity effect for rofi
