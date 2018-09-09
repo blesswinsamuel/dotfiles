@@ -19,4 +19,4 @@ case $BLOCK_BUTTON in
   5) $HOME/.config/i3/scripts/brightness.sh down ;;
 esac
 
-printf "%.0f%" "$(xbacklight -get)"
+printf "%.0f%%" "$(xbacklight -get)"
