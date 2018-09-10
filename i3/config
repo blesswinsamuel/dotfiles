@@ -114,6 +114,7 @@ bindsym $super+z focus child
 
 # super + tab
 bindsym $alt+Tab workspace back_and_forth
+bindsym $super+Tab workspace back_and_forth
 bindsym $alt+grave focus right
 bindsym $alt+Shift+grave focus left
 bindsym $super+Escape exec rofi -show window -modi window
@@ -121,12 +122,11 @@ workspace_auto_back_and_forth yes
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-# Icons:    
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
+set $ws1 "1:"
+set $ws2 "2:"
+set $ws3 "3:"
+set $ws4 "4:"
+set $ws5 "5:"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
@@ -261,13 +261,16 @@ exec --no-startup-id compton -f -D 1 # Opacity effect for rofi
 exec --no-startup-id greenclip daemon # Clipboard manager
 exec --no-startup-id dunst # Notifications - dunst
 exec --no-startup-id nm-applet # Network manager
+exec --no-startup-id blueman-applet # Blueman bluetooth manager
 
 # Window assignments
 for_window [class="Wine"] floating enable
 for_window [class="Lxappearance"] floating enable
 for_window [class="TeamViewer"] floating enable
+for_window [class="Blueman-manager"] floating enable
 for_window [class="SimpleScreenRecorder"] floating enable
 for_window [class="Nm-connection-editor"] floating enable
+for_window [class="Gnome-calculator"] floating enable
 
 # System logout
 set $mode_system System (l) Lock, (e) Logout, (s) Suspend, (r) Reboot, (Shift+s) Shutdown
@@ -286,16 +289,17 @@ mode "$mode_system" {
 }
 # Lock shortcut
 bindsym $super+$alt+l exec --no-startup-id exec ~/.config/i3/scripts/blur-lock.sh
-exec --no-startup-id xautolock -secure -time 5 -locker ~/.config/i3/scripts/blur-lock.sh
+exec --no-startup-id xautolock -secure -time 10 -locker ~/.config/i3/scripts/blur-lock.sh
 
 # Launch apps
 
-set $mode_launcher Launch: [c]hrome [f]irefox [s]ubl
+set $mode_launcher Launch: [c]hrome [f]irefox [s]ubl [t]ilix
 bindsym $super+o mode "$mode_launcher"
 mode "$mode_launcher" {
-    bindsym c exec chrome
-    bindsym f exec firefox
-    bindsym s exec subl
+    bindsym c exec chrome, mode "default"
+    bindsym f exec firefox, mode "default"
+    bindsym s exec subl, mode "default"
+    bindsym t exec tilix, mode "default"
 
     bindsym Escape mode "default"
     bindsym Return mode "default"
