@@ -158,7 +158,7 @@ bindsym $super+Shift+9 move container to workspace $ws9
 bindsym $super+Shift+0 move container to workspace $ws10
 
 # rename workspace to name in clipboard
-bindsym $super+$alt+r exec --no-startup-id i3-msg "rename workspace to $(echo "$ws1\n$ws2\n$ws3\n$ws4\n$ws5\n$ws6\n$ws7\n$ws8\n$ws9\n$ws10" | dmenu -p "Rename workspace")"
+bindsym $super+$alt+r exec --no-startup-id i3-msg "rename workspace to $(echo -e "$ws1\n$ws2\n$ws3\n$ws4\n$ws5\n$ws6\n$ws7\n$ws8\n$ws9\n$ws10" | dmenu -p "Rename workspace")"
 
 # reload the configuration file
 bindsym $super+Shift+c reload
