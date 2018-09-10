@@ -277,13 +277,14 @@ for_window [class="Gnome-calculator"] floating enable
 for_window [class="Synergy"] floating enable
 
 # System logout
-set $mode_system System (l) Lock, (e) Logout, (s) Suspend, (Shift+r) Reboot, (Shift+s) Shutdown
+set $mode_system System (l) Lock, (e) Logout, (s) Suspend, (h) Hibernate, (Shift+r) Reboot, (Shift+s) Shutdown
 bindsym $super+Delete mode "$mode_system"
 mode "$mode_system" {
     bindsym l exec --no-startup-id exec ~/.config/i3/scripts/blur-lock.sh, mode "default"
     # exit i3 (logs you out of your X session)
     bindsym e exit, mode "default"
-    bindsym s exec --no-startup-id pm-suspend, mode "default"
+    bindsym s exec --no-startup-id systemctl suspend, mode "default"
+    bindsym h exec --no-startup-id systemctl hibernate, mode "default"
     bindsym Shift+r exec --no-startup-id systemctl reboot, mode "default"
     bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
 
