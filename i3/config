@@ -274,21 +274,21 @@ for_window [class="Blueman-manager"] floating enable
 for_window [class="SimpleScreenRecorder"] floating enable
 for_window [class="Nm-connection-editor"] floating enable
 for_window [class="Gnome-calculator"] floating enable
+for_window [class="Synergy"] floating enable
 
 # System logout
-set $mode_system System (l) Lock, (e) Logout, (s) Suspend, (r) Reboot, (Shift+s) Shutdown
+set $mode_system System (l) Lock, (e) Logout, (s) Suspend, (Shift+r) Reboot, (Shift+s) Shutdown
 bindsym $super+Delete mode "$mode_system"
 mode "$mode_system" {
     bindsym l exec --no-startup-id exec ~/.config/i3/scripts/blur-lock.sh, mode "default"
     # exit i3 (logs you out of your X session)
-    bindsym e exec --no-startup-id "i3-nagbar -t warning -m 'Confirm logout' -b 'Yes, exit i3' 'i3-msg exit'", mode "default"
-    bindsym s exec --no-startup-id "i3-nagbar -t warning -m 'Confirm suspend' -b 'Yes, suspend' 'pm-suspend'", mode "default"
-    bindsym r exec --no-startup-id "i3-nagbar -t warning -m 'Confirm reboot' -b 'Yes, reboot' 'systemctl reboot'", mode "default"
-    bindsym Shift+s exec --no-startup-id "i3-nagbar -t warning -m 'Confirm poweroff' -b 'Yes, poweroff' 'systemctl poweroff -i'", mode "default"
+    bindsym e exit, mode "default"
+    bindsym s exec --no-startup-id pm-suspend, mode "default"
+    bindsym Shift+r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"
 
-    # back to normal: Enter or Escape
-    bindsym Return mode "default"
     bindsym Escape mode "default"
+    bindsym Return mode "default"
 }
 # Lock shortcut
 bindsym $super+$alt+l exec --no-startup-id exec ~/.config/i3/scripts/blur-lock.sh
