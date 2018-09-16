@@ -12,12 +12,15 @@ wget -qO - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add 
 echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 wget -qO - http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc | sudo apt-key add -
 echo 'deb http://download.virtualbox.org/virtualbox/debian bionic contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.org.list
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
 sudo apt update
 
 sudo apt install -y \
+  apt-transport-https ca-certificates software-properties-common \
   openssh-server openssh-client autossh net-tools x11vnc \
-  fish vim git curl tmux htop \
+  fish vim git curl tmux htop httpie synergy docker-ce \
   imagemagick fontforge \
   i3 i3blocks \
   rofi dunst maim compton \
