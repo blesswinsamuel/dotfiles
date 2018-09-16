@@ -6,6 +6,7 @@ MAC_FILES=(
   "fish/config.fish" "$HOME/.config/fish/config.fish"
   "fish/functions" "$HOME/.config/fish/functions"
   "tmux.conf" "$HOME/.tmux.conf"
+  ".vimrc" "$HOME/.vimrc"
   ".hushlogin" "$HOME/.hushlogin"
 )
 
@@ -17,6 +18,7 @@ LINUX_FILES=(
   "dunst" "$HOME/.config/dunst"
 
   "tmux.conf" "$HOME/.tmux.conf"
+  ".vimrc" "$HOME/.vimrc"
   ".Xresources" "$HOME/.Xresources"
   ".Xmodmap" "$HOME/.Xmodmap"
   ".xinitrc" "$HOME/.xinitrc"
