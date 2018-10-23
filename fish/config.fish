@@ -19,6 +19,8 @@ alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
 alias ix "curl -F 'f:1=<-' ix.io"
 
+alias dc "docker-compose"
+
 if type -q bat
   alias cat bat
 end
