@@ -259,7 +259,13 @@ bindsym XF86MonBrightnessDown exec $HOME/.config/i3/scripts/brightness.sh down &
 # Refresh Wallpaper
 bindsym $super+$alt+w exec --no-startup-id $HOME/.config/i3/scripts/wallpaper.sh
 
+# Refresh Polybar
+# bindsym $super+$alt+p exec --no-startup-id $HOME/.config/polybar/launch.sh
+
+# exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+# exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id feh --bg-scale $HOME/Pictures/wallpaper.jpg # Set wallpaper
+# exec --no-startup-id xfce4-panel --disable-wm-check
 exec --no-startup-id compton -f -D 1 # Opacity effect for rofi
 exec --no-startup-id greenclip daemon # Clipboard manager
 exec --no-startup-id dunst # Notifications - dunst

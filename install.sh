@@ -16,6 +16,7 @@ LINUX_FILES=(
   "i3" "$HOME/.config/i3"
   "rofi" "$HOME/.config/rofi"
   "dunst" "$HOME/.config/dunst"
+  "polybar" "$HOME/.config/polybar"
 
   "tmux.conf" "$HOME/.tmux.conf"
   ".vimrc" "$HOME/.vimrc"
