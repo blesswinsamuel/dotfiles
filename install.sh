@@ -27,68 +27,73 @@ LINUX_FILES=(
 
 FILES=()
 
-DRY_RUN='false'
+DRY_RUN=false
 
 error() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@" >&2
 }
 
+if_actual_run() {
+  if [ "$DRY_RUN" == "false" ]; then
+    "$@"
+  fi
+}
+
 main() {
+  case "$(uname -s)" in
+    Darwin)
+      echo 'Running on macOS'
+      FILES=("${MAC_FILES[@]}")
+      ;;
+    Linux)
+      echo 'Running on Linux'
+      FILES=("${LINUX_FILES[@]}")
+      ;;
+  esac
+
   for i in "$@"; do
     case $i in
-      -m|--mac) FILES=("${MAC_FILES[@]}") ;;
-      -l|--linux) FILES=("${LINUX_FILES[@]}") ;;
       -n|--dry-run) DRY_RUN='true' ;;
       *) error "Unexpected option ${flag}"; exit 1 ;;
     esac
   done
 
-  if [ "$DRY_RUN" = "true" ]; then
+  if [ "$DRY_RUN" == "true" ]; then
     echo "Dry run"
   fi
 
   for ((i = 0; i < ${#FILES[@]}; i = $((i + 2)))); do
     file="${FILES[$i]}"
-    source="$FILES_DIR/${FILES[$i]}"
-    destination=${FILES[$i + 1]}
-    backup="$BACKUP_DIR/$file"
-    fileorfolder=""
-    if [[ -d $source ]]; then
-      fileorfolder="directory"
-    elif [[ -f $source ]]; then
-      fileorfolder="file"
+    SRC="$FILES_DIR/${FILES[$i]}"
+    DEST=${FILES[$i + 1]}
+    BACKUP_DEST="$BACKUP_DIR/$file"
+    FILE_OR_DIR=""
+    if [[ -d $SRC ]]; then
+      FILE_OR_DIR="directory"
+    elif [[ -f $SRC ]]; then
+      FILE_OR_DIR="file"
     fi
 
-    echo "---- $fileorfolder: $file -----"
-    if [ -L $destination ]; then
-      echo "$destination is already a symlink"
+    echo "---- $FILE_OR_DIR: $file -----"
+    if [ -L $DEST ]; then
+      echo "$DEST is already a symlink"
     else
-      echo "Creating directory $(dirname $backup)"
-      if [ "$DRY_RUN" = "false" ]; then
-        mkdir -p $(dirname $backup)
-      fi
-      if [ -e "$destination" ]; then
-        if [ -e "$backup" ]; then
-          echo "Backup $fileorfolder $backup already exists"
-          echo "Removing $fileorfolder $destination"
-          if [ "$DRY_RUN" = "false" ]; then
-            rm -rf "$destination"
-          fi
+      echo "Creating directory $(dirname $BACKUP_DEST)"
+      if_actual_run mkdir -p $(dirname $BACKUP_DEST)
+      if [ -e "$DEST" ]; then
+        if [ -e "$BACKUP_DEST" ]; then
+          echo "Backup $FILE_OR_DIR $BACKUP_DEST already exists"
+          # echo "Removing $FILE_OR_DIR $DEST"
+          # if_actual_run rm -rf "$DEST"
         else
-          echo "Backing up $fileorfolder $destination to $backup"
-          if [ "$DRY_RUN" = "false" ]; then
-            mv "$destination" "$backup"
-          fi
+          echo "Backing up $FILE_OR_DIR $DEST to $BACKUP_DEST"
+          if_actual_run mv "$DEST" "$BACKUP_DEST"
         fi
       fi
-      echo "Creating directory $(dirname $destination)"
-      if [ "$DRY_RUN" = "false" ]; then
-        mkdir -p $(dirname $destination)
-      fi
-      echo "Creating symlink for $fileorfolder $source in $destination"
-      if [ "$DRY_RUN" = "false" ]; then
-        ln -s "$source" "$destination"
-      fi
+      echo "Creating directory $(dirname $DEST)"
+      if_actual_run mkdir -p $(dirname $DEST)
+      echo "Creating symlink for $FILE_OR_DIR $SRC in $DEST"
+      if_actual_run ln -s "$SRC" "$DEST"
       echo "$file done."
     fi
     echo
