@@ -5,7 +5,7 @@
 ```
 git clone https://github.com/blesswinsamuel/dotfiles
 cd dotfiles
-./install.sh
+./install.sh [-n]
 ```
 
 ## Ingredients
