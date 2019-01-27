@@ -21,6 +21,13 @@ alias ix "curl -F 'f:1=<-' ix.io"
 
 alias dc "docker-compose"
 
+# alias dlrshell "env PS1='\$ ' bash"
+
+function mkcd
+    mkdir -pv $argv;
+    cd $argv;
+end
+
 if type -q bat
   alias cat bat
 end
