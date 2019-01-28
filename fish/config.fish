@@ -27,6 +27,7 @@ function mkcd
     mkdir -pv $argv;
     cd $argv;
 end
+alias cdr "cd (git rev-parse --show-toplevel)"
 
 if type -q bat
   alias cat bat
