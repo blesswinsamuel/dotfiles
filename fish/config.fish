@@ -66,10 +66,10 @@ case Darwin
   # cd to open Finder directory
   alias cdf "cd (osascript -e 'tell application \"Finder\" to get the POSIX path of (target of front window as alias)')"
 case '*'
-  alias pbcopy 'xsel --clipboard --input'
-  alias pbpaste 'xsel --clipboard --output'
-  # alias pbcopy 'xclip -selection clipboard'
-  # alias pbpaste 'xclip -selection clipboard -o'
+  # alias pbcopy 'xsel --clipboard --input'
+  # alias pbpaste 'xsel --clipboard --output'
+  alias pbcopy 'xclip -selection clipboard'
+  alias pbpaste 'xclip -selection clipboard -o'
 end
 
 switch (uname)
