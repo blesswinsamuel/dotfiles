@@ -18,7 +18,7 @@ alias fix-file-perms "find . -type f -exec chmod 644 '{}' \+"
 alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
 alias ix "curl -F 'f:1=<-' ix.io"
-
+alias flushdns "sudo killall -HUP mDNSResponder"
 alias dc "docker-compose"
 
 # alias dlrshell "env PS1='\$ ' bash"
