@@ -17,7 +17,6 @@ COMMON_FILES = {
     "tmux.conf": ".tmux.conf",
     ".vimrc": ".vimrc",
     ".gitconfig": ".gitconfig",
-    "gpg-agent.conf": ".gnupg/gpg-agent.conf",
 }
 
 MAC_FILES = {
@@ -25,6 +24,10 @@ MAC_FILES = {
 
     "Brewfile": ".Brewfile",
     ".hushlogin": ".hushlogin",
+    "gpg-agent.conf": ".gnupg/gpg-agent.conf",
+
+    "sublime/Package Control.sublime-settings": "Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings",
+    "sublime/Preferences.sublime-settings": "Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 }
 
 LINUX_FILES = {
