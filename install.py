@@ -15,13 +15,6 @@ BACKUP_DIR = HOME / ".dotfiles_backup"
 COMMON_FILES = {
     "fish": ".config/fish",
 
-    "zsh/zlogin": ".zlogin",
-    "zsh/zlogout": ".zlogout",
-    "zsh/zpreztorc": ".zpreztorc",
-    "zsh/zprofile": ".zprofile",
-    "zsh/zshenv": ".zshenv",
-    "zsh/zshrc": ".zshrc",
-
     "tmux.conf": ".tmux.conf",
     ".vimrc": ".vimrc",
 }
@@ -35,15 +28,6 @@ MAC_FILES = {
 
 LINUX_FILES = {
     **COMMON_FILES,
-
-    "i3": ".config/i3",
-    "rofi": ".config/rofi",
-    "dunst": ".config/dunst",
-
-    ".Xresources": ".Xresources",
-    ".Xmodmap": ".Xmodmap",
-    ".xinitrc": ".xinitrc",
-    ".xsessionrc": ".xsessionrc",
 }
 
 def error(e):

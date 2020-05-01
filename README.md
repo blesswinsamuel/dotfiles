@@ -11,9 +11,9 @@ cd dotfiles
 ## Configurations
 
 - fish
+- vim
 - tmux
-- i3 + rofi + dunst
-- urxvt
+- brew
 
 ## Brew
 
