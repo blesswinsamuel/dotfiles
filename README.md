@@ -39,3 +39,13 @@ code --list-extensions > vs_code_extensions.txt
 # Install
 cat vs_code_extensions.txt | xargs -n 1 code --install-extension
 ```
+
+### Create GPG Key
+```
+gpg --full-generate-key
+# Use key size 4096
+```
+
+```
+gpg --armor --export <email> | pbcopy
+```

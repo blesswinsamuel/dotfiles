@@ -23,6 +23,8 @@ brew "fish"
 ### VCS
 brew "git"
 brew "git-lfs"
+brew "gnupg"
+brew "pinentry-mac"
 
 ### Cloud
 brew "awscli"

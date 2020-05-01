@@ -14,9 +14,10 @@ BACKUP_DIR = HOME / ".dotfiles_backup"
 
 COMMON_FILES = {
     "fish": ".config/fish",
-
     "tmux.conf": ".tmux.conf",
     ".vimrc": ".vimrc",
+    ".gitconfig": ".gitconfig",
+    "gpg-agent.conf": ".gnupg/gpg-agent.conf",
 }
 
 MAC_FILES = {
