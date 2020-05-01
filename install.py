@@ -30,6 +30,7 @@ COMMON_FILES = {
 MAC_FILES = {
     **COMMON_FILES,
 
+    "Brewfile": ".Brewfile",
     ".hushlogin": ".hushlogin",
 }
 
