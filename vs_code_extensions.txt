@@ -1,0 +1,3 @@
+bmalehorn.vscode-fish
+esbenp.prettier-vscode
+ms-vscode.Go
