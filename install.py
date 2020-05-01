@@ -13,8 +13,7 @@ BACKUP_DIR = HOME / ".dotfiles_backup"
 # git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
 
 COMMON_FILES = {
-    "fish/config.fish": ".config/fish/config.fish",
-    "fish/functions": ".config/fish/functions",
+    "fish": ".config/fish",
 
     "zsh/zlogin": ".zlogin",
     "zsh/zlogout": ".zlogout",
