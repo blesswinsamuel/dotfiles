@@ -5,6 +5,8 @@
 	],
 	"installed_packages":
 	[
+		"Babel",
+		"fish",
 		"Package Control",
 		"Pretty JSON",
 		"TypeScript"

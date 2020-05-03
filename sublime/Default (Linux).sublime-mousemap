@@ -1,0 +1,11 @@
+[
+  {
+    "modifiers": [
+      "ctrl",
+      "alt"
+    ],
+    "button": "button1",
+    "press_command": "drag_select",
+    "command": "goto_definition"
+  }
+]

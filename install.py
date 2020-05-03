@@ -19,6 +19,16 @@ COMMON_FILES = {
     ".gitconfig": ".gitconfig",
 }
 
+def get_sublime_files(path):
+    return {
+        "sublime/Package Control.sublime-settings": path + "/Packages/User/Package Control.sublime-settings",
+        "sublime/Preferences.sublime-settings": path + "/Packages/User/Preferences.sublime-settings",
+        "sublime/JavaScript (Babel).sublime-settings": path + "/Packages/User/JavaScript (Babel).sublime-settings",
+        "sublime/JavaScript.sublime-settings": path + "/Packages/User/JavaScript.sublime-settings",
+        "sublime/Default (Linux).sublime-keymap": path + "/Packages/User/Default (Linux).sublime-keymap",
+        "sublime/Default (Linux).sublime-mousemap": path + "/Packages/User/Default (Linux).sublime-mousemap",
+    }
+
 MAC_FILES = {
     **COMMON_FILES,
 
@@ -26,12 +36,13 @@ MAC_FILES = {
     ".hushlogin": ".hushlogin",
     "gpg-agent.conf": ".gnupg/gpg-agent.conf",
 
-    "sublime/Package Control.sublime-settings": "Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings",
-    "sublime/Preferences.sublime-settings": "Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+    **get_sublime_files("Library/Application Support/Sublime Text 3"),
 }
 
 LINUX_FILES = {
     **COMMON_FILES,
+
+    **get_sublime_files(".config/sublime-text-3"),
 }
 
 def error(e):
