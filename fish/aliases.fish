@@ -71,6 +71,12 @@ case '*'
   alias o "xdg-open"
 end
 
-function git_dashboard
+alias fish-reload "source ~/.config/fish/config.fish"
+
+function git-dashboard
     fd '^\.git$' -H -x fish -c 'cd {//}; set -g __fish_git_prompt_show_informative_status; printf "%*s\r%s\n" '(tput cols)' (__fish_git_prompt) "{//}"'
+end
+
+function git-fetch-all
+    fd '^\.git$' -H -x fish -c 'git -C {//} fetch'
 end
