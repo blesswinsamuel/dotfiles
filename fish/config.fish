@@ -36,3 +36,7 @@ set -g fish_color_param cyan
 # set -g fish_color_redirection normal
 # set -g fish_color_search_match purple
 set -g fish_color_status red
+
+if test -e ~/.config/fish/config.local.fish
+  source ~/.config/fish/config.local.fish
+end
