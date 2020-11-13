@@ -5,10 +5,14 @@
 	],
 	"installed_packages":
 	[
+		"Anaconda",
 		"Babel",
 		"fish",
+		"JsPrettier",
 		"Package Control",
 		"Pretty JSON",
+		"SideBarEnhancements",
+		"SublimeLinter",
 		"TypeScript"
 	]
 }
