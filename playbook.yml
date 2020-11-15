@@ -1,0 +1,164 @@
+---
+- name: Install
+  hosts: localhost
+  # hosts:
+  #   localhost:
+  #     vars:
+  #       ansible_connection: local
+  #       ansible_python_interpreter: "{{ansible_playbook_python}}"
+  # gather_facts: no
+  vars:
+    login_shell: /usr/local/bin/fish
+    common_files:
+      - { src: fish, dest: ~/.config/fish }
+      - { src: .tmux.conf, dest: ~/.tmux.conf }
+      - { src: .vimrc, dest: ~/.vimrc }
+      - { src: .gitconfig, dest: ~/.gitconfig }
+    mac_files:
+      - { src: .hushlogin, dest: ~/.hushlogin }
+      - { src: Brewfile, dest: ~/.Brewfile }
+      - { src: gpg-agent.conf, dest: ~/.gnupg/gpg-agent.conf }
+    sublime_files:
+      - { src: sublime/Package Control.sublime-settings, dest: Packages/User/Package Control.sublime-settings }
+      - { src: sublime/Preferences.sublime-settings, dest: Packages/User/Preferences.sublime-settings }
+      - { src: sublime/JavaScript (Babel).sublime-settings, dest: Packages/User/JavaScript (Babel).sublime-settings }
+      - { src: sublime/JavaScript.sublime-settings, dest: Packages/User/JavaScript.sublime-settings }
+      - { src: sublime/Default (Linux).sublime-keymap, dest: Packages/User/Default (Linux).sublime-keymap }
+      - { src: sublime/Default (Linux).sublime-mousemap, dest: Packages/User/Default (Linux).sublime-mousemap }
+    sublime_mac_dir: ~/Library/Application Support/Sublime Text 3/
+    sublime_linux_dir: ~/.config/sublime-text-3/
+  tasks:
+    # - name: Install required system packages
+    #   apt:
+    #     name:
+    #       - htop
+    #       - vim
+    #       - rsync
+    #     update_cache: yes
+    #     cache_valid_time: 86400 # One day
+    #     state: present
+    #   tags: [setup]
+
+    - block:
+        - name: make sure destination dir exists
+          file: path={{ item.dest | dirname }} state=directory # recurse=yes
+          loop: "{{ common_files }}"
+        - name: copy files
+          file: src={{ playbook_dir }}/{{ item.src }} dest={{ item.dest }} state=link
+          loop: "{{ common_files }}"
+      tags: [setup]
+
+    - block:
+        - name: macOS | make sure destination dir exists
+          file: path={{ item.dest | dirname }} state=directory # recurse=yes
+          loop: "{{ mac_files }}"
+        - name: macOS | copy files
+          file: src={{ playbook_dir }}/{{ item.src }} dest={{ item.dest }} state=link
+          loop: "{{ mac_files }}"
+      when: ansible_os_family == "Darwin"
+      tags: [setup]
+
+    - block:
+        - name: macOS | sublime | make sure destination dir exists
+          file: path={{ sublime_mac_dir + item.dest | dirname }} state=directory # recurse=yes
+          loop: "{{ sublime_files }}"
+        - name: macOS | sublime | copy files
+          file: src={{ playbook_dir }}/{{ item.src }} dest={{ sublime_mac_dir + item.dest }} state=link
+          loop: "{{ sublime_files }}"
+      when: ansible_os_family == "Darwin"
+      tags: [setup]
+
+    - block:
+        - name: arch | sublime | make sure destination dir exists
+          file: path={{ sublime_mac_dir + item.dest | dirname }} state=directory # recurse=yes
+          loop: "{{ sublime_files }}"
+        - name: arch | sublime | copy files
+          file: src={{ playbook_dir }}/{{ item.src }} dest={{ sublime_mac_dir + item.dest }} state=link
+          loop: "{{ sublime_files }}"
+      when: ansible_os_family == "Archlinux"
+      tags: [setup]
+
+    # Add shells installed via homebrew on macOS to /etc/shells
+    - block:
+        - name: check if homebrew bash is installed
+          stat: path=/usr/local/bin/bash
+          register: brew_bash
+        - name: add homwbrew bash to /etc/shells
+          lineinfile: dest=/etc/shells line="/usr/local/bin/bash" state=present
+          when: brew_bash.stat.exists
+
+        - name: check if homebrew zsh is installed
+          stat: path=/usr/local/bin/zsh
+          register: brew_zsh
+        - name: add homwbrew zsh to /etc/shells
+          lineinfile: dest=/etc/shells line="/usr/local/bin/zsh" state=present
+          when: brew_zsh.stat.exists
+
+        - name: check if homebrew fish is installed
+          stat: path=/usr/local/bin/fish
+          register: brew_fish
+        - name: add homwbrew fish to /etc/shells
+          lineinfile: dest=/etc/shells line="/usr/local/bin/fish" state=present
+          when: brew_fish.stat.exists
+      when: ansible_os_family == "Darwin"
+      become: yes
+
+    - name: check if preferred login_shell is installed
+      stat: path={{ login_shell }}
+      register: login_shell_installed
+
+    - name: Set default shell
+      user: name={{ ansible_user_id }} shell={{ login_shell }}
+      when: login_shell_installed.stat.exists
+      become: yes
+
+  #   - name: ensure parent directories exist
+  #     file:
+  #       path: "{{item}}"
+  #       state: directory
+  #     loop:
+  #       - ~/el-bethel-scripts/caddy
+  #       - ~/el-bethel-scripts/vmagent
+  #     tags: [caddy, vmagent]
+
+  #   - name: copy Caddyfile
+  #     copy:
+  #       src: caddy/Caddyfile
+  #       dest: ~/el-bethel-scripts/caddy/Caddyfile
+  #       mode: 0644
+  #     notify:
+  #       - reload caddy
+  #     tags: [caddy]
+
+  #   - name: copy vmagent
+  #     copy:
+  #       src: vmagent/scrape.yml
+  #       dest: ~/el-bethel-scripts/vmagent/scrape.yml
+  #       mode: 0644
+  #     notify:
+  #       - reload vmagent
+  #     tags: [vmagent]
+
+  #   - name: copy docker-compose.yml
+  #     copy:
+  #       src: docker-compose.yml
+  #       dest: ~/el-bethel-scripts/docker-compose.yml
+  #       mode: 0644
+  #     notify:
+  #       - reload vmagent
+  #     tags: [start]
+  #   - name: docker-compose up
+  #     shell: |
+  #       docker-compose up --remove-orphans --build -d
+  #     args:
+  #       chdir: ~/el-bethel-scripts
+  #     tags: [start]
+
+  # handlers:
+  #   - name: restart docker
+  #     become: yes
+  #     service: name=docker state=restarted
+  #   - name: reload caddy
+  #     command: docker exec caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+  #   - name: reload vmagent
+  #     command: docker exec caddy wget -qO - vmagent:8429/-/reload

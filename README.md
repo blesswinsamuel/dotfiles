@@ -5,7 +5,8 @@
 ```
 git clone https://github.com/blesswinsamuel/dotfiles
 cd dotfiles
-./install.py [-n]
+ansible-playbook playbook.yml --extra-vars "ansible_sudo_pass=pass" -vC
+ansible-playbook playbook.yml --ask-become-pass -vC
 ```
 
 ## Configurations
@@ -27,23 +28,8 @@ brew bundle cleanup --zap --force
 brew bundle check --verbose
 ```
 
-## Set default shell
-
-```sh
-echo $(which fish) | sudo tee -a /etc/shells
-chsh -s $(which fish)
-```
-
-## VS Code
-
-```sh
-# List
-code --list-extensions > vs_code_extensions.txt
-# Install
-cat vs_code_extensions.txt | xargs -n 1 code --install-extension
-```
-
 ### Create GPG Key
+
 ```
 gpg --full-generate-key
 # Use key size 4096
