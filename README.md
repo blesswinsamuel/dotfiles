@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-./install.sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/blesswinsamuel/dotfiles/master/install.sh)"
 ```
 
 ## Configurations
