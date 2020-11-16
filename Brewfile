@@ -15,6 +15,7 @@ brew "ruby"
 ## Package Managers
 brew "maven"
 brew "yarn"
+brew "pipx"
 
 ## Shells
 brew "fish"
@@ -59,12 +60,12 @@ brew "ncdu"
 
 ### Video/Image/PDF processing
 brew "ffmpeg"
-brew "ghostscript"
-brew "imagemagick"
+#brew "ghostscript"
+#brew "imagemagick"
 
 ### Completions
-brew "docker-completion"
-brew "docker-compose-completion"
+#brew "docker-completion"
+#brew "docker-compose-completion"
 
 # Casks
 ## Browsers
@@ -78,8 +79,9 @@ cask "istat-menus"
 
 ## Utilities
 cask "itsycal"
-cask "philips-hue-sync"
 cask "transmission"
+cask "logitech-options"
+cask "barrier"
 
 ## Media
 cask "iina"
@@ -89,44 +91,39 @@ cask "spotify"
 ## Dev Tools
 cask "alfred"
 cask "iterm2"
-cask "docker"
-cask "graphql-playground"
-cask "postman"
 
-cask "intellij-idea"
+#cask "intellij-idea"
 cask "sublime-text"
 cask "visual-studio-code"
 
-cask "fork"
 cask "sublime-merge"
 
 cask "postico"
-cask "sequel-pro"
 cask "tableplus"
 
 # Fonts
 tap "homebrew/cask-fonts"
-cask "font-fira-code"
-cask "font-hack"
-cask "font-hasklig"  # Source Code Pro with ligatures
-cask "font-source-code-pro"
-cask "font-inconsolata"
-cask "font-noto-sans"
+#cask "font-fira-code"
+#cask "font-hack"
+#cask "font-hasklig"  # Source Code Pro with ligatures
+#cask "font-source-code-pro"
+#cask "font-inconsolata"
+#cask "font-noto-sans"
 
 # Mac App Store
-mas "Apple Configurator 2", id: 1037126344
+#mas "Apple Configurator 2", id: 1037126344
 mas "Pages", id: 409201541
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
+mas "GarageBand", id: 682658836
 mas "MainStage 3", id: 634159523
-mas "Xcode", id: 497799835
+#mas "Xcode", id: 497799835
 
-mas "Adblock Plus", id: 1432731683
+#mas "Adblock Plus", id: 1432731683
 mas "Magnet", id: 441258766
 mas "ColorSlurp", id: 1287239339
-mas "MathStudio", id: 829912893
+#mas "MathStudio", id: 829912893
 mas "Stockfish", id: 801463932
 mas "Trello", id: 1278508951
-mas "Twitter", id: 1482454543
 mas "LyricsX", id: 1254743014
 mas "Slack", id: 803453959
