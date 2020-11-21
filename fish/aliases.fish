@@ -48,8 +48,6 @@ end
 
 switch (uname)
     case Darwin
-        set -gx PATH /usr/local/sbin ~/.local/bin ~/go/bin ~/bin /usr/local/bin $PATH
-
         # Mac Quick Look
         alias ql "qlmanage -p"
         alias dont-index "touch .metadata_never_index"

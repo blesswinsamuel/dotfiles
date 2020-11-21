@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 export PATH="$PATH:$HOME/.local/bin"
 
@@ -19,6 +19,7 @@ fi
 cd "$DOTFILES_DIR"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    export HOMEBREW_NO_AUTO_UPDATE=1
     brew update
     brew bundle install
     brew bundle cleanup
