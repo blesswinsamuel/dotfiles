@@ -11,6 +11,7 @@ alias flushdns "sudo killall -HUP mDNSResponder"
 alias dc "docker-compose"
 alias d "docker"
 alias g "git"
+alias k "kubectl"
 
 # alias dlrshell "env PS1='\$ ' bash"
 
