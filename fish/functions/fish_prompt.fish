@@ -40,6 +40,25 @@ function fish_prompt
     set -g fish_color_status red
 
     ## Line 1
+    set_color cyan
+    printf "%s" (date "+%F")
+    printf " "
+    set_color cyan --bold
+    printf "%s" (date "+%T")
+    printf " "
+    if test $CMD_DURATION -gt 0
+        set_color green --bold
+        # Show duration of the last command in seconds
+        set duration (echo "$CMD_DURATION 1000" | awk '{printf "%.3fs", $1 / $2}')
+        printf "[$duration]"
+        printf " "
+    end
+    # Exit Code
+    if not test $last_status -eq 0
+        set_color $fish_color_status
+        printf "[$last_status]"
+        printf " "
+    end
     printf "\n"
 
     # SSH indicator
@@ -62,14 +81,12 @@ function fish_prompt
 
     ## Line 2
     printf "\n"
-    # Exit Code
-    if not test $last_status -eq 0
-        set_color $fish_color_status
-        printf "[$last_status]"
-        printf " "
-    end
     # Prompt indicator
-    set_color yellow
+    if not test $last_status -eq 0
+        set_color red
+    else
+        set_color yellow
+    end
     printf "❯"
     set_color normal
     printf " "

@@ -16,3 +16,7 @@ set -gx HOMEBREW_NO_AUTO_UPDATE 1
 # pipx - ~/.local/bin
 # go   - ~/go/bin
 set -gx PATH $PATH /usr/local/sbin /usr/local/bin ~/.local/bin ~/go/bin ~/bin
+
+set PATH $PATH ~/.cargo/bin ~/.config/yarn/global/node_modules/.bin/
+
+set PATH $PATH ~/.gem/ruby/2.7.0/bin
