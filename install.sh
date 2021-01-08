@@ -1,11 +1,12 @@
 #!/bin/bash -xe
 
 export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:/opt/homebrew/bin"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     if ! command -v brew &> /dev/null; then
         # Install Homebrew - https://brew.sh
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
 fi
 
@@ -21,10 +22,7 @@ cd "$DOTFILES_DIR"
 if [[ "$OSTYPE" == "darwin"* ]]; then
     export HOMEBREW_NO_AUTO_UPDATE=1
     brew update
-    brew bundle install
-    brew bundle cleanup
-    # brew bundle cleanup --zap --force
-    brew bundle check --verbose
+    brew install pipx bash zsh fish
 fi
 
 if ! command -v ansible &> /dev/null; then
@@ -33,3 +31,10 @@ fi
 
 # ansible-playbook playbook.yml --extra-vars "ansible_sudo_pass=pass" -vC
 ansible-playbook playbook.yml --ask-become-pass -v
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    brew bundle install
+    brew bundle cleanup
+    # brew bundle cleanup --zap --force
+    brew bundle check --verbose
+fi

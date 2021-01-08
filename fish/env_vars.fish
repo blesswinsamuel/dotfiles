@@ -15,7 +15,7 @@ set -gx HOMEBREW_NO_AUTO_UPDATE 1
 # brew - /usr/local/sbin /usr/local/bin
 # pipx - ~/.local/bin
 # go   - ~/go/bin
-set -gx PATH $PATH /usr/local/sbin /usr/local/bin ~/.local/bin ~/go/bin ~/bin
+set -gx PATH $PATH /opt/homebrew/bin /usr/local/sbin /usr/local/bin ~/.local/bin ~/go/bin ~/bin
 
 set PATH $PATH ~/.cargo/bin ~/.config/yarn/global/node_modules/.bin/
 
