@@ -15,6 +15,7 @@
       - { src: .tmux.conf, dest: ~/.tmux.conf }
       - { src: .vimrc, dest: ~/.vimrc }
       - { src: .gitconfig, dest: ~/.gitconfig }
+      - { src: .mackup.cfg, dest: ~/.mackup.cfg }
     mac_files:
       - { src: .hushlogin, dest: ~/.hushlogin }
       - { src: Brewfile, dest: ~/.Brewfile }

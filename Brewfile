@@ -44,6 +44,9 @@ brew "tree"
 brew "mkcert"
 brew "watchman"
 brew "tldr"
+brew "dockutil"
+brew "mackup"
+brew "rclone"
 
 ### Networking
 brew "httpie"
