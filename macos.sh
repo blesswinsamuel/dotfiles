@@ -1,14 +1,24 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
+
+# ~/.macos — https://mths.be/macos
+
+# Close any open System Preferences panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Preferences" to quit'
 
 # Change screenshot location
+# defaults read ~/Library/Preferences/com.apple.screencapture.plist
 defaults write com.apple.screencapture location ~/Documents/Screenshots
 # Alternative method: Cmd + Shift + 5 -> Options -> Save to Other location -> ~/Documents/Screenshots
+
+# defaults read ~/Library/Preferences/com.apple.menuextra.clock.plist
+defaults write com.apple.menuextra.clock IsAnalog -bool true
 
 # Settings > Trackpad
 # 	Point & Click Tab -> Check Tap to Click, Set Tracking speed to Fast
 # 	More Gestures Tab -> Check App Expose
 # Settings > General
-# 	Use dark menu bar and dock
+# 	Appearance - Dark
 # Settings > Accessibility > Mouse & Trackpad
 # 	Trackpad Options… > Check enable dragging - 3 finger drag
 # Settings > Accessibility > Zoom
@@ -28,9 +38,6 @@ defaults write com.apple.screencapture location ~/Documents/Screenshots
 # Notification Centre -> Scroll Up -> Turn on Night Shift
 # iPhone Tethering override WiFi:
 # 	Settings -> Network -> iPhone USB -> Uncheck disable unless needed.
-
-# Dock spacer
-# defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
 
 killall Finder
 killall Dock
