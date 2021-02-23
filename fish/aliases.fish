@@ -95,3 +95,21 @@ function git-open
     set -l giturl $giturl/tree/$branch
     open $giturl
 end
+
+function ssh-port-forward
+    set -l name $argv[1]
+    set -l fwd_addr $argv[2]
+    set -l ssh_params $argv[3]
+    mkdir -p "/tmp/portforwards"
+    set -l sockfilename "/tmp/portforwards/$name.sock"
+    # ssh -N -L $fwd_addr $ssh_params
+    ssh -M -S $sockfilename -fNT -L $fwd_addr $ssh_params
+end
+
+function ssh-port-forward-stop
+    set -l name $argv[1]
+    set -l ssh_params $argv[2]
+    mkdir -p "/tmp/portforwards"
+    set -l sockfilename "/tmp/portforwards/$name.sock"
+    ssh -S $sockfilename -O exit $ssh_params
+end
