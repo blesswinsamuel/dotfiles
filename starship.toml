@@ -1,0 +1,59 @@
+# https://starship.rs/config/
+
+format = """
+$status$time$cmd_duration$jobs$docker_context$package$golang$helm$java$nodejs$python$rust$terraform$kubernetes$aws$gcloud\
+$line_break\
+$username$hostname$shlvl$directory$git_branch$git_commit$git_state$git_status$hg_branch\
+$line_break\
+$shell$character"""
+
+[kubernetes]
+format = '[\[$symbol$context( \($namespace\))\]]($style) '
+style = "cyan"
+disabled = false
+
+[aws]
+format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
+style = "bold yellow"
+symbol = "🅰 "
+
+[time]
+disabled = false
+format = '[$time]($style) '
+time_format = "%d-%m-%y %H:%M:%S"
+style = "green"
+utc_time_offset = "-5"
+
+[git_status]
+conflicted = "=[$count](white) " # ✕
+ahead = "⇡[$count](white)" # ↑
+behind = "⇣[$count](white)" # ↓
+diverged = "⇕⇡$ahead_count⇣$behind_count"
+untracked = "?[$count](white)" # …
+stashed = '\$[$count](white)'
+modified = "±[$count](white)" # !
+staged = "+[$count](white)" # ●
+renamed = "»[$count](white)"
+deleted = "✘[$count](white)"
+
+[directory]
+truncate_to_repo = false
+truncation_symbol = ".../"
+style = "bold white"
+truncation_length = 8
+
+[status]
+format = '[\[$symbol $common_meaning$signal_name$maybe_int\]]($style) '
+map_symbol = true
+disabled = false
+
+[cmd_duration]
+min_time = 1_000
+show_milliseconds = true
+style = "bold bright-black"
+format = '[\[$duration\]]($style) '
+show_notifications = true
+min_time_to_notify = "45_000"
+
+[package]
+format = '[\[$symbol$version\]]($style) '

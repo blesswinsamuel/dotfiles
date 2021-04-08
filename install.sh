@@ -22,7 +22,7 @@ cd "$DOTFILES_DIR"
 if [[ "$OSTYPE" == "darwin"* ]]; then
     export HOMEBREW_NO_AUTO_UPDATE=1
     brew update
-    brew install pipx bash zsh fish
+    brew install pipx bash zsh fish starship  # direnv
 fi
 
 if ! command -v ansible &> /dev/null; then
