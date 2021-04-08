@@ -12,6 +12,11 @@ format = '[\[$symbol$context( \($namespace\))\]]($style) '
 style = "cyan"
 disabled = false
 
+[golang]
+symbol = "GO "
+format = '[\[$symbol$version\]]($style) '
+style = "bold cyan"
+
 [aws]
 format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
 style = "bold yellow"
