@@ -17,6 +17,11 @@ symbol = "GO "
 format = '[\[$symbol$version\]]($style) '
 style = "bold cyan"
 
+[nodejs]
+symbol = "⬢ "
+format = '[\[$symbol$version\]]($style) '
+style = "bold green"
+
 [aws]
 format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
 style = "bold yellow"
@@ -67,3 +72,14 @@ min_time_to_notify = "45_000"
 
 [package]
 format = '[\[$symbol$version\]]($style) '
+
+[username]
+style_user = "bold dimmed green"
+style_root = "bold red"
+format = "[↯](bold yellow) [$user]($style)[@](bold dimmed white)"
+
+[hostname]
+format =  "[$hostname]($style) "
+trim_at = "."
+style = "bold dimmed yellow"
+disabled = false
