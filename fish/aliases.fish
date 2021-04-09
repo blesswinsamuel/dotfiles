@@ -108,8 +108,7 @@ end
 
 function ssh-port-forward-stop
     set -l name $argv[1]
-    set -l ssh_params $argv[2]
     mkdir -p "/tmp/portforwards"
     set -l sockfilename "/tmp/portforwards/$name.sock"
-    ssh -S $sockfilename -O exit $ssh_params
+    ssh -S $sockfilename -O exit ''
 end

@@ -20,3 +20,5 @@ set -gx PATH $PATH /opt/homebrew/bin /usr/local/sbin /usr/local/bin ~/.local/bin
 set PATH $PATH ~/.cargo/bin ~/.config/yarn/global/node_modules/.bin/
 
 set PATH $PATH ~/.gem/ruby/2.7.0/bin
+
+set PATH $PATH ~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/
