@@ -8,10 +8,10 @@ alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
 alias ix "curl -F 'f:1=<-' ix.io"
 alias flushdns "sudo killall -HUP mDNSResponder"
-abbr -a dc "docker-compose"
-abbr -a d "docker"
-abbr -a g "git"
-abbr -a k "kubectl"
+abbr -g -a dc "docker-compose"
+abbr -g -a d "docker"
+abbr -g -a g "git"
+abbr -g -a k "kubectl"
 
 # alias dlrshell "env PS1='\$ ' bash"
 
@@ -22,10 +22,18 @@ end
 alias cdr "cd (git rev-parse --show-toplevel)"
 
 if type -q bat
-    alias cat bat
+    abbr -g -a cat bat
+end
+if type -q exa
+    function ls --wraps exa --description 'alias ls to exa'
+        exa $argv
+    end
+    # abbr -g -a ls exa
 end
 if type -q prettyping
-    alias ping 'prettyping --nolegend'
+    function ping --wraps prettyping --description 'alias ping to prettyping'
+        prettyping --nolegend $argv
+    end
 end
 if type -q fzf
     # add support for ctrl+o to open selected file in subl
