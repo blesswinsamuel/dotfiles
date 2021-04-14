@@ -17,6 +17,11 @@ symbol = "GO "
 format = '[\[$symbol$version\]]($style) '
 style = "bold cyan"
 
+[rust]
+symbol = "🦀 "
+format = '[\[$symbol$version\]]($style) '
+style = "bold red"
+
 [nodejs]
 symbol = "⬢ "
 format = '[\[$symbol$version\]]($style) '
@@ -40,16 +45,17 @@ format = '[\($symbol$branch\)]($style) '
 style = "bold green"
 
 [git_status]
-conflicted = "=[$count](white) " # ✕
-ahead = "⇡[$count](white)" # ↑
-behind = "⇣[$count](white)" # ↓
+format = '([\[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind\]]($style) )'
+conflicted = "#[$count](white) " # ✕ =
+ahead = "↑[$count](white)" # ⇡
+behind = "↓[$count](white)" # ⇣
 diverged = "⇕⇡$ahead_count⇣$behind_count"
-untracked = "…[$count](white)" # ?
-stashed = '' # '\$[$count](white)'
-modified = "±[$count](white)" # !
-staged = "●[$count](white)" # +
-renamed = "»[$count](white)"
-deleted = "✘[$count](white)"
+untracked = "[…](bold yellow)[$count](white)" # ?
+# stashed = '\$[$count](white)'
+modified = "[±](bold yellow)[$count](white)" # !
+staged = "[+](bold green)[$count](white)" # ●
+renamed = "[»](bold blue)[$count](white)"
+deleted = "[✕](bold purple)[$count](white)" # ✘
 style = "bold red"
 
 [directory]
