@@ -17,19 +17,29 @@ symbol = "GO "
 format = '[\[$symbol$version\]]($style) '
 style = "bold cyan"
 
+[python]
+symbol = "🐍 "
+format = '[\[$symbol$version\]]($style) '
+# style = "bold yellow"
+
+[docker_context]
+symbol = "🐳 "
+format = '[\[$symbol$version\]]($style) '
+# style = "blue bold"
+
 [rust]
 symbol = "🦀 "
 format = '[\[$symbol$version\]]($style) '
-style = "bold red"
+# style = "bold red"
 
 [nodejs]
 symbol = "⬢ "
 format = '[\[$symbol$version\]]($style) '
-style = "bold green"
+# style = "bold green"
 
 [aws]
 format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
-style = "bold yellow"
+# style = "bold yellow"
 symbol = "🅰 "
 
 [time]
