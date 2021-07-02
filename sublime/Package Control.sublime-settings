@@ -6,7 +6,6 @@
 	"installed_packages":
 	[
 		"Anaconda",
-		"Babel",
 		"fish",
 		"JsPrettier",
 		"LSP",
@@ -15,6 +14,6 @@
 		"SideBarEnhancements",
 		"SublimeLinter",
 		"TOML",
-		"TypeScript"
-	]
+		"TypeScript",
+	],
 }
