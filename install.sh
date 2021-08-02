@@ -10,7 +10,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     fi
 fi
 
-DOTFILES_DIR=${DOTFILES_DIR:-~/Projects/blesswinsamuel/dotfiles}
+DOTFILES_DIR=${DOTFILES_DIR:-~/dotfiles}
 
 if [ ! -d "$DOTFILES_DIR" ]; then
     mkdir -p "${DOTFILES_DIR##*/}"
