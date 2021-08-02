@@ -24,18 +24,23 @@ format = '[\[$symbol$version\]]($style) '
 
 [docker_context]
 symbol = "🐳 "
+format = '[\[$symbol$context\]]($style) '
+# style = "blue bold"
+
+[nodejs]
+symbol = "⬢ "
 format = '[\[$symbol$version\]]($style) '
+# style = "bold green"
+
+[terraform]
+symbol = "💠 "
+format = '[\[$symbol$workspace\]]($style) '
 # style = "blue bold"
 
 [rust]
 symbol = "🦀 "
 format = '[\[$symbol$version\]]($style) '
 # style = "bold red"
-
-[nodejs]
-symbol = "⬢ "
-format = '[\[$symbol$version\]]($style) '
-# style = "bold green"
 
 [aws]
 format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
