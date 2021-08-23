@@ -7,9 +7,11 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 [alias]
-	co = checkout
-	br = branch
-	ci = commit
-	st = status
+	ch = checkout
+	b = branch
+	c = commit
+	s = status
+	st = stash
+	open = !fish -c git-open
 [commit]
 	gpgsign = true

@@ -8,10 +8,16 @@ alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
 alias ix "curl -F 'f:1=<-' ix.io"
 alias flushdns "sudo killall -HUP mDNSResponder"
-abbr -g -a dc "docker-compose"
-abbr -g -a d "docker"
-abbr -g -a g "git"
-abbr -g -a k "kubectl"
+switch (uname)
+    case Darwin
+        abbr -g -a dc "docker compose"
+    case '*'
+        abbr -g -a dc docker-compose
+end
+abbr -g -a d docker
+abbr -g -a g git
+abbr -g -a k kubectl
+abbr -g -a o open
 
 # alias dlrshell "env PS1='\$ ' bash"
 
@@ -72,10 +78,9 @@ end
 
 switch (uname)
     case Darwin
-        alias o "open"
+        # keep open alias
     case '*'
-        alias open "xdg-open"
-        alias o "xdg-open"
+        alias open xdg-open
 end
 
 alias fish-reload "source ~/.config/fish/config.fish"
@@ -97,7 +102,7 @@ function git-open
         return
     end
 
-    set -l giturl (string replace "git@github.com:" "https://github.com/" $giturl)
+    set -l giturl (echo $giturl | sed 's/git@/http:\/\//' | sed 's/com:/com\//')
     set -l giturl (string replace ".git" "" $giturl)
     set -l branch (git branch --show-current)
     set -l giturl $giturl/tree/$branch
@@ -105,10 +110,11 @@ function git-open
 end
 
 function ssh-port-forward
+    # use mole instead
     set -l name $argv[1]
     set -l fwd_addr $argv[2]
     set -l ssh_params $argv[3]
-    mkdir -p "/tmp/portforwards"
+    mkdir -p /tmp/portforwards
     set -l sockfilename "/tmp/portforwards/$name.sock"
     # ssh -N -L $fwd_addr $ssh_params
     ssh -M -S $sockfilename -fNT -L $fwd_addr $ssh_params
@@ -116,7 +122,7 @@ end
 
 function ssh-port-forward-stop
     set -l name $argv[1]
-    mkdir -p "/tmp/portforwards"
+    mkdir -p /tmp/portforwards
     set -l sockfilename "/tmp/portforwards/$name.sock"
     ssh -S $sockfilename -O exit ''
 end
