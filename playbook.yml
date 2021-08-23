@@ -22,7 +22,9 @@
     mac_files:
       - { src: .hushlogin, dest: ~/.hushlogin }
       - { src: Brewfile, dest: ~/.Brewfile }
-      - { src: gpg-agent.conf, dest: ~/.gnupg/gpg-agent.conf }
+      - { src: .gnupg/pinentry-wrapper, dest: /usr/local/bin/pinentry-wrapper, become: true }
+      - { src: .gnupg/gpg-agent.conf, dest: ~/.gnupg/gpg-agent.conf }
+      - { src: .gnupg/gpg.conf, dest: ~/.gnupg/gpg.conf }
     sublime_files:
       - { src: sublime/Package Control.sublime-settings, dest: Packages/User/Package Control.sublime-settings }
       - { src: sublime/Preferences.sublime-settings, dest: Packages/User/Preferences.sublime-settings }
@@ -59,6 +61,13 @@
           loop: "{{ mac_files }}"
         - name: macOS | copy files
           file: src={{ playbook_dir }}/{{ item.src }} dest={{ item.dest }} state=link
+          # become: "{{ (item.become | default(false) | bool) == true }}"
+          when: (item.become | default(false) | bool) == false
+          loop: "{{ mac_files }}"
+        - name: macOS | copy files
+          file: src={{ playbook_dir }}/{{ item.src }} dest={{ item.dest }} state=link
+          become: true
+          when: (item.become | default(false) | bool) == true
           loop: "{{ mac_files }}"
       when: ansible_os_family == "Darwin"
       tags: [setup]
