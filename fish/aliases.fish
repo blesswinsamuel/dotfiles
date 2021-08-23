@@ -8,12 +8,7 @@ alias youtube-dl-mp3 "youtube-dl --extract-audio --audio-format mp3"
 
 alias ix "curl -F 'f:1=<-' ix.io"
 alias flushdns "sudo killall -HUP mDNSResponder"
-switch (uname)
-    case Darwin
-        abbr -g -a dc "docker compose"
-    case '*'
-        abbr -g -a dc docker-compose
-end
+abbr -g -a dc "docker compose"
 abbr -g -a d docker
 abbr -g -a g git
 abbr -g -a k kubectl

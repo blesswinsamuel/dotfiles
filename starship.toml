@@ -52,7 +52,6 @@ disabled = false
 format = '[$time]($style) '
 time_format = "%d-%m-%y %H:%M:%S"
 style = "green"
-utc_time_offset = "-5"
 
 [git_branch]
 symbol = "⎇ "
