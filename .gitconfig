@@ -15,3 +15,5 @@
 	open = !fish -c git-open
 [commit]
 	gpgsign = true
+[include]
+    path = ~/.gitconfig.local
