@@ -10,6 +10,7 @@ if test -n "$DISPLAY"
     set -gx EDITOR "subl -nw"
 end
 
+set -gx HOMEBREW_NO_INSTALL_UPGRADE 1
 set -gx HOMEBREW_NO_AUTO_UPDATE 1
 
 # brew - /usr/local/sbin /usr/local/bin
