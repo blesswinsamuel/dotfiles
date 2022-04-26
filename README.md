@@ -6,13 +6,6 @@
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/blesswinsamuel/dotfiles/master/install.sh)"
 ```
 
-## Configurations
-
-- fish
-- vim
-- tmux
-- brew
-
 ## Brew commands
 
 ```bash
@@ -32,9 +25,6 @@ gpg --armor --export <email> | pbcopy
 ```
 
 ## Mackup
-
-- iStat Menus - Use Export and Import via iCloud
-- Alfred - use B2 sync
 
 ```bash
 cat <<EOF > ~/.config/rclone/rclone.conf 

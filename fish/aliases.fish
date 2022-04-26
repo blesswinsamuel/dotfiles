@@ -13,6 +13,7 @@ abbr -g -a d docker
 abbr -g -a g git
 abbr -g -a k kubectl
 abbr -g -a o open
+abbr -g -a cdssd "cd /Volumes/BleSSD/"
 
 # alias dlrshell "env PS1='\$ ' bash"
 

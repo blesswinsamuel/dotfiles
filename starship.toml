@@ -89,7 +89,7 @@ show_milliseconds = true
 style = "bold dimmed white"
 format = '[\[$duration\]]($style) '
 show_notifications = true
-min_time_to_notify = "45_000"
+min_time_to_notify = 45_000
 
 [package]
 format = '[\[$symbol$version\]]($style) '

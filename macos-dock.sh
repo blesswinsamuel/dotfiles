@@ -3,16 +3,16 @@
 dockutil --remove all --no-restart
 
 dockutil --add '/System/Applications/Launchpad.app' --label 'Launchpad' --no-restart
+# dockutil --add '/System/Applications/Forklift.app' --label 'Forklift' --no-restart
 dockutil --add '/System/Applications/Mail.app' --label 'Mail' --no-restart
 dockutil --add '/System/Applications/Messages.app' --label 'Messages' --no-restart
 dockutil --add '/System/Applications/Contacts.app' --label 'Contacts' --no-restart
 dockutil --add '/System/Applications/Calendar.app' --label 'Calendar' --no-restart
 dockutil --add '/System/Applications/Reminders.app' --label 'Reminders' --no-restart
 dockutil --add '/System/Applications/Notes.app' --label 'Notes' --no-restart
-dockutil --add '/Applications/Notion.app' --label 'Notion' --no-restart
 dockutil --add '/Applications/Telegram.app' --label 'Telegram' --no-restart
 dockutil --add '/Applications/Slack.app' --label 'Slack' --no-restart
-dockutil --add '/Applications/Trello.app' --label 'Trello' --no-restart
+dockutil --add '/Applications/Home Assistant.app' --label 'Home Assistant' --no-restart
 dockutil --add '' --type spacer --section apps --no-restart
 
 dockutil --add '/Applications/Safari.app' --label 'Safari' --no-restart
@@ -31,6 +31,6 @@ dockutil --add '/System/Applications/System Preferences.app' --label 'System Pre
 
 dockutil --add '/Applications' --view auto --display stack --sort dateadded --no-restart
 dockutil --add '~/Downloads' --view auto --display stack --sort dateadded --no-restart
-dockutil --add '~/Documents/Screenshots' --view auto --display stack --sort dateadded --no-restart
+dockutil --add '/Volumes/BleSSD/Screenshots' --view auto --display stack --sort dateadded --no-restart
 
 killall Dock

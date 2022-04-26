@@ -30,26 +30,37 @@ brew "pinentry-mac"
 ### Cloud
 brew "awscli"
 
-### Utilities
+### Alternatives to common tools
+brew "exa"        # Alternative to ls 
+brew "bat"        # Alternative to cat
+brew "fd"         # Alternative to find
+brew "ripgrep"    # Alternative to grep
+brew "dog"        # Alternative to dig
+brew "duf"        # Alternative to df
+brew "ncdu"       # Alternative to du
+brew "bottom"     # Alternative to top
+brew "htop"
+brew "sd"         # Alternative to sed
+brew "difftastic" # Alternative to diff
+brew "git-delta"  # pager for git
+brew "hexyl"      # Alternative to hexdump
+
 brew "tmux"
-brew "bat"  # Alternative to cat
-brew "fd"   # Alternative to find
-brew "fzf"  # General-purpose command-line fuzzy finder
-brew "ripgrep"  # Recursively searches your current directory for a regex pattern
-brew "the_silver_searcher"  # A code searching tool similar to ack, but faster
+brew "fzf"        # General-purpose command-line fuzzy finder
 brew "youtube-dl"
 brew "jq"
 brew "mas"
 brew "tree"
 brew "mkcert"
-brew "watchman"
-brew "tldr"
+# brew "watchman"
+brew "tldr"      # man
 brew "dockutil"
 brew "mackup"
 brew "rclone"
 
 ### Networking
 brew "httpie"
+brew "xh"
 brew "wget"
 brew "lftp"
 brew "telnet"
@@ -57,9 +68,9 @@ brew "iperf3"
 brew "nmap"
 brew "prettyping"
 
-### System Monitoring
-brew "htop"
-brew "ncdu"
+### Kubernetes
+brew "kubernetes-cli"
+brew "k9s"
 
 ### Video/Image/PDF processing
 brew "ffmpeg"
@@ -70,32 +81,33 @@ brew "ffmpeg"
 #brew "docker-completion"
 #brew "docker-compose-completion"
 
-# Casks
+#########
+# Casks #
+#########
+
 ## Browsers
 cask "google-chrome"
 cask "firefox"
-cask "telegram"
 
-## System Monitoring
-cask "coconutbattery"
-cask "istat-menus"
+## Messaging
+# cask "telegram"
 
 ## Utilities
+cask "istat-menus"
 cask "itsycal"
-cask "transmission"
-cask "logitech-options"
-cask "barrier"
+cask "mouse-fix"
+cask "alfred"
+cask "raycast"
+cask "iterm2"
 
 ## Media
 cask "iina"
 cask "imageoptim"
-cask "spotify"
+cask "handbrake"
+# cask "spotify"
 
 ## Dev Tools
-cask "alfred"
-cask "iterm2"
-
-#cask "intellij-idea"
+cask "intellij-idea"
 cask "sublime-text"
 cask "visual-studio-code"
 
@@ -103,6 +115,10 @@ cask "sublime-merge"
 
 cask "postico"
 cask "tableplus"
+
+# Drivers
+cask "audient-evo"
+cask "yamaha-usb-midi-driver"
 
 # Fonts
 tap "homebrew/cask-fonts"
@@ -122,11 +138,12 @@ mas "GarageBand", id: 682658836
 mas "MainStage 3", id: 634159523
 #mas "Xcode", id: 497799835
 
-#mas "Adblock Plus", id: 1432731683
-mas "Magnet", id: 441258766
-mas "ColorSlurp", id: 1287239339
-#mas "MathStudio", id: 829912893
+# mas "ColorSlurp", id: 1287239339
+# mas "MathStudio", id: 829912893
+mas "Telegram", id: 747648890
 mas "Stockfish", id: 801463932
-mas "Trello", id: 1278508951
-mas "LyricsX", id: 1254743014
+mas "Home Assistant", id: 1099568401
+# mas "Trello", id: 1278508951
+# mas "LyricsX", id: 1254743014
 mas "Slack", id: 803453959
+mas "The Unarchiver", id: 425424353

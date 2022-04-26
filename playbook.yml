@@ -17,6 +17,7 @@
       - { src: .vimrc, dest: ~/.vimrc }
       - { src: .gitconfig, dest: ~/.gitconfig }
       - { src: .mackup.cfg, dest: ~/.mackup.cfg }
+      - { src: .mackup, dest: ~/.mackup }
       - { src: .zshrc, dest: ~/.zshrc }
       - { src: .bashrc, dest: ~/.bashrc }
     mac_files:
@@ -58,11 +59,18 @@
     - block:
         - name: macOS | make sure destination dir exists
           file: path={{ item.dest | dirname }} state=directory # recurse=yes
+          when: (item.become | default(false) | bool) == false
           loop: "{{ mac_files }}"
         - name: macOS | copy files
           file: src={{ playbook_dir }}/{{ item.src }} dest={{ item.dest }} state=link
           # become: "{{ (item.become | default(false) | bool) == true }}"
           when: (item.become | default(false) | bool) == false
+          loop: "{{ mac_files }}"
+
+        - name: macOS | make sure destination dir exists
+          file: path={{ item.dest | dirname }} state=directory # recurse=yes
+          when: (item.become | default(false) | bool) == true
+          become: true
           loop: "{{ mac_files }}"
         - name: macOS | copy files
           file: src={{ playbook_dir }}/{{ item.src }} dest={{ item.dest }} state=link
@@ -115,7 +123,7 @@
           lineinfile: dest=/etc/shells line="{{ bin_dir }}/fish" state=present
           when: brew_fish.stat.exists
       when: ansible_os_family == "Darwin"
-      become: yes
+      become: true
 
     - name: check if preferred login_shell is installed
       stat: path={{ login_shell }}
@@ -124,4 +132,4 @@
     - name: Set default shell
       user: name={{ ansible_user_id }} shell={{ login_shell }}
       when: login_shell_installed.stat.exists
-      become: yes
+      become: true
