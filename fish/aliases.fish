@@ -24,7 +24,9 @@ end
 alias cdr "cd (git rev-parse --show-toplevel)"
 
 if type -q bat
-    abbr -g -a cat bat
+    function cat --wraps bat --description 'alias cat to bat'
+        bat $argv
+    end
 end
 if type -q exa
     function ls --wraps exa --description 'alias ls to exa'

@@ -6,7 +6,7 @@ if test -n "$LC_ALL"
     set -gx LC_ALL en_US.UTF-8
 end
 
-if test -n "$DISPLAY"
+if test -z "$SSH_CLIENT"
     set -gx EDITOR "subl -nw"
 end
 

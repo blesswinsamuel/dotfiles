@@ -67,10 +67,12 @@ brew "telnet"
 brew "iperf3"
 brew "nmap"
 brew "prettyping"
+brew "openconnect"
 
 ### Kubernetes
 brew "kubernetes-cli"
 brew "k9s"
+brew "direnv"
 
 ### Video/Image/PDF processing
 brew "ffmpeg"
@@ -99,6 +101,7 @@ cask "mouse-fix"
 cask "alfred"
 cask "raycast"
 cask "iterm2"
+cask "monitorcontrol"
 
 ## Media
 cask "iina"
