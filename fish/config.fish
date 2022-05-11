@@ -13,6 +13,11 @@ if type -q starship
     starship init fish | source
 end
 
+if type -q conda
+    eval conda "shell.fish" "hook" $argv | source
+end
+
+
 # My colors
 # set -g fish_color_autosuggestion 444444
 set -g fish_color_command green --bold

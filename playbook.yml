@@ -29,10 +29,6 @@
     sublime_files:
       - { src: sublime/Package Control.sublime-settings, dest: Packages/User/Package Control.sublime-settings }
       - { src: sublime/Preferences.sublime-settings, dest: Packages/User/Preferences.sublime-settings }
-      - { src: sublime/JavaScript (Babel).sublime-settings, dest: Packages/User/JavaScript (Babel).sublime-settings }
-      - { src: sublime/JavaScript.sublime-settings, dest: Packages/User/JavaScript.sublime-settings }
-      - { src: sublime/Default (Linux).sublime-keymap, dest: Packages/User/Default (Linux).sublime-keymap }
-      - { src: sublime/Default (Linux).sublime-mousemap, dest: Packages/User/Default (Linux).sublime-mousemap }
     sublime_mac_dir: ~/Library/Application Support/Sublime Text 3/
     sublime_linux_dir: ~/.config/sublime-text-3/
   tasks:

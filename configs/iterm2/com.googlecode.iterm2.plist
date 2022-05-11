@@ -10,6 +10,10 @@
 	<true/>
 	<key>ClosingTmuxTabKillsTmuxWindows_selection</key>
 	<integer>1</integer>
+	<key>Command</key>
+	<string></string>
+	<key>CopySelection</key>
+	<false/>
 	<key>Default Bookmark Guid</key>
 	<string>DC0E468E-EE1F-41EA-94C7-208F221B4838</string>
 	<key>HapticFeedbackForEsc</key>
@@ -31,6 +35,18 @@
 			<true/>
 			<key>ASCII Ligatures</key>
 			<false/>
+			<key>AWDS Pane Directory</key>
+			<string></string>
+			<key>AWDS Pane Option</key>
+			<string>No</string>
+			<key>AWDS Tab Directory</key>
+			<string></string>
+			<key>AWDS Tab Option</key>
+			<string>No</string>
+			<key>AWDS Window Directory</key>
+			<string></string>
+			<key>AWDS Window Option</key>
+			<string>No</string>
 			<key>Ambiguous Double Width</key>
 			<false/>
 			<key>Ansi 0 Color</key>

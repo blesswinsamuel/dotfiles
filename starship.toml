@@ -1,7 +1,7 @@
 # https://starship.rs/config/
 
 format = """
-$status$time$cmd_duration$jobs$docker_context$package$golang$helm$java$nodejs$python$rust$terraform$kubernetes$aws$gcloud\
+$status$time$cmd_duration$jobs$docker_context$package$golang$helm$java$nodejs$python$conda$rust$terraform$kubernetes$aws$gcloud\
 $line_break\
 $username$hostname$shlvl$directory$git_branch$git_commit$git_state$git_status$hg_branch\
 $line_break\
@@ -19,8 +19,13 @@ style = "bold cyan"
 
 [python]
 symbol = "🐍 "
-format = '[\[$symbol$version\]]($style) '
+format = '[\[${symbol}${pyenv_prefix}(${version})( \($virtualenv\))\]]($style) '
 # style = "bold yellow"
+
+[conda]
+symbol = "🅒 "
+format = '[\[$symbol$environment\]]($style) '
+style = "bold green"
 
 [docker_context]
 symbol = "🐳 "

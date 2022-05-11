@@ -107,20 +107,35 @@ function git-open
     open $giturl
 end
 
-function ssh-port-forward
-    # use mole instead
-    set -l name $argv[1]
-    set -l fwd_addr $argv[2]
-    set -l ssh_params $argv[3]
-    mkdir -p /tmp/portforwards
-    set -l sockfilename "/tmp/portforwards/$name.sock"
-    # ssh -N -L $fwd_addr $ssh_params
-    ssh -M -S $sockfilename -fNT -L $fwd_addr $ssh_params
+
+function sshrun --description 'run command over ssh'
+    if test -z "$SSH_CLIENT"
+        echo "Not an SSH session"
+        return
+    end
+    set -l command (string replace "." "$PWD" $argv)
+    set -l command (string replace "/mnt/bless-mac-mini-ssd-nfs" "/Volumes/BleSSD" $command)
+    set -l sshusername "blesswinsamuel"
+    set -l sshhost (string split -f1 ' ' "$SSH_CLIENT")
+    set -l sshport (string split -f3 ' ' "$SSH_CLIENT")
+    echo "Running command '$command' on host '$sshusername@$sshhost:$sshport'"
+    ssh -p $sshport "$sshusername@$sshhost" $command
 end
 
-function ssh-port-forward-stop
-    set -l name $argv[1]
-    mkdir -p /tmp/portforwards
-    set -l sockfilename "/tmp/portforwards/$name.sock"
-    ssh -S $sockfilename -O exit ''
-end
+# function ssh-port-forward
+#     # use mole instead
+#     set -l name $argv[1]
+#     set -l fwd_addr $argv[2]
+#     set -l ssh_params $argv[3]
+#     mkdir -p /tmp/portforwards
+#     set -l sockfilename "/tmp/portforwards/$name.sock"
+#     # ssh -N -L $fwd_addr $ssh_params
+#     ssh -M -S $sockfilename -fNT -L $fwd_addr $ssh_params
+# end
+
+# function ssh-port-forward-stop
+#     set -l name $argv[1]
+#     mkdir -p /tmp/portforwards
+#     set -l sockfilename "/tmp/portforwards/$name.sock"
+#     ssh -S $sockfilename -O exit ''
+# end
