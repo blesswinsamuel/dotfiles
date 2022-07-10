@@ -36,19 +36,19 @@ else
     ansible-playbook playbook.yml --ask-become-pass -v
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" =~ "^darwin.*" ]]; then
     brew bundle install
     brew bundle cleanup
     # brew bundle cleanup --zap --force
     brew bundle check --verbose
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" =~ "^darwin.*" ]]; then
     # mackup restore
     echo 'TODO'
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" =~ "^darwin.*" ]]; then
     # iTerm2
     ## Specify the preferences directory
     defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$DOTFILES_DIR/configs/iterm2"
