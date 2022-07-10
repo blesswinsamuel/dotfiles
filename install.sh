@@ -30,7 +30,11 @@ if ! command -v ansible &> /dev/null; then
 fi
 
 # ansible-playbook playbook.yml --extra-vars "ansible_sudo_pass=pass" -vC
-ansible-playbook playbook.yml --ask-become-pass -v
+if [[ "$ANSIBLE_SUDO_PASS" == "false" ]]; then
+    ansible-playbook playbook.yml -v -e "ansible_sudo_pass=$ANSIBLE_SUDO_PASS"
+else
+    ansible-playbook playbook.yml --ask-become-pass -v
+fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     brew bundle install
@@ -39,7 +43,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     brew bundle check --verbose
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then;
     # mackup restore
 fi
 
