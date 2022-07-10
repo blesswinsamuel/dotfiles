@@ -3,7 +3,7 @@
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:/opt/homebrew/bin"
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" =~ "^darwin.*" ]]; then
     if ! command -v brew &> /dev/null; then
         # Install Homebrew - https://brew.sh
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -19,7 +19,7 @@ fi
 
 cd "$DOTFILES_DIR"
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" =~ "^darwin.*" ]]; then
     export HOMEBREW_NO_AUTO_UPDATE=1
     brew update
     brew install pipx bash zsh fish starship  # direnv
