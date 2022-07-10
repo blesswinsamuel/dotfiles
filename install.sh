@@ -43,8 +43,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     brew bundle check --verbose
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then;
+if [[ "$OSTYPE" == "darwin"* ]]; then
     # mackup restore
+    echo 'TODO'
 fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
