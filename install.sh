@@ -30,7 +30,7 @@ if ! command -v ansible &> /dev/null; then
 fi
 
 # ansible-playbook playbook.yml --extra-vars "ansible_sudo_pass=pass" -vC
-if [[ "$ANSIBLE_SUDO_PASS" == "false" ]]; then
+if [[ "$ASK_BECOME_PASS" == "false" ]]; then
     ansible-playbook playbook.yml -v -e "ansible_sudo_pass=$ANSIBLE_SUDO_PASS"
 else
     ansible-playbook playbook.yml --ask-become-pass -v
