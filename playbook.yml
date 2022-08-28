@@ -22,7 +22,7 @@
       - { src: .bashrc, dest: ~/.bashrc }
     mac_files:
       - { src: .hushlogin, dest: ~/.hushlogin }
-      - { src: Brewfile, dest: ~/.Brewfile }
+      # - { src: Brewfile, dest: ~/.Brewfile }
       - { src: .gnupg/pinentry-wrapper, dest: /usr/local/bin/pinentry-wrapper, become: true }
       - { src: .gnupg/gpg-agent.conf, dest: ~/.gnupg/gpg-agent.conf }
       - { src: .gnupg/gpg.conf, dest: ~/.gnupg/gpg.conf }

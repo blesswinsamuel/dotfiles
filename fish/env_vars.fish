@@ -17,6 +17,7 @@ set -gx HOMEBREW_NO_AUTO_UPDATE 1
 # pipx - ~/.local/bin
 # go   - ~/go/bin
 set -gx PATH /opt/homebrew/bin $PATH /usr/local/sbin /usr/local/bin ~/.local/bin ~/go/bin ~/bin
+# set -gx PATH $PATH "$(brew --prefix)/opt/python/libexec/bin"  # unversioned python binaries
 
 set -gx PATH $PATH ~/.cargo/bin ~/.config/yarn/global/node_modules/.bin/
 
