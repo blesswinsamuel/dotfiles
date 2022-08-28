@@ -60,7 +60,7 @@ style = "green"
 
 [git_branch]
 symbol = "⎇ "
-format = '[\($symbol$branch\)]($style) '
+format = '([\($symbol$branch(:$remote_branch)\)]($style) )'
 style = "bold green"
 
 [git_status]
@@ -89,7 +89,7 @@ map_symbol = true
 disabled = false
 
 [cmd_duration]
-min_time = 1_000
+min_time = 1
 show_milliseconds = true
 style = "bold dimmed white"
 format = '[\[$duration\]]($style) '
