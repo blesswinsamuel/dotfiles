@@ -47,10 +47,14 @@ dockutil --add '/System/Applications/Utilities/Activity Monitor.app' --label 'Ac
 dockutil --add '/System/Applications/Utilities/Console.app' --label 'Console' --no-restart
 dockutil --add '/System/Applications/App Store.app' --label 'App Store' --no-restart
 dockutil --add '/System/Applications/System Preferences.app' --label 'System Preferences' --no-restart
+dockutil --add '/System/Applications/Shortcuts.app' --label 'Shortcuts' --no-restart
+dockutil --add '/System/Applications/Utilities/Audio MIDI Setup.app' --label 'Audio MIDI Setup' --no-restart
+dockutil --add '/Applications/Mac Mouse Fix.app' --label 'Mac Mouse Fix' --no-restart
 
 dockutil --add '' --type spacer --section apps --no-restart
 dockutil --add '/Applications/MainStage 3.app' --label 'MainStage' --no-restart
 dockutil --add '/Applications/Logic Pro X.app' --label 'Logic Pro' --no-restart
+dockutil --add '/Applications/EVO.app' --label 'EVO' --no-restart
 dockutil --add '/Applications/Final Cut Pro.app' --label 'Final Cut Pro' --no-restart
 
 
