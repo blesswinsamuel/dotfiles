@@ -43,6 +43,7 @@ if [[ "$OSTYPE" =~ ^darwin.* ]]; then
     brew bundle install --file brewfiles/core-addons.Brewfile.rb
     brew bundle install --file brewfiles/casks.Brewfile.rb
     brew bundle install --file brewfiles/mas.Brewfile.rb
+    brew bundle install --file brewfiles/services.Brewfile.rb
     # brew bundle cleanup
     # brew bundle cleanup --zap --force
     cat brewfiles/*.Brewfile.rb | brew bundle check --verbose --file=-
