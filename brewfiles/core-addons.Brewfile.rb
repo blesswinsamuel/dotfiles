@@ -37,6 +37,7 @@ brew "pipx"
 brew "awscli"
 
 brew "tmux"
+brew "just"
 brew "fzf"        # General-purpose command-line fuzzy finder
 brew "youtube-dl"
 brew "jq"

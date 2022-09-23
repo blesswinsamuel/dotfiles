@@ -5,6 +5,7 @@ tap "homebrew/cask"
 # tap "homebrew/cask-versions"
 
 ## Browsers
+cask "orion"
 cask "google-chrome"
 cask "firefox"
 
@@ -21,6 +22,7 @@ cask "iterm2"
 cask "monitorcontrol"
 cask "forklift"
 cask "trex"
+cask "shottr"
 
 ## Media
 cask "iina"
