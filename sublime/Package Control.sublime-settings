@@ -13,7 +13,6 @@
 		"Pretty JSON",
 		"SideBarEnhancements",
 		"SublimeLinter",
-		"TOML",
-		"TypeScript",
+		"TOML"
 	],
 }
