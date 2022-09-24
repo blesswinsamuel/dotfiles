@@ -56,3 +56,13 @@ killall Finder
 killall Dock
 killall SystemUIServer
 
+# Itsycal
+defaults write com.mowglii.ItsycalApp ClockFormat -string "h:mm:ss a"
+defaults write com.mowglii.ItsycalApp HighlightedDOWs -int 65  # Sunday and Saturday
+defaults write com.mowglii.ItsycalApp MoCalendarNumRows -int 6
+defaults write com.mowglii.ItsycalApp ShowEventDays -int 7  # Event list shows: 7 days
+defaults write com.mowglii.ItsycalApp ShowMonthInIcon -int 1  # Show month in icon
+defaults write com.mowglii.ItsycalApp ShowWeeks -int 1  # Show calendar weeks
+defaults write com.mowglii.ItsycalApp SizePreference -int 1  # Font size
+defaults write com.mowglii.ItsycalApp UseOutlineIcon -int 1  # Show outline icon
+defaults write com.mowglii.ItsycalApp ShowDayOfWeekInIcon -int 1  # Show day of week in icon
