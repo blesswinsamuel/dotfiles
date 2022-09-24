@@ -41,6 +41,8 @@ brew "just"
 brew "fzf"        # General-purpose command-line fuzzy finder
 brew "youtube-dl"
 brew "jq"
+brew "yq"
+brew "gh"
 brew "mas"
 brew "tree"
 brew "mkcert"
@@ -63,8 +65,10 @@ brew "openconnect"
 
 ### Kubernetes
 brew "kubernetes-cli"
+brew "helm"
 brew "k9s"
 brew "direnv"
+brew "terraform"
 
 ### Video/Image/PDF processing
 # brew "ffmpeg"
