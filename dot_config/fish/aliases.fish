@@ -15,6 +15,12 @@ abbr -g -a k kubectl
 abbr -g -a o open
 abbr -g -a cdssd "cd /Volumes/BleSSD/"
 
+if type -q kubecolor
+    function kubectl --wraps kubecolor --description 'alias kubectl to kubecolor'
+        kubecolor $argv
+    end
+end
+
 # alias dlrshell "env PS1='\$ ' bash"
 
 function mkcd
@@ -120,6 +126,18 @@ function sshrun --description 'run command over ssh'
     set -l sshport (string split -f3 ' ' "$SSH_CLIENT")
     echo "Running command '$command' on host '$sshusername@$sshhost:$sshport'"
     ssh -p $sshport "$sshusername@$sshhost" $command
+end
+
+function clipboard-server
+    echo 'Starting server on port 9630'
+    while true
+        nc -l localhost 9630 | pbcopy
+        echo 'Received data'
+    end
+end
+
+function remote-pbcopy
+    nc -C localhost 9630
 end
 
 # function ssh-port-forward

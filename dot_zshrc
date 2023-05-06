@@ -4,3 +4,7 @@ export PATH="$PATH:/opt/homebrew/bin"
 if type "starship" > /dev/null; then
 	eval "$(starship init zsh)"
 fi
+
+if type "atuin" > /dev/null; then
+	eval "$(atuin init zsh --disable-up-arrow)"
+fi

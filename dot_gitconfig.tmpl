@@ -1,13 +1,16 @@
 [user]
 	name = Blesswin Samuel
-	email = blesswinsamuel@gmail.com
+	email = {{ .email | quote }}
 [alias]
 	ch = checkout
 	b = branch
 	c = commit
 	s = status
 	st = stash
+	o = open
 	open = !fish -c git-open
+	t = tree
+	tree = log --graph --decorate --pretty=oneline --abbrev-commit
 [commit]
 	gpgsign = true
 [include]

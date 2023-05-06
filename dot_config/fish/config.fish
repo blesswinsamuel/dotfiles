@@ -5,16 +5,22 @@ if test -e ~/.config/fish/config.local.fish
     source ~/.config/fish/config.local.fish
 end
 
-if type -q direnv
-    direnv hook fish | source
-end
+if status is-interactive
+    if type -q direnv
+        direnv hook fish | source
+    end
 
-if type -q starship
-    starship init fish | source
-end
+    if type -q starship
+        starship init fish | source
+    end
 
-if type -q conda
-    eval conda "shell.fish" "hook" $argv | source
+    if type -q atuin
+        atuin init fish --disable-up-arrow | source
+    end
+
+    if type -q conda
+        eval conda "shell.fish" "hook" $argv | source
+    end
 end
 
 

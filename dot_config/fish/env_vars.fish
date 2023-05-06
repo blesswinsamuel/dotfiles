@@ -9,6 +9,10 @@ end
 if test -z "$SSH_CLIENT"
     set -gx EDITOR "subl -nw"
 end
+switch (uname)
+    case Darwin
+        set -gx EDITOR "subl -nw"
+end
 
 set -gx HOMEBREW_NO_INSTALL_UPGRADE 1
 set -gx HOMEBREW_NO_AUTO_UPDATE 1
