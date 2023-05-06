@@ -15,3 +15,6 @@ brew "pipx"
 
 ## Direnv
 brew "direnv"
+
+## Dotfiles management
+brew "chezmoi"

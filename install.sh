@@ -28,16 +28,28 @@ if [[ "$OSTYPE" =~ ^darwin.* ]]; then
     brew bundle install --file brewfiles/core.Brewfile.rb
 fi
 
-if ! command -v ansible &> /dev/null; then
-    pipx install ansible --include-deps
+chezmoi init --ssh https://github.com/blesswinsamuel/dotfiles.git
+chezmoi diff
+chezmoi apply
+
+BIN_DIR="/usr/local/bin"
+if [[ "$OSTYPE" =~ ^darwin.* ]]; then
+    BIN_DIR="/opt/homebrew/bin"
 fi
 
-# ansible-playbook playbook.yml --extra-vars "ansible_sudo_pass=pass" -vC
-if [[ "$ASK_BECOME_PASS" == "false" ]]; then
-    ansible-playbook playbook.yml -v -e "ansible_sudo_pass=$ANSIBLE_SUDO_PASS"
-else
-    ansible-playbook playbook.yml --ask-become-pass -v
+# Add to /etc/shells
+if [ -f "$BIN_DIR/fish" ]; then
+    grep -qxF 'include "'$BIN_DIR'/fish"' /etc/shells || echo 'include "'$BIN_DIR'/fish"' >> /etc/shells
 fi
+if [ -f "$BIN_DIR/bash" ]; then
+    grep -qxF 'include "'$BIN_DIR'/bash"' /etc/shells || echo 'include "'$BIN_DIR'/bash"' >> /etc/shells
+fi
+if [ -f "$BIN_DIR/zsh" ]; then
+    grep -qxF 'include "'$BIN_DIR'/zsh"' /etc/shells || echo 'include "'$BIN_DIR'/zsh"' >> /etc/shells
+fi
+
+# Change default shell
+chsh -s "$BIN_DIR/fish"
 
 if [[ "$OSTYPE" =~ ^darwin.* ]]; then
     brew bundle install --file brewfiles/core-addons.Brewfile.rb
