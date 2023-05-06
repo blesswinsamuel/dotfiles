@@ -78,3 +78,7 @@ brew "terraform"
 ### Completions
 # brew "docker-completion"
 # brew "docker-compose-completion"
+
+### Tools
+
+brew "switchaudio-osx"

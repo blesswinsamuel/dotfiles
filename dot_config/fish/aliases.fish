@@ -1,3 +1,6 @@
+#alias python "/usr/bin/env python3"
+#alias pip "/usr/bin/env pip3"
+
 alias show_git_prompt "set -g fish_prompt_show_git_prompt 1"
 alias hide_git_prompt "set -e fish_prompt_show_git_prompt"
 
@@ -10,10 +13,18 @@ alias ix "curl -F 'f:1=<-' ix.io"
 alias flushdns "sudo killall -HUP mDNSResponder"
 abbr -g -a dc "docker compose"
 abbr -g -a d docker
+abbr -g -a p podman
 abbr -g -a g git
 abbr -g -a k kubectl
 abbr -g -a o open
 abbr -g -a cdssd "cd /Volumes/BleSSD/"
+alias yqsd "yq e '.data | map_values(@base64d)'"
+alias jqsd "jq '.data | map_values(@base64d)'"
+
+function dockersize
+    set -l image $argv
+    podman manifest inspect -v "$name" | jq -c 'if type == "array" then .[] else . end' |  jq -r '[ ( .Descriptor.platform | [ .os, .architecture, .variant, ."os.version" ] | del(..|nulls) | join("/") ), ( [ .SchemaV2Manifest.layers[].size ] | add ) ] | join(" ")' | numfmt --to iec --format '%.2f' --field 2 | sort | column -t
+end
 
 if type -q kubecolor
     function kubectl --wraps kubecolor --description 'alias kubectl to kubecolor'

@@ -23,6 +23,7 @@ cask "monitorcontrol"
 cask "forklift"
 cask "trex"
 cask "shottr"
+cask "rectangle"
 
 ## Media
 cask "iina"
@@ -34,6 +35,7 @@ cask "handbrake"
 cask "intellij-idea"
 cask "sublime-text"
 cask "visual-studio-code"
+cask "github"
 
 cask "sublime-merge"
 
@@ -44,6 +46,9 @@ cask "tableplus"
 tap "homebrew/cask-drivers"
 cask "audient-evo"
 cask "yamaha-usb-midi-driver"
+
+# MS
+
 
 # Fonts
 tap "homebrew/cask-fonts"

@@ -1,11 +1,13 @@
 # Mac App Store
 # #mas "Apple Configurator 2", id: 1037126344
-# mas "Pages", id: 409201541
-# mas "Keynote", id: 409183694
-# mas "Numbers", id: 409203825
-# mas "GarageBand", id: 682658836
-# mas "MainStage 3", id: 634159523
-# mas "Xcode", id: 497799835
+mas "Pages", id: 409201541
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "GarageBand", id: 682658836
+mas "MainStage", id: 634159523
+mas "Logic Pro", id: 634148309
+mas "Final Cut Pro", id: 424389933
+mas "Xcode", id: 497799835
 mas "TestFlight", id: 899247664
 
 # mas "ColorSlurp", id: 1287239339

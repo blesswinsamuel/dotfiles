@@ -21,8 +21,8 @@ dockutil --add '/Applications/Home Assistant.app' --label 'Home Assistant' --no-
 dockutil --add '/System/Applications/Home.app' --label 'Home' --no-restart
 
 dockutil --add '' --type spacer --section apps --no-restart
-dockutil --add '/Applications/Microsoft Teams.app' --label 'Microsoft Teams' --no-restart
-dockutil --add '/Applications/Microsoft Outlook.app' --label 'Microsoft Outlook' --no-restart
+# dockutil --add '/Applications/Microsoft Teams.app' --label 'Microsoft Teams' --no-restart
+# dockutil --add '/Applications/Microsoft Outlook.app' --label 'Microsoft Outlook' --no-restart
 dockutil --add '/Applications/Numbers.app' --label 'Numbers' --no-restart
 
 dockutil --add '' --type spacer --section apps --no-restart
@@ -40,7 +40,7 @@ dockutil --add '/Applications/Postico.app' --label 'Postico' --no-restart
 dockutil --add '/Applications/TablePlus.app' --label 'TablePlus' --no-restart
 dockutil --add '/Applications/iTerm.app' --label 'iTerm' --no-restart
 dockutil --add '/Applications/IntelliJ IDEA.app' --label 'IntelliJ IDEA' --no-restart
-dockutil --add '/Applications/Podman Desktop.app' --label 'Podman Desktop' --no-restart
+# dockutil --add '/Applications/Podman Desktop.app' --label 'Podman Desktop' --no-restart
 
 dockutil --add '' --type spacer --section apps --no-restart
 dockutil --add '/System/Applications/Utilities/Activity Monitor.app' --label 'Activity Monitor' --no-restart
