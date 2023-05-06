@@ -32,6 +32,12 @@ if type -q kubecolor
     end
 end
 
+if type -q kubecolor
+    function kubectl --wraps kubecolor --description 'alias kubectl to kubecolor'
+        kubecolor $argv
+    end
+end
+
 # alias dlrshell "env PS1='\$ ' bash"
 
 function mkcd
