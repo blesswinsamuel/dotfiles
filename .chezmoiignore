@@ -6,6 +6,7 @@ README.md
 /backup.sh
 /setup.sh
 /install.sh
+/macos-defaults.sh
 
 {{ if ne .chezmoi.os "darwin" }}
 Library/Application Support/Sublime Text 3

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -e
+
+CONTEXT_PATH="$HOME/.config/bw-cli"
+
+if [[ -z "$BW_CONTEXT" ]]; then
+    CONTEXT_FILE="$CONTEXT_PATH/context.txt"
+
+    if [ ! -f "$CONTEXT_FILE" ]; then
+        echo "context file does not exist. creating one."
+        mkdir -p "$CONTEXT_PATH"
+        touch "$CONTEXT_FILE"
+    fi
+
+    BW_CONTEXT=$(cat "$CONTEXT_FILE")
+fi
+
+case "$1" in
+    set-context)
+        echo "setting context to: $2"
+        echo "$2" > "$CONTEXT_FILE"
+        exit 0
+        ;;
+    *)
+        ;;
+esac
+
+if [[ -z "$BW_CONTEXT" ]]; then
+    echo "context is empty"
+    exit 1
+fi
+
+>&2 echo "current context: $BW_CONTEXT"
+
+SESSION_ENV_VAR_NAME="BW_SESSION_$(echo $BW_CONTEXT | tr 'a-z' 'A-Z')"
+if [[ ! -z "${!SESSION_ENV_VAR_NAME}" ]]; then
+    export BW_SESSION="${!SESSION_ENV_VAR_NAME}"
+    # >&2 echo "$SESSION_ENV_VAR_NAME env var is set: ${!SESSION_ENV_VAR_NAME}. Updating BW_SESSION."
+fi
+
+
+export BITWARDENCLI_APPDATA_DIR="$HOME/.config/bw-cli/$BW_CONTEXT"
+
+directory_to_remove="$HOME/bin"
+PATH=:$PATH:
+PATH=${PATH//:$directory_to_remove:/:}
+PATH=${PATH#:}
+export PATH=${PATH%:}
+
+exec bw $@

@@ -17,6 +17,10 @@ abbr -g -a p podman
 abbr -g -a g git
 abbr -g -a k kubectl
 abbr -g -a o open
+if type -q nvim
+    abbr -g -a vim nvim
+    abbr -g -a vi nvim
+end
 abbr -g -a cdssd "cd /Volumes/BleSSD/"
 alias yqsd "yq e '.data | map_values(@base64d)'"
 alias jqsd "jq '.data | map_values(@base64d)'"
