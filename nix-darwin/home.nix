@@ -60,5 +60,13 @@
     # ]
   };
 
-  # home.packages = [ pkgs.delta ];
+  programs.fish = {
+    enable = true;
+    functions = {
+      fish_greeting = builtins.readFile ./fish/functions/greeting.fish;
+    };
+    # interactiveShellInit = (builtins.readFile ./fish/env_vars.fish) + "\n" + (builtins.readFile ./fish/aliases.fish) + "\n" + (builtins.readFile ./fish/config.fish);
+  };
+
+  home.packages = with pkgs; [ jq ];
 }

@@ -16,13 +16,28 @@
       configuration = { pkgs, ... }: {
         # List packages installed in system profile. To search by name, run:
         # $ nix-env -qaP | grep wget
-        environment.systemPackages = [
-          pkgs.vim
-          pkgs.jq
-          pkgs.nixpkgs-fmt
+        environment.systemPackages = with pkgs; [
+          vim
+          nixpkgs-fmt
+          home-manager
         ];
 
         environment.shells = [ pkgs.fish pkgs.zsh ];
+
+        environment.systemPath = [
+          # "$HOME/bin"
+          # "/usr/local/sbin"
+          # "/usr/local/bin"
+          # "~/.local/bin"
+          # "~/go/bin"
+          # "/opt/homebrew/bin"
+          # "~/.cargo/bin"
+          # "~/.config/yarn/global/node_modules/.bin/"
+          # "~/.gem/ruby/2.7.0/bin"
+          # "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/"
+          # "~/.krew/bin"
+          # "/Applications/IntelliJ\\ IDEA.app/Contents/MacOS"
+        ];
 
         # Auto upgrade nix package and the daemon service.
         services.nix-daemon.enable = true;

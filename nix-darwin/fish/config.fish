@@ -1,10 +1,3 @@
-source ~/.config/fish/env_vars.fish
-source ~/.config/fish/aliases.fish
-
-if test -e ~/.config/fish/config.local.fish
-    source ~/.config/fish/config.local.fish
-end
-
 if status is-interactive
     if type -q direnv
         direnv hook fish | source
@@ -19,7 +12,7 @@ if status is-interactive
     end
 
     if type -q conda
-        eval conda "shell.fish" "hook" $argv | source
+        eval conda "shell.fish" hook $argv | source
     end
 end
 
