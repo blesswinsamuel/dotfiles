@@ -3,7 +3,19 @@
 ## Install
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/blesswinsamuel/dotfiles/master/install.sh)"
+# https://github.com/DeterminateSystems/nix-installer
+# https://zero-to-nix.com/start/install
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+
+# nix flake init -t nix-darwin
+# mv /etc/zshenv /etc/zshenv.before-nix-darwin
+# mv /etc/shells /etc/shells.before-nix-darwin
+nix run nix-darwin -- switch --flake ~/dotfiles/nix-darwin
+chsh -s /run/current-system/sw/bin/fish
+
+darwin-rebuild switch --flake ~/dotfiles/nix-darwin
+
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/blesswinsamuel/dotfiles/master/install.sh)"
 ```
 
 ## Brew commands
