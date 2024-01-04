@@ -63,10 +63,26 @@
   programs.fish = {
     enable = true;
     functions = {
-      fish_greeting = builtins.readFile ./fish/functions/greeting.fish;
+      fish_greeting = "";
     };
-    # interactiveShellInit = (builtins.readFile ./fish/env_vars.fish) + "\n" + (builtins.readFile ./fish/aliases.fish) + "\n" + (builtins.readFile ./fish/config.fish);
+    interactiveShellInit = (builtins.readFile ./fish/env_vars.fish) + "\n" + (builtins.readFile ./fish/aliases.fish) + "\n" + (builtins.readFile ./fish/config.fish);
   };
 
-  home.packages = with pkgs; [ jq ];
+  programs.starship = {
+    enable = true;
+    settings = builtins.fromTOML (builtins.readFile ./starship/starship.toml);
+  };
+
+  # home.file = {
+  #   starship = {
+  #     enable = true;
+  #     source = ./starship/starship.toml;
+  #     target = "~/.config/starship.toml";
+  #   };
+  # };
+
+  home.packages = with pkgs; [
+    jq
+    # starship
+  ];
 }
