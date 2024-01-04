@@ -60,9 +60,18 @@
           configuration
           home-manager.darwinModules.home-manager
           {
+            # https://nix-community.github.io/home-manager/
+            # https://nix-community.github.io/home-manager/options.xhtml
+            # https://nix-community.github.io/home-manager/nixos-options.xhtml
+            # https://nix-community.github.io/home-manager/nix-darwin-options.xhtml
+            # https://nix-community.github.io/home-manager/release-notes.xhtml
+            # https://nixos.wiki/wiki/Home_Manager
+            # https://mipmip.github.io/home-manager-option-search/?query=
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            # home-manager.users.jdoe = import ./home.nix;
+            users.users.blesswinsamuel.home = "/Users/blesswinsamuel";
+            users.users.blesswinsamuel.shell = "/run/current-system/sw/bin/fish";
+            home-manager.users.blesswinsamuel = import ./home.nix;
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix

@@ -19,5 +19,46 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # home.packages = [ pkgs.atool pkgs.httpie ];
+  programs.git = {
+    enable = true;
+    userName = "Blesswin Samuel";
+    userEmail = "blesswinsamuel@gmail.com"; # TODO: template this - different for work
+
+    aliases = {
+      ch = "checkout";
+      b = "branch";
+      c = "commit";
+      s = "status";
+      st = "stash";
+      o = "open";
+      open = "!fish -c git-open";
+      t = "tree";
+      tree = "log --graph --decorate --pretty=oneline --abbrev-commit";
+    };
+
+    lfs = {
+      enable = true;
+    };
+
+    # https://github.com/dandavison/delta
+    delta = {
+      enable = true;
+      options = {
+        navigate = true; # use n and N to move between diff sections
+      };
+    };
+
+    extraConfig = {
+      merge.conflictstyle = "diff3";
+      diff.colorMoved = "default";
+      commit = {
+        gpgSign = true;
+      };
+    };
+    # includes = [
+    #   { path = "~/.gitconfig.local"; }
+    # ]
+  };
+
+  # home.packages = [ pkgs.delta ];
 }
