@@ -88,6 +88,27 @@
     settings = builtins.fromTOML (builtins.readFile ./starship/starship.toml);
   };
 
+  programs.vim = {
+    enable = true;
+    extraConfig = builtins.readFile ./vim/vimrc;
+  };
+
+  programs.zsh = {
+    enable = true;
+    initExtra = builtins.readFile ./zsh/zshrc;
+    envExtra = builtins.readFile ./zsh/zshenv;
+  };
+
+  programs.bash = {
+    enable = true;
+    bashrcExtra = builtins.readFile ./bash/bashrc;
+  };
+
+  programs.tmux = {
+    enable = true;
+    extraConfig = builtins.readFile ./tmux/tmux.conf;
+  };
+
   # git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
   # home.file = {
   #   ".config/nvim".source = pkgs.fetchFromGitHub {
@@ -155,6 +176,7 @@
     ripgrep
     htop
     direnv
+    atuin
 
     neovim
     nmap
