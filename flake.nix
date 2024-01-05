@@ -46,7 +46,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ] ++ extraHmImports;
+                imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHmImports;
               };
             }
             ./commons/commons.nix
@@ -69,7 +69,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ] ++ extraHmImports;
+                imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHmImports;
               };
             }
             ./commons/commons.nix

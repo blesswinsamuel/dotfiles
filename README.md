@@ -38,6 +38,12 @@ gpg --full-generate-key # Use key size 4096
 gpg --armor --export <email> | pbcopy
 ```
 
+### SSH key first time setup
+
+```bash
+ssh-keygen -t ed25519
+```
+
 ## Mackup
 
 ```bash
