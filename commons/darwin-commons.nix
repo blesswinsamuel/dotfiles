@@ -1,4 +1,4 @@
-{ self, pkgs, lib, config, ... }: {
+{ self, pkgs, lib, config, systemConfig, ... }: {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
@@ -13,6 +13,8 @@
   environment.shells = [ pkgs.fish pkgs.zsh ];
 
   environment.systemPath = [
+    "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
+    "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"
     # "$HOME/bin"
     # "/usr/local/sbin"
     # "/usr/local/bin"
@@ -24,7 +26,6 @@
     # "~/.gem/ruby/2.7.0/bin"
     # "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/"
     # "~/.krew/bin"
-    # "/Applications/IntelliJ\\ IDEA.app/Contents/MacOS"
   ];
 
   # Auto upgrade nix package and the daemon service.
@@ -45,6 +46,11 @@
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
+
+  users.users.${systemConfig.username} = {
+    home = "/Users/${systemConfig.username}";
+    shell = "/run/current-system/sw/bin/fish";
+  };
 
   # # The platform the configuration will be used on.
   # nixpkgs.hostPlatform = "aarch64-darwin";

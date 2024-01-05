@@ -1,4 +1,9 @@
-{ self, pkgs, lib, config, ... }: {
+{ self, pkgs, lib, config, secrets, systemConfig, ... }: {
+  # age.secrets.personalEmail = {
+  #   file = ../../secrets/personalEmail.age;
+  #   # path = "../../secrets-decrypted/personalEmail";
+  # };
+
   # programs.git = {
   #   enable = true;
   #   userName  = "my_git_username";
@@ -6,10 +11,6 @@
   # };
 
 
-  users.users.blesswinsamuel = {
-    home = "/Users/blesswinsamuel";
-    shell = "/run/current-system/sw/bin/fish";
-  };
 
   # Optionally, use home-manager.extraSpecialArgs to pass
   # arguments to home.nix

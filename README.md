@@ -13,12 +13,9 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 # nix flake init -t nix-darwin
 # mv /etc/zshenv /etc/zshenv.before-nix-darwin
 # mv /etc/shells /etc/shells.before-nix-darwin
-nix run nix-darwin -- switch --flake ~/dotfiles/nix-darwin
-chsh -s /run/current-system/sw/bin/fish
 
-darwin-rebuild switch --flake ~/dotfiles/nix-darwin
-
-# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/blesswinsamuel/dotfiles/master/install.sh)"
+nix run nixpkgs#go-task -- init # first run
+nix run nixpkgs#go-task -- switch
 ```
 
 ## Brew commands

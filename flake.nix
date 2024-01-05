@@ -4,6 +4,8 @@
   description = "Blesswin's system flake";
 
   inputs = {
+    agenix.url = "github:ryantm/agenix";
+
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
@@ -13,8 +15,10 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs-darwin, home-manager, nixpkgs }:
+  outputs = inputs@{ self, agenix, nix-darwin, nixpkgs-darwin, home-manager, nixpkgs }:
     let
+      systemConfig = builtins.fromJSON (builtins.readFile "${self}/config.json");
+
       genPkgs = system: import nixpkgs {
         inherit system;
         # https://nixos.wiki/wiki/Unfree_Software
@@ -54,20 +58,21 @@
       #         ./nixos-common.nix
       #       ] ++ (lib.my.mapModulesRec' (toString ./nixos-modules) import) ++ extraModules;
       #     };
-      darwinSystem = system: extraModules: hostName:
+      darwinSystem = { system, extraModules, systemConfig }: hostName:
         let
           pkgs = genPkgs system;
         in
         nix-darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit pkgs inputs self; };
+          specialArgs = { inherit pkgs inputs self systemConfig; };
           modules = [
             home-manager.darwinModules.home-manager
+            agenix.nixosModules.default
             {
               # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              # home-manager.extraSpecialArgs = { inherit inputs pkgs; };
+              home-manager.extraSpecialArgs = { inherit systemConfig; };
               home-manager.users.blesswinsamuel = hmConfig;
             }
             ./commons/darwin-commons.nix
@@ -79,7 +84,16 @@
     in
     {
       darwinConfigurations = processConfigurations {
-        Blesswins-Mac-Studio = darwinSystem "aarch64-darwin" [ ./hosts/mac-studio/mac-studio.nix ];
+        Blesswins-Mac-Studio = darwinSystem {
+          system = "aarch64-darwin";
+          extraModules = [ ./hosts/mac-studio/mac-studio.nix ];
+          systemConfig = systemConfig.personal;
+        };
+        ABLSAMUE-M-28DY = darwinSystem {
+          system = "x86_64-darwin";
+          extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
+          systemConfig = systemConfig.work;
+        };
       };
 
       # # Expose the package set, including overlays, for convenience.

@@ -1,0 +1,28 @@
+version: 3
+
+tasks:
+  _decrypt-config:
+    cmds:
+      - bash -c '(cd secrets && nix run github:ryantm/agenix -- -d config.json.age) > config.json' && git add config.json
+    internal: true
+
+  print-config:
+    cmds:
+      - cd secrets && nix run github:ryantm/agenix -- -d config.json.age
+
+  edit-config:
+    cmds:
+      - cd secrets && nix run github:ryantm/agenix -- -e config.json.age
+
+  init:
+    cmds:
+      - task: _decrypt-config
+      - defer: git rm -f config.json
+      - nix run nix-darwin -- switch --flake ~/dotfiles
+      - chsh -s /run/current-system/sw/bin/fish
+
+  switch:
+    cmds:
+      - task: _decrypt-config
+      - defer: git rm -f config.json
+      - darwin-rebuild switch --flake ~/dotfiles

@@ -1,8 +1,8 @@
-{ config, pkgs, lib, osConfig, ... }: {
+{ config, pkgs, lib, osConfig, systemConfig, ... }: {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
-  home.username = "blesswinsamuel";
-  home.homeDirectory = "/Users/blesswinsamuel";
+  home.username = systemConfig.username;
+  home.homeDirectory = "/Users/${systemConfig.username}";
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -20,7 +20,7 @@
   programs.git = {
     enable = true;
     userName = "Blesswin Samuel";
-    userEmail = "blesswinsamuel@gmail.com"; # TODO: template this - different for work
+    userEmail = systemConfig.git.email; # TODO: template this - different for work
 
     aliases = {
       ch = "checkout";
