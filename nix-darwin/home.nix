@@ -54,6 +54,8 @@
       commit = {
         gpgSign = true;
       };
+      # [credential]
+      # 	helper = osxkeychain
     };
     # includes = [
     #   { path = "~/.gitconfig.local"; }
@@ -83,6 +85,57 @@
 
   home.packages = with pkgs; [
     jq
+    nixpkgs-fmt
+    home-manager
     # starship
+
+    rustup
+    go
+    nodejs
+    python3
+
+    poetry
+    virtualenv
+    pipx
+    yarn
+
+    # mongodb
+    # mongosh
+    # mongodb-tools
+    redis
+    postgresql_14
+
+    kapp
+    kubectl
+    kubernetes-helm
+    kopia
+    krew
+    k9s
+    podman
+    podman-compose
+    podman-tui
+
+    awscli2
+    terraform
+    # nodePackages.cdk8s-cli
+    nodePackages.cdktf-cli
+
+    just
+    go-task
+    mprocs
+    yt-dlp
+    bitwarden-cli
+    mailhog
+
+    bat
+    ripgrep
+    htop
+    direnv
+
+    neovim
+    nmap
+    ncdu
+
+    vips
   ];
 }

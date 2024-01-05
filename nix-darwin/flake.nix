@@ -18,8 +18,9 @@
         # $ nix-env -qaP | grep wget
         environment.systemPackages = with pkgs; [
           vim
-          nixpkgs-fmt
-          home-manager
+          tmux
+          wget
+          git
         ];
 
         environment.shells = [ pkgs.fish pkgs.zsh ];
@@ -74,7 +75,15 @@
         modules = [
           configuration
           home-manager.darwinModules.home-manager
-          {
+          # https://nixos.wiki/wiki/Unfree_Software
+          ({ lib, ... }: {
+            nixpkgs.config.allowUnfreePredicate = pkg:
+              builtins.elem (lib.getName pkg) [
+                # Add additional package names here
+                "terraform"
+              ];
+          })
+          ({ pkgs, ... }: {
             # https://nix-community.github.io/home-manager/
             # https://nix-community.github.io/home-manager/options.xhtml
             # https://nix-community.github.io/home-manager/nixos-options.xhtml
@@ -82,6 +91,7 @@
             # https://nix-community.github.io/home-manager/release-notes.xhtml
             # https://nixos.wiki/wiki/Home_Manager
             # https://mipmip.github.io/home-manager-option-search/?query=
+
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             users.users.blesswinsamuel.home = "/Users/blesswinsamuel";
@@ -90,7 +100,7 @@
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
-          }
+          })
         ];
       };
 
@@ -98,3 +108,7 @@
       darwinPackages = self.darwinConfigurations."Blesswins-Mac-Studio".pkgs;
     };
 }
+
+# /Users/blesswinsamuel/.nix-profile/bin - via home-manager.home.packages option (home-manager)
+# /etc/profiles/per-user/blesswinsamuel/bin - via users.users.<name>.packages option (nix-darwin)
+# /run/current-system/sw/bin - via environment.systemPackages (nix-darwin)
