@@ -13,7 +13,7 @@
 
   outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs }:
     let
-      configuration = { pkgs, ... }: {
+      configuration = { pkgs, lib, config, ... }: {
         # List packages installed in system profile. To search by name, run:
         # $ nix-env -qaP | grep wget
         environment.systemPackages = with pkgs; [
@@ -50,6 +50,7 @@
         # Create /etc/zshrc that loads the nix-darwin environment.
         programs.zsh.enable = true; # default shell on catalina
         programs.fish.enable = true;
+        programs.fish.useBabelfish = true; # no visible change - probably not required
 
         # programs.git = {
         #   enable = true;

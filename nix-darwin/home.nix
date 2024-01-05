@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, osConfig, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
@@ -68,12 +68,38 @@
       fish_greeting = "";
     };
     interactiveShellInit = (builtins.readFile ./fish/env_vars.fish) + "\n" + (builtins.readFile ./fish/aliases.fish) + "\n" + (builtins.readFile ./fish/config.fish);
+    # fix path variable order - https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
+    # https://d12frosted.io/posts/2021-05-21-path-in-fish-with-nix-darwin.html
+    loginShellInit =
+      let
+        # This naive quoting is good enough in this case. There shouldn't be any
+        # double quotes in the input string, and it needs to be double quoted in case
+        # it contains a space (which is unlikely!)
+        dquote = str: "\"" + str + "\"";
+
+        makeBinPathList = map (path: path + "/bin");
+      in
+      ''
+        fish_add_path --move --prepend --path ${lib.concatMapStringsSep " " dquote (makeBinPathList osConfig.environment.profiles)}
+        set fish_user_paths $fish_user_paths
+      '';
   };
 
   programs.starship = {
     enable = true;
     settings = builtins.fromTOML (builtins.readFile ./starship/starship.toml);
   };
+
+  # git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+  # home.file = {
+  #   ".config/nvim".source = pkgs.fetchFromGitHub {
+  #     owner = "NvChad";
+  #     repo = "NvChad";
+  #     # https://github.com/NvChad/NvChad
+  #     rev = "c2ec317b1bbcac75b7c258759b62c65261ab5d5d";
+  #     hash = "sha256-mDnW3TpTl1ez4X+VU6B8GeKJDICwjw9yAaPWAmBczeo";
+  #   };
+  # };
 
   # home.file = {
   #   starship = {
