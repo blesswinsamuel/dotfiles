@@ -5,7 +5,9 @@
     vim
     tmux
     wget
+    curl
     git
+    openssh
   ];
 
   environment.shells = [ pkgs.fish pkgs.zsh ];

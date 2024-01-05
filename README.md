@@ -62,3 +62,6 @@ mackup restore # --dry-run
 - https://devenv.sh/getting-started/
 - https://sandstorm.de/de/blog/post/my-first-steps-with-nix-on-mac-osx-as-homebrew-replacement.html
 - https://github.com/nix-community/impermanence
+- https://github.com/schickling/dotfiles (https://www.youtube.com/watch?v=1dzgVkgQ5mE)
+- https://github.com/badele/nix-homelab/tree/main
+- https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-with-flakes-enabled
