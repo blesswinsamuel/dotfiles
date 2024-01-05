@@ -7,6 +7,9 @@
 # https://zero-to-nix.com/start/install
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 
+# printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
+# /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
+
 # nix flake init -t nix-darwin
 # mv /etc/zshenv /etc/zshenv.before-nix-darwin
 # mv /etc/shells /etc/shells.before-nix-darwin
@@ -52,3 +55,10 @@ rclone ls b2:blesswin-mackup
 rclone sync b2:blesswin-mackup ~/Mackup # --dry-run
 mackup restore # --dry-run
 ```
+
+## Resources
+
+- https://xyno.space/post/nix-darwin-introduction
+- https://devenv.sh/getting-started/
+- https://sandstorm.de/de/blog/post/my-first-steps-with-nix-on-mac-osx-as-homebrew-replacement.html
+- https://github.com/nix-community/impermanence

@@ -1,6 +1,4 @@
-{ config, pkgs, lib, osConfig, ... }:
-
-{
+{ config, pkgs, lib, osConfig, ... }: {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "blesswinsamuel";
