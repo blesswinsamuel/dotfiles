@@ -6,7 +6,7 @@
   inputs = {
     agenix.url = "github:ryantm/agenix";
 
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
+    # nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
@@ -15,7 +15,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, agenix, nix-darwin, nixpkgs-darwin, home-manager, nixpkgs }:
+  outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs }:
     let
       systemConfig = builtins.fromJSON (builtins.readFile "${self}/config.json");
 
