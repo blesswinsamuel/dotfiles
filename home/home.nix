@@ -120,19 +120,17 @@
   #   };
   # };
 
-  # home.file = {
-  #   starship = {
-  #     enable = true;
-  #     source = ./starship/starship.toml;
-  #     target = "~/.config/starship.toml";
-  #   };
-  # };
+  home.file = {
+    ".hushlogin" = {
+      enable = true;
+      source = ./hushlogin/hushlogin;
+    };
+  };
 
   home.packages = with pkgs; [
     jq
     nixpkgs-fmt
     home-manager
-    # starship
 
     rustup
     go
