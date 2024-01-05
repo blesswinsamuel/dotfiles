@@ -60,6 +60,13 @@
     # ]
   };
 
+  programs.gpg = {
+    enable = true;
+    settings = {
+      no-tty = true;
+    };
+  };
+
   programs.fish = {
     enable = true;
     functions = {
