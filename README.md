@@ -15,7 +15,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 # mv /etc/shells /etc/shells.before-nix-darwin
 
 nix run nixpkgs#go-task -- init # first run
-nix run nixpkgs#go-task -- switch
+nix run nixpkgs#go-task -- switch -- --verbose
 
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 ```

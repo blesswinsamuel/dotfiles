@@ -26,3 +26,7 @@ tasks:
       - task: _decrypt-config
       - defer: git rm -f config.json
       - darwin-rebuild switch --flake ~/dotfiles {{ .CLI_ARGS }}
+
+  maintanence:
+    cmds:
+      - nix store gc

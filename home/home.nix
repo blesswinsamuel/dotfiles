@@ -135,14 +135,21 @@
   };
 
   home.packages = with pkgs; [
-    jq
+    # Nix
     nixpkgs-fmt
     home-manager
 
+    # Linux
+    libgccjit
+    coreutils-full
+
+    # Languages
     rustup
     go
     nodejs
     python3
+    deno
+    bun
 
     poetry
     virtualenv
@@ -154,39 +161,95 @@
     # mongodb-tools
     redis
     postgresql_14
+    mailhog
+    # grafana
+    # traefik
+    # victoriametrics
 
+    # Kubernetes
     kapp
     kubectl
     kubernetes-helm
     kopia
     krew
-    k9s
+    stern
+
+    # Docker
     podman
     podman-compose
     podman-tui
 
-    awscli2
+    # Infrastructure management
     terraform
     # nodePackages.cdk8s-cli
     nodePackages.cdktf-cli
 
-    just
-    go-task
-    mprocs
-    yt-dlp
-    bitwarden-cli
-    mailhog
+    # TUI
+    k9s
+    gitui
 
+    yt-dlp
+    ffmpeg
+    imagemagick
+    vips
+
+    # Better tools
+    prettyping
     bat
+    dog
     ripgrep
+    eza
+    fd
+    fzf
+    ncdu
     htop
+    difftastic
+    duf
+    sd
+    zellij # terminal multiplexer
+
+    # Tools
+    mprocs
     direnv
     atuin
-
+    just
+    go-task
     neovim
-    nmap
-    ncdu
+    tldr
+    jq
+    yq-go
+    rclone
+    qpdf
+    pv
+    gnused
+    gnutar
+    tree
+    websocat
+    xh
+    unison
+    hexyl # command line hex viewer
+    # qrcp # transfer files over Wi-Fi from your computer to a mobile device by scanning a QR code without leaving the terminal
+    smartmontools # tools for monitoring the health of hard drives
+    syncthing # continuous file synchronization program
+    wakeonlan # sends magic packets to wake up network-devices
+    mkcert # simple tool for making locally-trusted development certificates
+    delta # syntax-highlighting pager for git
 
-    vips
+    # Mac tools
+    duti
+    pngpaste # Paste image files from clipboard to file on MacOS
+
+    # Network tools
+    nmap
+    inetutils
+    iperf
+    openconnect
+
+    # 3rd party cloud service tools
+    awscli2
+    bitwarden-cli
+    gh
+    doppler
+    mas
   ];
 }
