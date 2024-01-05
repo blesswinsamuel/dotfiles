@@ -27,7 +27,7 @@ alias jqsd "jq '.data | map_values(@base64d)'"
 
 function dockersize
     set -l image $argv
-    podman manifest inspect -v "$name" | jq -c 'if type == "array" then .[] else . end' |  jq -r '[ ( .Descriptor.platform | [ .os, .architecture, .variant, ."os.version" ] | del(..|nulls) | join("/") ), ( [ .SchemaV2Manifest.layers[].size ] | add ) ] | join(" ")' | numfmt --to iec --format '%.2f' --field 2 | sort | column -t
+    podman manifest inspect -v "$name" | jq -c 'if type == "array" then .[] else . end' | jq -r '[ ( .Descriptor.platform | [ .os, .architecture, .variant, ."os.version" ] | del(..|nulls) | join("/") ), ( [ .SchemaV2Manifest.layers[].size ] | add ) ] | join(" ")' | numfmt --to iec --format '%.2f' --field 2 | sort | column -t
 end
 
 if type -q kubecolor
@@ -55,11 +55,11 @@ if type -q bat
         bat $argv
     end
 end
-if type -q exa
-    function ls --wraps exa --description 'alias ls to exa'
-        exa $argv
+if type -q eza
+    function ls --wraps eza --description 'alias ls to eza'
+        eza $argv
     end
-    # abbr -g -a ls exa
+    # abbr -g -a ls eza
 end
 if type -q prettyping
     function ping --wraps prettyping --description 'alias ping to prettyping'
@@ -142,7 +142,7 @@ function sshrun --description 'run command over ssh'
     end
     set -l command (string replace "." "$PWD" $argv)
     set -l command (string replace "/mnt/bless-mac-mini-ssd-nfs" "/Volumes/BleSSD" $command)
-    set -l sshusername "blesswinsamuel"
+    set -l sshusername blesswinsamuel
     set -l sshhost (string split -f1 ' ' "$SSH_CLIENT")
     set -l sshport (string split -f3 ' ' "$SSH_CLIENT")
     echo "Running command '$command' on host '$sshusername@$sshhost:$sshport'"
