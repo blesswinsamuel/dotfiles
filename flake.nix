@@ -30,41 +30,36 @@
           ];
       };
 
-      hmConfig = import ./home/home.nix;
-
-      # nixosSystem = system: extraModules: hostName:
-      #   let
-      #     pkgs = genPkgs system;
-      #   in
-      #   nixpkgs.lib.nixosSystem
-      #     rec {
-      #       inherit system;
-      #       specialArgs = { inherit lib inputs; };
-      #       modules = [
-      #         ({ config, ... }: lib.mkMerge [{
-      #           nixpkgs.pkgs = pkgs;
-      #           nixpkgs.overlays = overlays;
-      #           networking.hostName = hostName;
-      #           system.configurationRevision = rev;
-      #           home-manager.useGlobalPkgs = true;
-      #           home-manager.useUserPackages = true;
-      #           home-manager.extraSpecialArgs = { inherit inputs; };
-      #         }
-
-      #           (lib.mkIf config.blesswinsamuel.user.enable {
-      #             # import hm stuff if enabled
-      #             home-manager.users.blesswinsamuel = hmConfig;
-      #           })])
-      #         ./nixos-common.nix
-      #       ] ++ (lib.my.mapModulesRec' (toString ./nixos-modules) import) ++ extraModules;
-      #     };
-      darwinSystem = { system, extraModules, systemConfig }: hostName:
+      nixosSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
+        let
+          pkgs = genPkgs system;
+        in
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit self pkgs inputs systemConfig; };
+          modules = [
+            # home-manager.darwinModules.home-manager
+            agenix.nixosModules.default
+            {
+              # networking.hostName = hostName;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit systemConfig; };
+              home-manager.users.blesswinsamuel = inputs: {
+                imports = [ ./home/home.nix ] ++ extraHmImports;
+              };
+            }
+            ./commons/commons.nix
+            ./commons/nixos-commons.nix
+          ] ++ extraModules;
+        };
+      darwinSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
         let
           pkgs = genPkgs system;
         in
         nix-darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit pkgs inputs self systemConfig; };
+          specialArgs = { inherit self pkgs inputs systemConfig; };
           modules = [
             home-manager.darwinModules.home-manager
             agenix.nixosModules.default
@@ -73,8 +68,11 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig; };
-              home-manager.users.blesswinsamuel = hmConfig;
+              home-manager.users.blesswinsamuel = inputs: {
+                imports = [ ./home/home.nix ] ++ extraHmImports;
+              };
             }
+            ./commons/commons.nix
             ./commons/darwin-commons.nix
           ] ++ extraModules;
         };
@@ -87,11 +85,13 @@
         Blesswins-Mac-Studio = darwinSystem {
           system = "aarch64-darwin";
           extraModules = [ ./hosts/mac-studio/mac-studio.nix ];
+          extraHmImports = [ ./hosts/mac-studio/mac-studio-home.nix ];
           systemConfig = systemConfig.personal;
         };
         ABLSAMUE-M-28DY = darwinSystem {
           system = "x86_64-darwin";
           extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
+          extraHmImports = [ ./hosts/mbp-work/mbp-work-home.nix ];
           systemConfig = systemConfig.work;
         };
       };

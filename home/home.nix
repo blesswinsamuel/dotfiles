@@ -20,7 +20,7 @@
   programs.git = {
     enable = true;
     userName = "Blesswin Samuel";
-    userEmail = systemConfig.git.email; # TODO: template this - different for work
+    userEmail = systemConfig.git.email;
 
     aliases = {
       ch = "checkout";
