@@ -45,7 +45,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig; };
-              home-manager.users.blesswinsamuel = inputs: {
+              home-manager.users.${systemConfig.username} = inputs: {
                 imports = [ ./home/home.nix ] ++ extraHmImports;
               };
             }
@@ -68,7 +68,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig; };
-              home-manager.users.blesswinsamuel = inputs: {
+              home-manager.users.${systemConfig.username} = inputs: {
                 imports = [ ./home/home.nix ] ++ extraHmImports;
               };
             }

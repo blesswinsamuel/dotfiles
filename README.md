@@ -16,6 +16,8 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 
 nix run nixpkgs#go-task -- init # first run
 nix run nixpkgs#go-task -- switch
+
+git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 ```
 
 ## Brew commands

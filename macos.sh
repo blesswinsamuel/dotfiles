@@ -66,3 +66,9 @@ defaults write com.mowglii.ItsycalApp ShowWeeks -int 1  # Show calendar weeks
 defaults write com.mowglii.ItsycalApp SizePreference -int 1  # Font size
 defaults write com.mowglii.ItsycalApp UseOutlineIcon -int 1  # Show outline icon
 defaults write com.mowglii.ItsycalApp ShowDayOfWeekInIcon -int 1  # Show day of week in icon
+
+### iTerm2
+## Specify the preferences directory
+defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$HOME/dotfiles/configs/iterm2"
+## Tell iTerm2 to use the custom preferences in the directory
+defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
