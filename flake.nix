@@ -4,15 +4,22 @@
   description = "Blesswin's system flake";
 
   inputs = {
-    agenix.url = "github:ryantm/agenix";
+    agenix = {
+      url = "github:ryantm/agenix";
+    };
 
     # nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs = {
+      url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs }:
@@ -22,12 +29,7 @@
       genPkgs = system: import nixpkgs {
         inherit system;
         # https://nixos.wiki/wiki/Unfree_Software
-        # config.allowUnfree = true;
-        config.allowUnfreePredicate = pkg:
-          builtins.elem (nixpkgs.lib.getName pkg) [
-            # Add additional package names here
-            "terraform"
-          ];
+        config.allowUnfree = true;
       };
 
       nixosSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
@@ -38,10 +40,10 @@
           inherit system;
           specialArgs = { inherit self pkgs inputs systemConfig; };
           modules = [
-            # home-manager.darwinModules.home-manager
+          home-manager.nixosModules.home-manager
             agenix.nixosModules.default
             {
-              # networking.hostName = hostName;
+            #   # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig; };
@@ -81,6 +83,14 @@
 
     in
     {
+      nixosConfigurations = processConfigurations {
+        hp-chromebox = nixosSystem {
+          system = "x86_64-linux";
+          extraModules = [ ./hosts/hp-chromebox/hp-chromebox.nix ];
+          extraHmImports = [ ];
+          systemConfig = systemConfig.personal;
+        };
+      };
       darwinConfigurations = processConfigurations {
         Blesswins-Mac-Studio = darwinSystem {
           system = "aarch64-darwin";

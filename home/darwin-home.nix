@@ -1,4 +1,6 @@
 { config, pkgs, lib, osConfig, systemConfig, ... }: {
+  home.homeDirectory = "/Users/${systemConfig.username}";
+
   # https://github.com/NixOS/nixpkgs/issues/240819
   # Connects gpg-agent to the OSX keychain via the brew-installed
   # pinentry program from GPGtools. This is the OSX 'magic sauce',
@@ -27,5 +29,30 @@
     # "bin/hexf".source = config.lib.file.mkOutOfStoreSymlink "/Applications/Hex Fiend.app/Contents/Resources/hexf";
     # "bin/iina".source = config.lib.file.mkOutOfStoreSymlink "/Applications/IINA.app/Contents/MacOS/iina-cli";
     # "bin/inkscape".source = config.lib.file.mkOutOfStoreSymlink "/opt/homebrew/Caskroom/inkscape/1.2.2/inkscape.wrapper.sh";
+  };
+
+  home.packages = with pkgs; [
+    # Mac tools
+    duti
+    pngpaste # Paste image files from clipboard to file on MacOS
+    mas
+  ];
+
+  programs.fish = {
+    # fix path variable order - https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
+    # https://d12frosted.io/posts/2021-05-21-path-in-fish-with-nix-darwin.html
+    loginShellInit =
+      let
+        # This naive quoting is good enough in this case. There shouldn't be any
+        # double quotes in the input string, and it needs to be double quoted in case
+        # it contains a space (which is unlikely!)
+        dquote = str: "\"" + str + "\"";
+
+        makeBinPathList = map (path: path + "/bin");
+      in
+      ''
+        fish_add_path --move --prepend --path ${lib.concatMapStringsSep " " dquote (makeBinPathList osConfig.environment.profiles)}
+        set fish_user_paths $fish_user_paths
+      '';
   };
 }

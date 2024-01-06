@@ -2,7 +2,6 @@
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = systemConfig.username;
-  home.homeDirectory = "/Users/${systemConfig.username}";
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
@@ -73,21 +72,6 @@
       fish_greeting = "";
     };
     interactiveShellInit = (builtins.readFile ./fish/env_vars.fish) + "\n" + (builtins.readFile ./fish/aliases.fish) + "\n" + (builtins.readFile ./fish/config.fish);
-    # fix path variable order - https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
-    # https://d12frosted.io/posts/2021-05-21-path-in-fish-with-nix-darwin.html
-    loginShellInit =
-      let
-        # This naive quoting is good enough in this case. There shouldn't be any
-        # double quotes in the input string, and it needs to be double quoted in case
-        # it contains a space (which is unlikely!)
-        dquote = str: "\"" + str + "\"";
-
-        makeBinPathList = map (path: path + "/bin");
-      in
-      ''
-        fish_add_path --move --prepend --path ${lib.concatMapStringsSep " " dquote (makeBinPathList osConfig.environment.profiles)}
-        set fish_user_paths $fish_user_paths
-      '';
   };
 
   programs.starship = {
@@ -141,7 +125,7 @@
     nixos-rebuild
 
     # Linux
-    libgccjit
+    # libgccjit # gcc
     coreutils-full
 
     # Languages
@@ -236,10 +220,6 @@
     mkcert # simple tool for making locally-trusted development certificates
     delta # syntax-highlighting pager for git
 
-    # Mac tools
-    duti
-    pngpaste # Paste image files from clipboard to file on MacOS
-
     # Network tools
     nmap
     inetutils
@@ -251,6 +231,5 @@
     bitwarden-cli
     gh
     doppler
-    mas
   ];
 }

@@ -1,17 +1,4 @@
 { self, pkgs, lib, config, systemConfig, ... }: {
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = with pkgs; [
-    vim
-    tmux
-    wget
-    curl
-    git
-    openssh
-  ];
-
-  environment.shells = [ pkgs.fish pkgs.zsh ];
-
   environment.systemPath = [
     # "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
     # "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"
@@ -34,14 +21,6 @@
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;
 
-  # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
-
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true; # default shell on catalina
-  programs.fish.enable = true;
-  programs.fish.useBabelfish = true; # no visible change - probably not required
-
   # Set Git commit hash for darwin-version.
   system.configurationRevision = self.rev or self.dirtyRev or null;
 
@@ -51,7 +30,6 @@
 
   users.users.${systemConfig.username} = {
     home = "/Users/${systemConfig.username}";
-    shell = "/run/current-system/sw/bin/fish";
   };
 
   # # The platform the configuration will be used on.
