@@ -18,7 +18,7 @@ tasks:
     cmds:
       - task: _decrypt-config
       - defer: git rm -f config.json
-      - nix run nix-darwin -- switch --flake ~/dotfiles
+      - nix run nix-darwin -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
       - chsh -s /run/current-system/sw/bin/fish
 
   switch:
