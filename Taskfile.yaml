@@ -27,6 +27,13 @@ tasks:
       - defer: git rm -f config.json
       - darwin-rebuild switch --flake ~/dotfiles {{ .CLI_ARGS }}
 
+  # nixos vscode remote target - https://github.com/microsoft/vscode-remote-release/issues/103#issuecomment-1060907227, https://github.com/microsoft/vscode-remote-release/issues/648#issuecomment-503148523
+  switch-nixos-remote:
+    cmds:
+      - task: _decrypt-config
+      - defer: git rm -f config.json
+      - nixos-rebuild --use-remote-sudo --fast --build-host blesswinsamuel@homelab-hp-chromebox-wifi --target-host blesswinsamuel@homelab-hp-chromebox-wifi switch --flake ~/dotfiles#hp-chromebox {{ .CLI_ARGS }}
+
   maintanence:
     cmds:
       - nix store gc
