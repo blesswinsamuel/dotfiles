@@ -13,10 +13,12 @@
   environment.shells = [ pkgs.fish pkgs.zsh ];
 
   environment.systemPath = [
-    "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
-    "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"
+    # "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
+    # "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"
+    # "'/Applications/Visual Studio Code.app/Contents/Resources/app/bin'"
+    "$HOME/bin"
+    "/opt/homebrew/bin"
     # "$HOME/.cargo/bin"
-    # "$HOME/bin"
     # "/usr/local/sbin"
     # "/usr/local/bin"
     # "~/.local/bin"

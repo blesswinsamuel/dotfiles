@@ -138,6 +138,7 @@
     # Nix
     nixpkgs-fmt
     home-manager
+    nixos-rebuild
 
     # Linux
     libgccjit

@@ -17,6 +17,9 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 nix run nixpkgs#go-task -- init # first run
 nix run nixpkgs#go-task -- switch -- --verbose
 
+nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+nix-channel --update nixpkgs
+
 git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 ```
 
@@ -70,3 +73,6 @@ mackup restore # --dry-run
 - https://github.com/schickling/dotfiles (https://www.youtube.com/watch?v=1dzgVkgQ5mE)
 - https://github.com/badele/nix-homelab/tree/main
 - https://nixos-and-flakes.thiscute.world/nixos-with-flakes/nixos-with-flakes-enabled
+- https://github.com/ironicbadger/nix-config
+- https://github.com/dustinlyons/nixos-config
+- https://wickedchicken.github.io/post/macos-nix-setup/

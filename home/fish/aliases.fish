@@ -25,6 +25,8 @@ abbr -g -a cdssd "cd /Volumes/BleSSD/"
 alias yqsd "yq e '.data | map_values(@base64d)'"
 alias jqsd "jq '.data | map_values(@base64d)'"
 
+alias nix-shell 'nix-shell --run fish'
+
 function dockersize
     set -l image $argv
     podman manifest inspect -v "$name" | jq -c 'if type == "array" then .[] else . end' | jq -r '[ ( .Descriptor.platform | [ .os, .architecture, .variant, ."os.version" ] | del(..|nulls) | join("/") ), ( [ .SchemaV2Manifest.layers[].size ] | add ) ] | join(" ")' | numfmt --to iec --format '%.2f' --field 2 | sort | column -t
@@ -57,7 +59,7 @@ if type -q bat
 end
 if type -q eza
     function ls --wraps eza --description 'alias ls to eza'
-        eza $argv
+        eza --group $argv
     end
     # abbr -g -a ls eza
 end
