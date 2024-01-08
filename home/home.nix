@@ -1,4 +1,4 @@
-{ config, pkgs, lib, osConfig, systemConfig, ... }: {
+{ config, pkgs, pkgsMaster, lib, osConfig, systemConfig, ... }: {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = systemConfig.username;
@@ -118,118 +118,117 @@
     };
   };
 
-  home.packages = with pkgs; [
+  home.packages = [
     # Nix
-    nixpkgs-fmt
-    home-manager
-    nixos-rebuild
+    pkgs.nixpkgs-fmt
+    pkgs.home-manager
+    pkgs.nixos-rebuild
 
     # Linux
     # libgccjit # gcc
-    coreutils-full
+    pkgs.coreutils-full
 
     # Languages
-    rustup
-    go
-    nodejs
-    python3
-    deno
-    bun
+    pkgs.rustup
+    pkgs.go
+    pkgs.nodejs
+    pkgs.python3
+    pkgs.deno
+    pkgs.bun
 
-    poetry
-    virtualenv
-    pipx
-    yarn
+    pkgs.poetry
+    pkgs.virtualenv
+    pkgs.pipx
+    pkgs.yarn
 
     # mongodb
     # mongosh
     # mongodb-tools
-    redis
-    postgresql_14
-    mailhog
+    pkgs.redis
+    pkgs.postgresql_14
+    pkgs.mailhog
     # grafana
     # traefik
     # victoriametrics
 
     # Kubernetes
-    kapp
-    kubectl
-    kubernetes-helm
-    kopia
-    krew
-    stern
+    pkgs.kapp
+    pkgs.kubectl
+    pkgs.kubernetes-helm
+    pkgs.kopia
+    pkgs.krew
+    pkgs.stern
 
     # Docker
-    podman
-    podman-compose
-    podman-tui
+    pkgs.podman
+    pkgs.podman-compose
+    pkgs.podman-tui
 
     # Infrastructure management
-    terraform
+    pkgs.terraform
     # nodePackages.cdk8s-cli
-    nodePackages.cdktf-cli
+    pkgs.nodePackages.cdktf-cli
 
     # TUI
-    k9s
-    gitui
+    pkgs.k9s
+    pkgs.gitui
 
-    yt-dlp
-    ffmpeg
-    imagemagick
-    vips
+    pkgs.yt-dlp
+    pkgs.ffmpeg
+    pkgs.imagemagick
 
     # Better tools
-    prettyping
-    bat
-    dog
-    ripgrep
-    eza
-    fd
-    fzf
-    ncdu
-    htop
-    difftastic
-    duf
-    sd
-    zellij # terminal multiplexer
+    pkgs.prettyping
+    pkgs.bat
+    pkgs.dog
+    pkgs.ripgrep
+    pkgs.eza
+    pkgs.fd
+    pkgs.fzf
+    pkgs.ncdu
+    pkgs.htop
+    pkgs.difftastic
+    pkgs.duf
+    pkgs.sd
+    pkgs.zellij # terminal multiplexer
 
     # Tools
-    mprocs
-    direnv
-    atuin
-    just
-    go-task
-    neovim
-    tldr
-    jq
-    yq-go
-    rclone
-    qpdf
-    pv
-    gnused
-    gnutar
-    tree
-    websocat
-    xh
-    unison
-    hexyl # command line hex viewer
+    pkgs.mprocs
+    pkgs.direnv
+    pkgs.atuin
+    pkgs.just
+    pkgsMaster.go-task
+    pkgs.neovim
+    pkgs.tldr
+    pkgs.jq
+    pkgs.yq-go
+    pkgs.rclone
+    pkgs.qpdf
+    pkgs.pv
+    pkgs.gnused
+    pkgs.gnutar
+    pkgs.tree
+    pkgs.websocat
+    pkgs.xh
+    pkgs.unison
+    pkgs.hexyl # command line hex viewer
     # qrcp # transfer files over Wi-Fi from your computer to a mobile device by scanning a QR code without leaving the terminal
-    smartmontools # tools for monitoring the health of hard drives
-    syncthing # continuous file synchronization program
-    wakeonlan # sends magic packets to wake up network-devices
-    mkcert # simple tool for making locally-trusted development certificates
-    delta # syntax-highlighting pager for git
+    pkgs.smartmontools # tools for monitoring the health of hard drives
+    pkgs.syncthing # continuous file synchronization program
+    pkgs.wakeonlan # sends magic packets to wake up network-devices
+    pkgs.mkcert # simple tool for making locally-trusted development certificates
+    pkgs.delta # syntax-highlighting pager for git
 
     # Network tools
-    nmap
-    inetutils
-    iperf
-    openconnect
+    pkgs.nmap
+    pkgs.inetutils
+    pkgs.iperf
+    pkgs.openconnect
 
     # 3rd party cloud service tools
-    awscli2
-    bitwarden-cli
-    gh
-    doppler
+    pkgs.awscli2
+    pkgs.bitwarden-cli
+    pkgs.gh
+    pkgs.doppler
   ];
 }

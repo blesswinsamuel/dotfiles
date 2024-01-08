@@ -12,6 +12,9 @@
     nixpkgs = {
       url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
+    nixpkgs-master = {
+      url = "github:NixOS/nixpkgs/master";
+    };
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,11 +25,11 @@
     };
   };
 
-  outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs }:
+  outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs, nixpkgs-master }:
     let
       systemConfig = builtins.fromJSON (builtins.readFile "${self}/config.json");
 
-      genPkgs = system: import nixpkgs {
+      genPkgs = system: pkgs: import pkgs {
         inherit system;
         # https://nixos.wiki/wiki/Unfree_Software
         config.allowUnfree = true;
@@ -34,19 +37,20 @@
 
       nixosSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
         let
-          pkgs = genPkgs system;
+          pkgs = genPkgs system nixpkgs;
+          pkgsMaster = genPkgs system nixpkgs-master;
         in
         nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit self pkgs inputs systemConfig; };
+          specialArgs = { inherit self pkgs pkgsMaster inputs systemConfig; };
           modules = [
-          home-manager.nixosModules.home-manager
+            home-manager.nixosModules.home-manager
             agenix.nixosModules.default
             {
-            #   # networking.hostName = hostName;
+              # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit systemConfig; };
+              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster; };
               home-manager.users.${systemConfig.username} = inputs: {
                 imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHmImports;
               };
@@ -57,11 +61,12 @@
         };
       darwinSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
         let
-          pkgs = genPkgs system;
+          pkgs = genPkgs system nixpkgs;
+          pkgsMaster = genPkgs system nixpkgs-master;
         in
         nix-darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit self pkgs inputs systemConfig; };
+          specialArgs = { inherit self pkgs pkgsMaster inputs systemConfig; };
           modules = [
             home-manager.darwinModules.home-manager
             agenix.nixosModules.default
@@ -69,7 +74,7 @@
               # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit systemConfig; };
+              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster; };
               home-manager.users.${systemConfig.username} = inputs: {
                 imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHmImports;
               };
