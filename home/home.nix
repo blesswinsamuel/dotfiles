@@ -173,9 +173,9 @@
     pkgs.k9s
     pkgs.gitui
 
-    pkgs.yt-dlp
-    pkgs.ffmpeg
-    pkgs.imagemagick
+    # pkgs.yt-dlp
+    # pkgs.ffmpeg
+    # pkgs.imagemagick
 
     # Better tools
     pkgs.prettyping

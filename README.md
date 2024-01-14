@@ -76,3 +76,5 @@ mackup restore # --dry-run
 - https://github.com/ironicbadger/nix-config
 - https://github.com/dustinlyons/nixos-config
 - https://wickedchicken.github.io/post/macos-nix-setup/
+- https://www.mathiaspolligkeit.com/dev-environment-setup-with-nix-on-macos/
+- https://github.com/kubukoz/nix-config
