@@ -87,12 +87,10 @@
   programs.zsh = {
     enable = true;
     initExtra = builtins.readFile ./zsh/zshrc;
-    envExtra = builtins.readFile ./zsh/zshenv;
   };
 
   programs.bash = {
     enable = true;
-    bashrcExtra = builtins.readFile ./bash/bashrc;
   };
 
   programs.tmux = {

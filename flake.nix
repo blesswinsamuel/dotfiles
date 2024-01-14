@@ -4,25 +4,12 @@
   description = "Blesswin's system flake";
 
   inputs = {
-    agenix = {
-      url = "github:ryantm/agenix";
-    };
-
-    # nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
-    nixpkgs = {
-      url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    };
-    nixpkgs-master = {
-      url = "github:NixOS/nixpkgs/master";
-    };
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    agenix = { url = "github:ryantm/agenix"; };
+    # nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin" };
+    nixpkgs = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
+    nixpkgs-master = { url = "github:NixOS/nixpkgs/master"; };
+    nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs"; };
+    home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
   outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs, nixpkgs-master }:
