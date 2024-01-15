@@ -31,7 +31,7 @@
         config.allowUnfree = true;
       };
 
-      nixosSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
+      nixosSystem = { system, extraModules, systemConfig, extraHomeModules }: hostName:
         let
           pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -44,19 +44,20 @@
             home-manager.nixosModules.home-manager
             agenix.nixosModules.default
             {
+              # https://mipmip.github.io/home-manager-option-search/
               # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHmImports;
+                imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHomeModules;
               };
             }
             ./commons/commons.nix
             ./commons/nixos-commons.nix
           ] ++ extraModules;
         };
-      darwinSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
+      darwinSystem = { system, extraModules, systemConfig, extraHomeModules }: hostName:
         let
           pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -74,7 +75,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHmImports;
+                imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHomeModules;
               };
             }
             ./commons/commons.nix
@@ -90,7 +91,7 @@
         hp-chromebox = nixosSystem {
           system = "x86_64-linux";
           extraModules = [ ./hosts/hp-chromebox/hp-chromebox.nix ];
-          extraHmImports = [ ];
+          extraHomeModules = [ ];
           systemConfig = systemConfig.personal;
         };
       };
@@ -98,13 +99,13 @@
         Blesswins-Mac-Studio = darwinSystem {
           system = "aarch64-darwin";
           extraModules = [ ./hosts/mac-studio/mac-studio.nix ];
-          extraHmImports = [ ./hosts/mac-studio/mac-studio-home.nix ];
+          extraHomeModules = [ ./hosts/mac-studio/mac-studio-home.nix ];
           systemConfig = systemConfig.personal;
         };
         ABLSAMUE-M-28DY = darwinSystem {
           system = "x86_64-darwin";
           extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
-          extraHmImports = [ ./hosts/mbp-work/mbp-work-home.nix ];
+          extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
           systemConfig = systemConfig.work;
         };
       };
