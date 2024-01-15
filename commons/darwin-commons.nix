@@ -42,4 +42,41 @@
   # https://nix-community.github.io/home-manager/release-notes.xhtml
   # https://nixos.wiki/wiki/Home_Manager
   # https://mipmip.github.io/home-manager-option-search/?query=
+
+
+  # https://github.com/dustinlyons/nixos-config/blob/c8099eef3b3eedb429f5084c37aba3de5781204c/modules/darwin/home-manager.nix#L30
+  # https://github.com/LnL7/nix-darwin/blob/master/modules/homebrew.nix
+  homebrew = {
+    # This is a module from nix-darwin
+    # Homebrew is *installed* via the flake input nix-homebrew
+    enable = true;
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "zap";
+    };
+    global = {
+      brewfile = true;
+    };
+
+    taps = [
+    ];
+
+    # These app IDs are from using the mas CLI app
+    # mas = mac app store
+    # https://github.com/mas-cli/mas
+    #
+    # $ nix shell nixpkgs#mas
+    # $ mas search <app name>
+    #
+    masApps = { };
+    # If an app isn't available in the Mac App Store, or the version in the App Store has
+    # limitiations, e.g., Transmit, install the Homebrew Cask.
+    casks = [
+    ];
+
+    # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
+    # installed in `../home/default.nix` whenever possible.
+    brews = [
+    ];
+  };
 }

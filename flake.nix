@@ -4,16 +4,25 @@
   description = "Blesswin's system flake";
 
   inputs = {
+    # Package sets
+    # https://github.com/NixOS/nixos-org-configurations/blob/master/channels.nix
+    nixpkgs-master = { url = "github:NixOS/nixpkgs/master"; };
+    nixpkgs-stable = { url = "github:NixOS/nixpkgs/nixos-23.11"; };
+    # nixpkgs-darwin-stable = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin"; };
+    nixpkgs-unstable = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
+
+    # Environment/system management
+    nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+    home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+
     agenix = { url = "github:ryantm/agenix"; };
     # nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin" };
-    nixpkgs = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
-    nixpkgs-master = { url = "github:NixOS/nixpkgs/master"; };
-    nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs"; };
-    home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs"; };
   };
 
-  outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs, nixpkgs-master }:
+  outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
     let
+      inherit (self.lib) attrValues makeOverridable mkForce optionalAttrs singleton;
+
       systemConfig = builtins.fromJSON (builtins.readFile "${self}/config.json");
 
       genPkgs = system: pkgs: import pkgs {
@@ -24,12 +33,13 @@
 
       nixosSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
         let
-          pkgs = genPkgs system nixpkgs;
+          pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
+          pkgsStable = genPkgs system nixpkgs-stable;
         in
-        nixpkgs.lib.nixosSystem {
+        nixpkgs-unstable.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit self pkgs pkgsMaster inputs systemConfig; };
+          specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             home-manager.nixosModules.home-manager
             agenix.nixosModules.default
@@ -37,7 +47,7 @@
               # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster; };
+              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
                 imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHmImports;
               };
@@ -48,12 +58,13 @@
         };
       darwinSystem = { system, extraModules, systemConfig, extraHmImports }: hostName:
         let
-          pkgs = genPkgs system nixpkgs;
+          pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
+          pkgsStable = genPkgs system nixpkgs-stable;
         in
         nix-darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit self pkgs pkgsMaster inputs systemConfig; };
+          specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             home-manager.darwinModules.home-manager
             agenix.nixosModules.default
@@ -61,7 +72,7 @@
               # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster; };
+              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
                 imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHmImports;
               };
@@ -71,7 +82,7 @@
           ] ++ extraModules;
         };
 
-      processConfigurations = nixpkgs.lib.mapAttrs (n: v: v n);
+      processConfigurations = nixpkgs-unstable.lib.mapAttrs (n: v: v n);
 
     in
     {

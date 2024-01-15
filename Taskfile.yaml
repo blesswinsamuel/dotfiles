@@ -25,13 +25,27 @@ tasks:
     cmds:
       - task: _decrypt-config
       - defer: git rm -f config.json
-      - darwin-rebuild switch --flake ~/dotfiles {{ .CLI_ARGS }}
-
-  nixos:switch:
-    cmds:
-      - task: _decrypt-config
-      - defer: git rm -f config.json
-      - sudo nixos-rebuild switch --flake ~/dotfiles#hp-chromebox {{ .CLI_ARGS }}
+      - |
+        {{- if eq .MACHINE "Mac" }}
+        darwin-rebuild switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        {{- else if eq .MACHINE "Linux" }}
+        sudo nixos-rebuild switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        {{- else }}
+        echo "Unsupported OS"
+        {{- end }}
+    vars:
+      MACHINE:
+        sh: |
+          unameOut="$(uname -s)"
+          case "${unameOut}" in
+              Linux*)     machine=Linux;;
+              Darwin*)    machine=Mac;;
+              CYGWIN*)    machine=Cygwin;;
+              MINGW*)     machine=MinGw;;
+              MSYS_NT*)   machine=Git;;
+              *)          machine="UNKNOWN:${unameOut}"
+          esac
+          echo ${machine}
 
   # nixos vscode remote target - https://github.com/microsoft/vscode-remote-release/issues/103#issuecomment-1060907227, https://github.com/microsoft/vscode-remote-release/issues/648#issuecomment-503148523
   switch-nixos-remote:
@@ -42,4 +56,5 @@ tasks:
 
   maintanence:
     cmds:
+      - nix flake update
       - nix store gc

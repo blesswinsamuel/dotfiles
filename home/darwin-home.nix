@@ -36,6 +36,7 @@
     duti
     pngpaste # Paste image files from clipboard to file on MacOS
     mas
+    dockutil
   ];
 
   programs.fish = {

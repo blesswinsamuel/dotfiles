@@ -1,4 +1,4 @@
-{ config, pkgs, pkgsMaster, lib, osConfig, systemConfig, ... }: {
+{ config, pkgs, pkgsMaster, pkgsStable, lib, osConfig, systemConfig, ... }: {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = systemConfig.username;
@@ -134,9 +134,9 @@
     pkgs.deno
     pkgs.bun
 
-    pkgs.poetry
+    pkgsStable.poetry
     pkgs.virtualenv
-    pkgs.pipx
+    pkgsStable.pipx
     pkgs.yarn
 
     # mongodb
@@ -191,6 +191,7 @@
     pkgs.zellij # terminal multiplexer
 
     # Tools
+    pkgs.autossh
     pkgs.mprocs
     pkgs.direnv
     pkgs.atuin
@@ -199,6 +200,8 @@
     pkgs.neovim
     pkgs.tldr
     pkgs.jq
+    pkgs.gojq
+    pkgs.hey # HTTP load generator, ApacheBench (ab) replacement
     pkgs.yq-go
     pkgs.rclone
     pkgs.qpdf
