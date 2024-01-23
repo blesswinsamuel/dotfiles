@@ -138,6 +138,7 @@
     pkgs.virtualenv
     pkgsStable.pipx
     pkgs.yarn
+    pkgs.python311Packages.pip
 
     # mongodb
     # mongosh
