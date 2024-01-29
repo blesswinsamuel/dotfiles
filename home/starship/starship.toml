@@ -4,7 +4,7 @@
 # https://starship.rs/config/
 
 format = """
-$status$time$cmd_duration$jobs$docker_context$package$golang$helm$java$nodejs$python$conda$rust$terraform$kubernetes$aws$gcloud\
+$status$time$cmd_duration$jobs$nix_shell$docker_context$package$golang$helm$java$nodejs$python$conda$rust$terraform$kubernetes$aws$gcloud\
 $line_break\
 $username$hostname$shlvl$directory$git_branch$git_commit$git_state$git_status$hg_branch\
 $line_break\
@@ -54,6 +54,10 @@ format = '[\[$symbol$version\]]($style) '
 format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
 # style = "bold yellow"
 symbol = "🅰 "
+
+[nix_shell]
+symbol = "❄️  "
+format = '[\[$symbol$state( \($name\))\]]($style) '
 
 [time]
 disabled = false
