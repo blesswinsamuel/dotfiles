@@ -46,22 +46,37 @@
       "Keynote" = 409183694;
       "Final Cut Pro" = 424389933;
       "Home Assistant" = 1099568401;
-      "Notes SE" = 1610634186;
       "TestFlight" = 899247664;
-      "Unsplash Wallpapers" = 1284863847;
+      # "Unsplash Wallpapers" = 1284863847;
       "Pages" = 409201541;
-      "Irvue" = 1039633667;
       "GarageBand" = 682658836;
-      "Telegram" = 747648890;
+      # "Telegram" = 747648890;
       "Logic Pro" = 634148309;
       "Numbers" = 409203825;
       "Stockfish" = 801463932;
+      # "Bitwarden" = 1352778147;
+      # "Tailscale" = 1475387142;
+      "Capo" = 696977615;
+      "Deliveries" = 290986013;
+      "AmorphousDiskMark" = 1168254295;
+      "Color Picker" = 1545870783;
     };
     casks = [
       # Browsers
+      "arc"
       "firefox"
       "google-chrome"
-      "orion"
+      # "orion"
+      # "microsoft-edge"
+      # "vivaldi"
+
+      # Password Managers
+      "bitwarden"
+
+      # Communication
+      "slack"
+      # "microsoft-teams"
+      "telegram"
 
       # Utilities
       "istat-menus"
@@ -75,6 +90,9 @@
       "trex"
       "shottr"
       "rectangle"
+      "alt-tab"
+      "swiftdefaultappsprefpane"
+      "tailscale"
 
       ## Media
       "iina"
@@ -86,16 +104,27 @@
       "intellij-idea"
       "sublime-text"
       "visual-studio-code"
-      "github"
       "sublime-merge"
+      "fork"
+      "github"
       "postico"
       "tableplus"
+      "wireshark"
+      "wezterm"
+      # "fleet"
+      "zed"
+      "warp"
+      "cyberduck"
+      "gitkraken"
+      "pgadmin4"
+      "hex-fiend"
 
       # Drivers
       "audient-evo" # homebrew/cask-drivers
       "yamaha-usb-midi-driver" # homebrew/cask-drivers
 
       # Fonts
+      "font-jetbrains-mono-nerd-font"
       # "font-fira-code"
       # "font-hack"
       # "font-hasklig"  # Source Code Pro with ligatures
@@ -104,57 +133,112 @@
       # "font-noto-sans"
 
       "1password"
+      "1password-cli"
       "arduino-ide"
-      "font-jetbrains-mono-nerd-font"
       "lunar"
       "obsidian"
       "reaper"
       "sonixd"
       "syntax-highlight"
       "vlc"
-      "1password-cli"
-      "fork"
-      "hex-fiend"
       "lyricsx"
       "orbstack"
-      "sourcetree"
-      "warp"
       "activitywatch"
       "balenaetcher"
       "keepingyouawake"
-      "microsoft-edge"
       "rustdesk"
       "spotify"
-      "tailscale"
-      "wezterm"
+      # "tailscale"
       "cider"
       "lapce"
-      "microsoft-teams"
-      "pgadmin4"
-      "alt-tab"
-      "cyberduck"
-      "gitkraken"
       "inkscape"
       "latest"
       "mimestream"
       "sigmaos"
       "utm"
-      "zed"
       "appflowy"
       "lens"
       "signal"
-      "swiftdefaultappsprefpane"
-      "arc"
-      "fleet"
       "hammerspoon"
       "logseq"
       "readdle-spark"
-      "slack"
       "syncthing"
-      "vivaldi"
     ];
     brews = [
       "switchaudio-osx"
     ];
   };
+
+  local.dock.enable = true;
+  local.dock.entries = [
+    { path = "/System/Applications/Launchpad.app/"; }
+    { path = "/Applications/ForkLift.app/"; }
+    { path = "/System/Applications/Clock.app/"; }
+    { path = "/System/Applications/Weather.app/"; }
+    # { path = "/System/Applications/Mail.app/"; }
+    { path = "/System/Applications/Messages.app/"; }
+    { path = "/System/Applications/Contacts.app/"; }
+    { path = "/System/Applications/Calendar.app/"; }
+    { path = "/System/Applications/Notes.app/"; }
+    { path = "/System/Applications/Stocks.app/"; }
+    # { path = "/Applications/Obsidian.app/"; }
+    { path = "/System/Applications/Reminders.app/"; }
+    { path = "/Applications/Spotify.app/"; }
+    { path = "/System/Applications/Podcasts.app/"; }
+    # { path = "/System/Applications/Music.app/"; }
+    # { path = "/System/Applications/TV.app/"; }
+    { path = "/System/Applications/VoiceMemos.app/"; }
+    { path = ""; options = "--type spacer"; }
+    { path = "/Applications/Home Assistant.app/"; }
+    { path = "/System/Applications/Home.app/"; }
+    { path = ""; options = "--type spacer"; }
+    { path = "/Applications/Slack.app/"; }
+    { path = "/Applications/Numbers.app/"; }
+    { path = ""; options = "--type spacer"; }
+    { path = "/Applications/Bitwarden.app/"; }
+    { path = "/Applications/Telegram.app/"; }
+    { path = "/Applications/1Password.app/"; }
+    { path = "/Applications/Arc.app/"; }
+    { path = "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/"; }
+    { path = "/Applications/Google Chrome.app/"; }
+    { path = "/Applications/Firefox.app/"; }
+    { path = "/Applications/IINA.app/"; }
+    { path = ""; options = "--type spacer"; }
+    { path = "/Applications/OrbStack.app/"; }
+    { path = "/Applications/Visual Studio Code.app/"; }
+    { path = "/Applications/Sublime Text.app/"; }
+    # { path = "/Applications/Zed.app/"; }
+    # { path = "/Applications/Lapce.app/"; }
+    { path = "/Applications/Sublime Merge.app/"; }
+    # { path = "/Applications/Fork.app/"; }
+    # { path = "/Applications/GitKraken.app/"; }
+    # { path = "/Applications/GitHub Desktop.app/"; }
+    { path = "/Applications/Postico 2.app/"; }
+    { path = "/Applications/TablePlus.app/"; }
+    # { path = "/Applications/Cyberduck.app/"; }
+    # { path = "/Applications/Warp.app/"; }
+    { path = "/Applications/iTerm.app/"; }
+    # { path = "/Applications/IntelliJ IDEA.app/"; }
+    # { path = "/Applications/Lens.app/"; }
+    { path = ""; options = "--type spacer"; }
+    { path = "/Applications/Color Picker.app/"; }
+    { path = "/System/Applications/Utilities/Activity Monitor.app/"; }
+    { path = "/System/Applications/Utilities/Console.app/"; }
+    { path = "/System/Applications/App Store.app/"; }
+    { path = "/System/Applications/System Settings.app/"; }
+    { path = "/System/Applications/Shortcuts.app/"; }
+    { path = "/System/Applications/Utilities/Audio MIDI Setup.app/"; }
+    { path = "/Applications/Mac Mouse Fix.app/"; }
+    { path = "/System/Applications/Utilities/Screen Sharing.app/"; }
+    { path = ""; options = "--type spacer"; }
+    { path = "/Applications/Final Cut Pro.app/"; }
+    { path = "/Applications/GarageBand.app/"; }
+    { path = "/Applications/MainStage 3.app/"; }
+    { path = "/Applications/Logic Pro X.app/"; }
+    { path = "/Applications/EVO.app/"; }
+
+    { path = "/Applications/"; section = "others"; options = "--sort datemodified --view grid --display folder"; }
+    { path = "/Users/blesswinsamuel/Downloads/"; section = "others"; options = "--sort dateadded --view fan --display stack"; }
+    { path = "/Volumes/BleSSD/Screenshots/"; section = "others"; options = "--sort datemodified --view grid --display stack"; }
+  ];
 }

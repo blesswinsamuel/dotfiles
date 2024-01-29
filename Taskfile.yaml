@@ -56,5 +56,8 @@ tasks:
 
   maintanence:
     cmds:
+      - brew update
+      - brew cleanup
       - nix flake update
       - nix store gc
+      - docker system prune -f -a --volumes

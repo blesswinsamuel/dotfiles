@@ -79,4 +79,25 @@
     brews = [
     ];
   };
+
+  # https://daiderd.com/nix-darwin/manual/index.html
+  system.defaults = {
+    dock = {
+      autohide = false;
+    };
+
+    # https://github.com/LnL7/nix-darwin/pull/557/files
+    # customize settings that not supported by nix-darwin directly
+    # see the source code of https://github.com/rgcr/m-cli to get all the available options
+    # or
+    # https://macos-defaults.com/
+    # https://github.com/yannbertrand/macos-defaults
+    CustomUserPreferences = {
+      "com.googlecode.iterm2" = {
+        CopySelection = 0;
+        # PrefsCustomFolder = "/Users/${systemConfig.username}/dotfiles/configs/iterm2";
+      };
+      # "com.apple.custommenu.apps" = ("NSGlobalDomain");
+    };
+  };
 }

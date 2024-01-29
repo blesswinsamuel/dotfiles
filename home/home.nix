@@ -128,11 +128,11 @@
 
     # Languages
     pkgs.rustup
-    pkgs.go
+    pkgsMaster.go
     pkgs.nodejs
     pkgs.python3
     pkgs.deno
-    pkgs.bun
+    pkgsMaster.bun
 
     pkgsStable.poetry
     pkgs.virtualenv
@@ -164,9 +164,9 @@
     pkgs.podman-tui
 
     # Infrastructure management
-    pkgs.terraform
+    pkgsMaster.terraform
     # nodePackages.cdk8s-cli
-    pkgs.nodePackages.cdktf-cli
+    pkgsMaster.nodePackages.cdktf-cli
 
     # TUI
     pkgs.k9s
@@ -179,17 +179,21 @@
     # Better tools
     pkgs.prettyping
     pkgs.bat
-    pkgs.dog
+    pkgs.dog # DNS client like dig
     pkgs.ripgrep
     pkgs.eza
     pkgs.fd
     pkgs.fzf
     pkgs.ncdu
+    pkgs.dua # Disk Usage Analyzer
+    pkgs.erdtree # File-tree visualizer and disk usage analyzer that is aware of .gitignore and hidden file rules
     pkgs.htop
     pkgs.difftastic
     pkgs.duf
     pkgs.sd
     pkgs.zellij # terminal multiplexer
+    pkgs.bandwhich
+    pkgs.bottom
 
     # Tools
     pkgs.autossh
