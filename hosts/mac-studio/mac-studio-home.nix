@@ -1,4 +1,4 @@
-{ config, pkgs, lib, osConfig, systemConfig, ... }: {
+{ config, pkgs, pkgsMaster, pkgsStable, lib, osConfig, systemConfig, ... }: {
   home.packages = [
     # Languages
     pkgs.rustup

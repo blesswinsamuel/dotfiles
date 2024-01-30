@@ -1,45 +1,45 @@
 { self, pkgs, lib, config, secrets, systemConfig, ... }: {
   homebrew = {
     taps = [
-      "homebrew/bundle"
-      "homebrew/cask-drivers"
-      "homebrew/cask-fonts"
-      "homebrew/cask-versions"
-      "homebrew/services"
-      "wez/wezterm"
+      # "homebrew/bundle"
+      # "homebrew/cask-drivers"
+      # "homebrew/cask-fonts"
+      # "homebrew/cask-versions"
+      # "homebrew/services"
+      # "wez/wezterm"
     ];
     masApps = {
-      "GarageBand" = 682658836;
-      "Keynote" = 409183694;
-      "Numbers" = 409203825;
-      "Pages" = 409201541;
+      # "GarageBand" = 682658836;
+      # "Keynote" = 409183694;
+      # "Numbers" = 409203825;
+      # "Pages" = 409201541;
     };
     casks = [
       "alfred"
       "arc"
-      "docker"
+      # "docker"
       "font-jetbrains-mono"
-      "fork"
-      "github"
-      "istat-menus"
+      # "fork"
+      # "github"
+      # "istat-menus"
       "iterm2"
       "itsycal"
       "keepingyouawake"
-      "lens"
+      # "lens"
       "raycast"
       "rectangle"
-      "rustdesk"
-      "sloth" # shows all open files and sockets in use by all running processes on your system
+      # "rustdesk"
+      # "sloth" # shows all open files and sockets in use by all running processes on your system
       "stats"
       "sublime-merge"
       "sublime-text"
-      "syncthing"
-      "tableplus"
-      "tailscale"
+      # "syncthing"
+      # "tableplus"
+      # "tailscale"
       "trex"
       "visual-studio-code"
-      "visual-studio-code-insiders"
-      "wezterm"
+      # "visual-studio-code-insiders"
+      # "wezterm"
       "zed"
     ];
     brews = [
@@ -51,13 +51,15 @@
       # "plow"
       # "prometheus"
       # "socat"
-      "sshpass"
       # "teleport"
-      "the_silver_searcher"
       # "ttyd"
       # "watch"
       # "wrk"
       # "wader/tap/fq"
+      # "sshpass"
+      # "the_silver_searcher"
     ];
   };
+
+  local.dock.enable = false;
 }
