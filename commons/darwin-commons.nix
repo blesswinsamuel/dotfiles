@@ -92,11 +92,30 @@
     # or
     # https://macos-defaults.com/
     # https://github.com/yannbertrand/macos-defaults
+    # https://apple.stackexchange.com/a/358609
     CustomUserPreferences = {
       "com.googlecode.iterm2" = {
         CopySelection = 0;
         # PrefsCustomFolder = "/Users/${systemConfig.username}/dotfiles/configs/iterm2";
       };
+      "com.apple.AppleMultitouchTrackpad" = {
+        # https://macos-defaults.com/trackpad/trackpadthreefingerdrag.html
+        # https://support.apple.com/en-in/guide/mac-help/unac899/mac
+        # Settings -> Accessibility -> Pointer Control -> Trackpad Options -> Dragging Style -> Three Finger Drag
+        TrackpadThreeFingerDrag = 1;
+        # Tap to click
+        Clicking = 1;
+      };
+      "com.apple.menuextra.clock" = {
+        IsAnalog = 1;
+      };
+      # "com.apple.controlcenter" = {
+      #   "NSStatusItem Visible Battery" = 0;
+      # };
+      # "com.apple.Spotlight" = {
+      #   # Hide spotlight icon
+      #   "NSStatusItem Visible Item-0" = 0;
+      # };
       # "com.apple.custommenu.apps" = ("NSGlobalDomain");
     };
   };

@@ -144,5 +144,12 @@
     pkgs.zellij # terminal multiplexer
     pkgs.bandwhich
     pkgs.bottom
+
+    # Common Utilities
+    pkgsMaster.go-task
+    pkgs.jq
+    pkgs.yq-go
+    pkgs.tree
+    pkgs.tldr
   ];
 }

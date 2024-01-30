@@ -56,19 +56,14 @@
     pkgs.direnv
     pkgs.atuin
     pkgs.just
-    pkgsMaster.go-task
     pkgs.neovim
-    pkgs.tldr
-    pkgs.jq
     pkgs.gojq
     pkgs.hey # HTTP load generator, ApacheBench (ab) replacement
-    pkgs.yq-go
     pkgs.rclone
     pkgs.qpdf
     pkgs.pv
     pkgs.gnused
     pkgs.gnutar
-    pkgs.tree
     pkgs.websocat
     pkgs.xh
     pkgs.unison

@@ -64,6 +64,14 @@ rclone sync b2:blesswin-mackup ~/Mackup # --dry-run
 mackup restore # --dry-run
 ```
 
+## Mac manual steps
+
+- Settings -> Keyboard -> Keyboard Shortcuts -> Modifier Keys -> Change Caps Lock to Escape
+- Settings -> Keyboard -> Keyboard Shortcuts -> Spotlight -> Show Spotlight Search -> Change to Ctrl+Cmd+Option+space
+- iTerm2
+    - Keys -> Hotkey -> Command+Esc
+    - Profiles -> Keys -> Presets -> Natural Text Editing
+
 ## Resources
 
 - https://xyno.space/post/nix-darwin-introduction
