@@ -103,8 +103,8 @@
           extraHomeModules = [ ./hosts/mac-studio/mac-studio-home.nix ];
           systemConfig = systemConfig.personal;
         };
-        ABLSAMUE-M-28DY = darwinSystem {
-          system = "x86_64-darwin";
+        RQHFR2KPF2 = darwinSystem {
+          system = "aarch64-darwin";
           extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
           extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
           systemConfig = systemConfig.work;

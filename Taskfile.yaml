@@ -14,7 +14,7 @@ tasks:
     cmds:
       - cd secrets && nix run github:ryantm/agenix -- -e config.json.age
 
-  init:
+  darwin-init:
     cmds:
       - task: _decrypt-config
       - defer: git rm -f config.json

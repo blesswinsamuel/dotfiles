@@ -14,7 +14,7 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 # mv /etc/zshenv /etc/zshenv.before-nix-darwin
 # mv /etc/shells /etc/shells.before-nix-darwin
 
-nix run nixpkgs#go-task -- init # first run
+nix run nixpkgs#go-task -- darwin-init # first run
 nix run nixpkgs#go-task -- switch -- --verbose
 
 nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
