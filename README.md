@@ -7,6 +7,9 @@
 # https://zero-to-nix.com/start/install
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 
+# Install homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 # printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
 # /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 

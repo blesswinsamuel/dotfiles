@@ -2,7 +2,7 @@
   home.packages = [
     # Languages
     pkgs.rustup
-    pkgsMaster.go
+    # pkgsMaster.go
     pkgs.nodejs
     pkgs.python3
     pkgs.deno
@@ -63,10 +63,13 @@
     pkgs.qpdf
     pkgs.pv
     pkgs.gnused
-    pkgs.gnutar
+    # pkgs.gnutar
+    # pkgs.gzip
+    # pkgs.unzip
+    pkgs.tree
     pkgs.websocat
     pkgs.xh
-    pkgs.unison
+    # pkgsMaster.unison
     pkgs.hexyl # command line hex viewer
     # qrcp # transfer files over Wi-Fi from your computer to a mobile device by scanning a QR code without leaving the terminal
     pkgs.smartmontools # tools for monitoring the health of hard drives

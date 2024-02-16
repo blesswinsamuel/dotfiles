@@ -18,7 +18,6 @@
   homebrew = {
     taps = [
       "homebrew/bundle"
-      "homebrew/cask-drivers"
       "homebrew/cask-fonts"
       "homebrew/cask-versions"
       "homebrew/services"
@@ -81,7 +80,7 @@
       # Utilities
       "istat-menus"
       "itsycal"
-      "mouse-fix"
+      "mac-mouse-fix"
       "alfred"
       "raycast"
       "iterm2"
@@ -120,8 +119,8 @@
       "hex-fiend"
 
       # Drivers
-      "audient-evo" # homebrew/cask-drivers
-      "yamaha-usb-midi-driver" # homebrew/cask-drivers
+      # "homebrew/cask-drivers/audient-evo"
+      # "homebrew/cask-drivers/yamaha-usb-midi-driver"
 
       # Fonts
       "font-jetbrains-mono-nerd-font"
@@ -149,7 +148,6 @@
       "rustdesk"
       "spotify"
       # "tailscale"
-      "cider"
       "lapce"
       "inkscape"
       "latest"
@@ -165,6 +163,8 @@
       "syncthing"
     ];
     brews = [
+      "go"
+      "unison"
       "switchaudio-osx"
     ];
   };
@@ -183,9 +183,9 @@
     { path = "/System/Applications/Stocks.app/"; }
     # { path = "/Applications/Obsidian.app/"; }
     { path = "/System/Applications/Reminders.app/"; }
-    { path = "/Applications/Spotify.app/"; }
+    { path = "/System/Applications/Music.app/"; }
+    # { path = "/Applications/Spotify.app/"; }
     { path = "/System/Applications/Podcasts.app/"; }
-    # { path = "/System/Applications/Music.app/"; }
     # { path = "/System/Applications/TV.app/"; }
     { path = "/System/Applications/VoiceMemos.app/"; }
     { path = ""; options = "--type spacer"; }
@@ -233,8 +233,9 @@
     { path = ""; options = "--type spacer"; }
     { path = "/Applications/Final Cut Pro.app/"; }
     { path = "/Applications/GarageBand.app/"; }
-    { path = "/Applications/MainStage 3.app/"; }
+    { path = "/Applications/MainStage.app/"; }
     { path = "/Applications/Logic Pro X.app/"; }
+    { path = "/Applications/Pianoteq 8 STAGE/Pianoteq 8 STAGE.app"; }
     { path = "/Applications/EVO.app/"; }
 
     { path = "/Applications/"; section = "others"; options = "--sort datemodified --view grid --display folder"; }

@@ -57,6 +57,7 @@ tasks:
   maintanence:
     cmds:
       - brew update
+      - brew upgrade
       - brew cleanup
       - nix flake update
       - nix store gc
