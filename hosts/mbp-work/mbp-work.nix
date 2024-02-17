@@ -4,7 +4,7 @@
       # "homebrew/bundle"
       # "homebrew/cask-drivers"
       "homebrew/cask-fonts"
-      # "homebrew/cask-versions"
+      "homebrew/cask-versions"
       # "homebrew/services"
       # "wez/wezterm"
     ];
@@ -17,16 +17,13 @@
     casks = [
       "alfred"
       "arc"
-      # "docker"
       "font-jetbrains-mono"
       # "fork"
       # "github"
       # "istat-menus"
-      "iterm2"
       "itsycal"
       "keepingyouawake"
       "1password"
-      "slack"
       # "lens"
       "raycast"
       "rectangle"
@@ -37,12 +34,24 @@
       "sublime-text"
       # "syncthing"
       # "tableplus"
-      # "tailscale"
+      "tailscale"
       "trex"
-      "visual-studio-code"
-      # "visual-studio-code-insiders"
+      "visual-studio-code-insiders"
       # "wezterm"
+      "iina"
       "zed"
+      "mac-mouse-fix"
+      "google-drive"
+
+      "licecap"
+      "slack"
+      "visual-studio-code"
+      # "zoom"
+      "1password-cli"
+      "goland"
+      "iterm2"
+      "docker"
+      "fly"
     ];
     brews = [
       # "grafana"
@@ -60,7 +69,32 @@
       # "wader/tap/fq"
       # "sshpass"
       # "the_silver_searcher"
+
+      # "go"
+      "python@3.10"
+      "make"
+      "nvm"
+
+      # "stern"
+      # "curl"
+      # "wget"
+      # "direnv"
+      # "git"
+      # "gh"
+      # "jq"
+      # "kubectl"
+      # "rg"
+      # "yq"
+      "openssl"
+      { name = "mysql-client@5.7"; link = true; }
+      # "s3cmd"
+      "terraform"
+      # "awscli"
+      # "doctl"
+      # "kcat"
+      # "redis"
     ];
+    # brew link --overwrite --force mysql-client@5.7
   };
 
   local.dock.enable = true;
@@ -71,20 +105,25 @@
     { path = "/System/Applications/Messages.app/"; }
     { path = "/System/Applications/Calendar.app/"; }
     { path = "/System/Applications/Notes.app/"; }
-    { path = "/System/Applications/Stocks.app/"; }
     { path = "/System/Applications/Reminders.app/"; }
+    { path = "/System/Applications/Stocks.app/"; }
     # { path = "/Applications/Spotify.app/"; }
     { path = ""; options = "--type spacer"; }
     { path = "/Applications/Slack.app/"; }
+    { path = "~/Applications/Gmail.app/"; }
     { path = "/Applications/1Password.app/"; }
     { path = "/Applications/Arc.app/"; }
     { path = "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/"; }
     { path = ""; options = "--type spacer"; }
     { path = "/Applications/Visual Studio Code.app/"; }
+    { path = "/Applications/Visual Studio Code - Insiders.app/"; }
     { path = "/Applications/Sublime Text.app/"; }
     { path = "/Applications/Zed.app/"; }
+    { path = "/Applications/GoLand.app/"; }
     { path = "/Applications/Sublime Merge.app/"; }
     { path = "/Applications/iTerm.app/"; }
+    { path = "/Applications/Sequel Ace.app/"; }
+    { path = "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/"; }
     { path = ""; options = "--type spacer"; }
     { path = "/System/Applications/Utilities/Activity Monitor.app/"; }
     { path = "/System/Applications/Utilities/Console.app/"; }
