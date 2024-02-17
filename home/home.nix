@@ -109,10 +109,29 @@
   #   };
   # };
 
+  age.secrets.wakatimeApiKey = {
+    file = ../secrets/wakatimeApiKey.age;
+    # mode = "400";
+    # owner = systemConfig.username;
+  };
+
   home.file = {
     ".hushlogin" = {
       enable = true;
       source = ./hushlogin/hushlogin;
+    };
+    ".wakatime.cfg" = {
+      enable = true;
+      source = pkgs.substituteAll { src = ./wakatime/wakatime.cfg; homeDir = config.home.homeDirectory; };
+      # onChange = ''cat ~/scratch/.wakatime.cfg > ~/.wakatime.cfg'';
+    };
+    ".wakatimeKey.sh" = {
+      enable = true;
+      # https://github.com/nix-community/home-manager/issues/322#issuecomment-1856128020
+      text = ''#!/bin/bash
+cat ${config.age.secrets.wakatimeApiKey.path}'';
+      # onChange = ''cat ~/scratch/.wakatimeKey.sh > ~/.wakatimeKey.sh && chmod +x ~/.wakatimeKey.sh'';
+      executable = true;
     };
   };
 

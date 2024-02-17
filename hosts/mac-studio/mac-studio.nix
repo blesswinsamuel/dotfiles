@@ -1,9 +1,4 @@
 { self, pkgs, lib, config, secrets, systemConfig, ... }: {
-  # age.secrets.personalEmail = {
-  #   file = ../../secrets/personalEmail.age;
-  #   # path = "../../secrets-decrypted/personalEmail";
-  # };
-
   # programs.git = {
   #   enable = true;
   #   userName  = "my_git_username";

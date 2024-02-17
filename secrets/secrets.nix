@@ -15,8 +15,7 @@ let
 in
 {
   "config.json.age".publicKeys = users ++ systems;
-  "personalEmail.age".publicKeys = [ blesswinsamuel mac-studio ];
-  "workEmail.age".publicKeys = [ blesswinsamuel-work mbp-work ];
+  "wakatimeApiKey.age".publicKeys = users ++ systems;
 }
 
-# nix run github:ryantm/agenix -- -e personalEmail.age
+# nix run github:ryantm/agenix -- -e wakatimeApiKey.age

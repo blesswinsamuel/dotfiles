@@ -50,7 +50,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHomeModules;
+                imports = [ agenix.homeManagerModules.default ] ++ [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHomeModules;
               };
             }
             ./commons/commons.nix
@@ -75,7 +75,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHomeModules;
+                imports = [ agenix.homeManagerModules.default ] ++ [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHomeModules;
               };
             }
             ./commons/commons.nix
