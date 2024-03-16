@@ -1,0 +1,55 @@
+profiles:
+  common:
+    files:
+      .hushlogin: { source: ./hushlogin/hushlogin }
+      .config/skhd/skhdrc: { source: ./skhd/skhdrc }
+      .config/wezterm/wezterm.lua: { source: ./wezterm/wezterm.lua }
+      .config/yabai/yabairc: { source: ./yabai/yabairc }
+      .config/starship.toml: { source: ./starship/starship.toml }
+      .config/git/config: { source: ./git/config, operation: copy, template: true }
+      .wakatime.cfg: { source: ./wakatime/wakatime.cfg, operation: copy, template: true }
+  darwin:
+    files:
+      Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings:
+        { source: ./sublime-text/Package Control.sublime-settings }
+      Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./sublime-text/Preferences.sublime-settings }
+  linux:
+hosts:
+  Blesswins-Mac-Studio:
+    secretProfile: personal
+  RQHFR2KPF2:
+    secretProfile: work
+    macos:
+      dock:
+        entries:
+          - { path: "/System/Applications/Launchpad.app/" }
+          - { path: "/System/Applications/Clock.app/" }
+          - { path: "/System/Applications/Weather.app/" }
+          - { path: "/System/Applications/Messages.app/" }
+          - { path: "/System/Applications/Calendar.app/" }
+          - { path: "/System/Applications/Notes.app/" }
+          - { path: "/System/Applications/Stocks.app/" }
+          - { path: "/System/Applications/Reminders.app/" }
+          # - { path: "/Applications/Spotify.app/" }
+          - { options: { type: spacer } }
+          - { path: "/Applications/Slack.app/" }
+          - { path: "/Applications/1Password.app/" }
+          - { path: "/Applications/Arc.app/" }
+          - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
+          - { options: { type: spacer } }
+          - { path: "/Applications/Visual Studio Code.app/" }
+          - { path: "/Applications/Sublime Text.app/" }
+          - { path: "/Applications/Zed.app/" }
+          - { path: "/Applications/Sublime Merge.app/" }
+          - { path: "/Applications/iTerm.app/" }
+          - { options: { type: spacer } }
+          - { path: "/System/Applications/Utilities/Activity Monitor.app/" }
+          - { path: "/System/Applications/Utilities/Console.app/" }
+          - { path: "/System/Applications/App Store.app/" }
+          - { path: "/System/Applications/System Settings.app/" }
+          # - { path: "/Applications/Mac Mouse Fix.app/" }
+          - { path: "/System/Applications/Utilities/Screen Sharing.app/" }
+
+          - { path: "/Applications/", section: "others", options: { sort: datemodified, view: grid, display: folder } }
+          - { path: "~/Downloads/", section: "others", options: { sort: dateadded, view: fan, display: stack } }
+          - { path: "~/Documents/Screenshots/", section: "others", options: { sort: datemodified, view: grid, display: stack } }

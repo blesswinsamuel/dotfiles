@@ -15,15 +15,12 @@
     nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
 
-    agenix = { url = "github:ryantm/agenix"; };
     # nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin" };
   };
 
-  outputs = inputs@{ self, agenix, nix-darwin, home-manager, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
+  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
     let
       inherit (self.lib) attrValues makeOverridable mkForce optionalAttrs singleton;
-
-      systemConfig = builtins.fromJSON (builtins.readFile "${self}/config.json");
 
       genPkgs = system: pkgs: import pkgs {
         inherit system;
@@ -42,7 +39,6 @@
           specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             home-manager.nixosModules.home-manager
-            agenix.nixosModules.default
             {
               # https://mipmip.github.io/home-manager-option-search/
               # networking.hostName = hostName;
@@ -50,7 +46,7 @@
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ agenix.homeManagerModules.default ] ++ [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHomeModules;
+                imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHomeModules;
               };
             }
             ./commons/commons.nix
@@ -68,14 +64,13 @@
           specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             home-manager.darwinModules.home-manager
-            agenix.nixosModules.default
             {
               # networking.hostName = hostName;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
               home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ agenix.homeManagerModules.default ] ++ [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHomeModules;
+                imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHomeModules;
               };
             }
             ./commons/commons.nix
@@ -93,7 +88,7 @@
           system = "x86_64-linux";
           extraModules = [ ./hosts/hp-chromebox/hp-chromebox.nix ];
           extraHomeModules = [ ];
-          systemConfig = systemConfig.personal;
+          systemConfig = { username = "blesswinsamuel"; };
         };
       };
       darwinConfigurations = processConfigurations {
@@ -101,13 +96,13 @@
           system = "aarch64-darwin";
           extraModules = [ ./hosts/mac-studio/mac-studio.nix ];
           extraHomeModules = [ ./hosts/mac-studio/mac-studio-home.nix ];
-          systemConfig = systemConfig.personal;
+          systemConfig = { username = "blesswinsamuel"; };
         };
         RQHFR2KPF2 = darwinSystem {
           system = "aarch64-darwin";
           extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
           extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
-          systemConfig = systemConfig.work;
+          systemConfig = { username = "bsamuel"; };
         };
       };
 

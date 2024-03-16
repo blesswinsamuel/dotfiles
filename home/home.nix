@@ -16,49 +16,6 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.git = {
-    enable = true;
-    userName = "Blesswin Samuel";
-    userEmail = systemConfig.git.email;
-
-    aliases = {
-      ch = "checkout";
-      b = "branch";
-      c = "commit";
-      s = "status";
-      st = "stash";
-      o = "open";
-      open = "!fish -c git-open";
-      t = "tree";
-      tree = "log --graph --decorate --pretty=oneline --abbrev-commit";
-    };
-
-    lfs = {
-      enable = true;
-    };
-
-    # https://github.com/dandavison/delta
-    delta = {
-      enable = true;
-      options = {
-        navigate = true; # use n and N to move between diff sections
-      };
-    };
-
-    extraConfig = {
-      merge.conflictstyle = "diff3";
-      diff.colorMoved = "default";
-      commit = {
-        gpgSign = true;
-      };
-      # [credential]
-      # 	helper = osxkeychain
-    };
-    # includes = [
-    #   { path = "~/.gitconfig.local"; }
-    # ]
-  };
-
   programs.gpg = {
     enable = true;
     settings = {
@@ -76,7 +33,6 @@
 
   programs.starship = {
     enable = true;
-    settings = builtins.fromTOML (builtins.readFile ./starship/starship.toml);
   };
 
   programs.vim = {
@@ -109,32 +65,6 @@
   #   };
   # };
 
-  age.secrets.wakatimeApiKey = {
-    file = ../secrets/wakatimeApiKey.age;
-    # mode = "400";
-    # owner = systemConfig.username;
-  };
-
-  home.file = {
-    ".hushlogin" = {
-      enable = true;
-      source = ./hushlogin/hushlogin;
-    };
-    ".wakatime.cfg" = {
-      enable = true;
-      source = pkgs.substituteAll { src = ./wakatime/wakatime.cfg; homeDir = config.home.homeDirectory; };
-      # onChange = ''cat ~/scratch/.wakatime.cfg > ~/.wakatime.cfg'';
-    };
-    ".wakatimeKey.sh" = {
-      enable = true;
-      # https://github.com/nix-community/home-manager/issues/322#issuecomment-1856128020
-      text = ''#!/bin/bash
-cat ${config.age.secrets.wakatimeApiKey.path}'';
-      # onChange = ''cat ~/scratch/.wakatimeKey.sh > ~/.wakatimeKey.sh && chmod +x ~/.wakatimeKey.sh'';
-      executable = true;
-    };
-  };
-
   home.packages = [
     # Nix
     pkgs.nixpkgs-fmt
@@ -165,6 +95,7 @@ cat ${config.age.secrets.wakatimeApiKey.path}'';
     pkgs.bottom
 
     # Utilities
+    pkgs.age
 
     # Experimental Utilities
     pkgs.gping
@@ -176,5 +107,10 @@ cat ${config.age.secrets.wakatimeApiKey.path}'';
     pkgs.yq-go
     pkgs.tree
     pkgs.tldr
+
+    # Git
+    pkgs.git
+    pkgs.git-lfs
+    pkgs.delta
   ];
 }

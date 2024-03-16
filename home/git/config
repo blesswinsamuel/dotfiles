@@ -1,0 +1,45 @@
+[alias]
+    b = "branch"
+    c = "commit"
+    ch = "checkout"
+    o = "open"
+    open = "!fish -c git-open"
+    s = "status"
+    st = "stash"
+    t = "tree"
+    tree = "log --graph --decorate --pretty=oneline --abbrev-commit"
+
+[commit]
+    gpgSign = true
+
+[core]
+    pager = "delta"
+
+# https://github.com/dandavison/delta
+[delta]
+    navigate = true # use n and N to move between diff sections
+
+[diff]
+    colorMoved = "default"
+
+[filter "lfs"]
+    clean = "git-lfs clean -- %f"
+    process = "git-lfs filter-process"
+    required = true
+    smudge = "git-lfs smudge -- %f"
+
+[interactive]
+    diffFilter = "delta --color-only"
+
+[merge]
+    conflictstyle = "diff3"
+
+[user]
+    email = "{{ .Secrets.git.email }}"
+    name = "Blesswin Samuel"
+
+# [credential]
+# 	helper = osxkeychain
+# includes = [
+#   { path = "~/.gitconfig.local"; }
+# ]
