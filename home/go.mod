@@ -6,6 +6,8 @@ require (
 	filippo.io/age v1.1.1
 	github.com/goccy/go-yaml v1.11.3
 	github.com/rs/zerolog v1.32.0
+	github.com/sergi/go-diff v1.3.1
+	howett.net/plist v1.0.1
 )
 
 require (

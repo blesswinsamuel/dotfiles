@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"maps"
+	"net/url"
 	"os"
 	"os/exec"
 	"path"
@@ -13,12 +14,13 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
-
 	"filippo.io/age"
 	"filippo.io/age/agessh"
 	"github.com/goccy/go-yaml"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+	"github.com/sergi/go-diff/diffmatchpatch"
+	"howett.net/plist"
 )
 
 type Config struct {
@@ -171,7 +173,6 @@ func main() {
 	maps.Copy(secrets, secretConfigAll[profile.SecretProfile])
 	log.Info().Str("profile", profile.SecretProfile).Interface("secrets", secrets).Msgf("got secret config")
 
-	// for _, profile := range profiles {
 	for destination, file := range profile.Files {
 		if file.Operation == "" {
 			file.Operation = "symlink"
@@ -262,5 +263,155 @@ func main() {
 			log.Fatal().Str("operation", file.Operation).Msgf("unsupported operation")
 		}
 	}
-	// }
+	for i, entry := range profile.MacOS.Dock.Entries {
+		if entry.Section == "" {
+			entry.Section = "apps"
+		}
+		if entry.Path != "" {
+			entry.Path = strings.Replace(entry.Path, "$HOME", os.Getenv("HOME"), -1)
+		}
+		profile.MacOS.Dock.Entries[i] = entry
+	}
+	// profile.MacOS.Dock.Entries
+	dockEntries, err := getCurrentDockEntries()
+	if err != nil {
+		log.Fatal().Err(err).Msgf("failed to get current dock entries")
+	}
+	// fmt.Println(dockEntries)
+	if isEqual := printDockDiff(dockEntries, profile.MacOS.Dock.Entries); !isEqual {
+		log.Info().Msgf("updating dock entries")
+		// https://gist.github.com/kamui545/c810eccf6281b33a53e094484247f5e8
+		if err := exec.Command("dockutil", "--remove", "all", "--no-restart").Run(); err != nil {
+			log.Fatal().Err(err).Msgf("failed to remove all dock entries")
+		}
+		for _, entry := range profile.MacOS.Dock.Entries {
+			cmdArgs := []string{"--no-restart", "--add", entry.Path}
+			cmdArgs = append(cmdArgs, "--section", entry.Section)
+			for k, v := range entry.Options {
+				cmdArgs = append(cmdArgs, "--"+k, v)
+			}
+			if err := exec.Command("dockutil", cmdArgs...).Run(); err != nil {
+				log.Fatal().Interface("entry", entry).Err(err).Msgf("failed to add dock entry")
+			}
+		}
+		if err := exec.Command("killall", "Dock").Run(); err != nil {
+			log.Fatal().Err(err).Msgf("failed to restart dock")
+		}
+	}
+}
+
+func printDockDiff(current, desired []DockEntry) bool {
+	currentYaml := &bytes.Buffer{}
+	if err := yaml.NewEncoder(currentYaml).Encode(current); err != nil {
+		log.Fatal().Err(err).Msgf("failed to encode current dock entries")
+	}
+	desiredYaml := &bytes.Buffer{}
+	if err := yaml.NewEncoder(desiredYaml).Encode(desired); err != nil {
+		log.Fatal().Err(err).Msgf("failed to encode desired dock entries")
+	}
+	dmp := diffmatchpatch.New()
+	isEqual := currentYaml.String() == desiredYaml.String()
+	if isEqual {
+		return true
+	}
+	diffs := dmp.DiffMain(currentYaml.String(), desiredYaml.String(), false)
+	fmt.Println(dmp.DiffPrettyText(diffs))
+	return false
+}
+
+func getCurrentDockEntries() ([]DockEntry, error) {
+	var entries []DockEntry
+	plistFile, err := os.Open(path.Join(os.Getenv("HOME"), "Library/Preferences/com.apple.dock.plist"))
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
+	}
+	decoder := plist.NewDecoder(plistFile)
+	decodedMap := map[string]any{}
+	if err := decoder.Decode(&decodedMap); err != nil {
+		return nil, fmt.Errorf("failed to decode plist: %w", err)
+	}
+	persistentApps, ok := decodedMap["persistent-apps"].([]any)
+	if !ok {
+		return nil, fmt.Errorf("failed to get persistent-apps")
+	}
+	// https://github.com/kcrawford/dockutil/blob/640c520ce142a5f21e56fda88a95b4e4d6576042/Sources/DockUtil/Dock.swift#L275-L324
+	addEntry := func(entry any, section string) error {
+		entryMap, ok := entry.(map[string]any)
+		if !ok {
+			return fmt.Errorf("failed to get entry")
+		}
+		tileData, ok := entryMap["tile-data"].(map[string]any)
+		if !ok {
+			return fmt.Errorf("failed to get tile-data")
+		}
+		tileType, ok := entryMap["tile-type"].(string)
+		if !ok {
+			return fmt.Errorf("failed to get tile-type")
+		}
+		// delete(tileData, "book")
+		// fmt.Println(entryMap)
+		dockEntry := DockEntry{Section: section}
+		// https://github.com/kcrawford/dockutil/blob/640c520ce142a5f21e56fda88a95b4e4d6576042/Sources/DockUtil/DockUtil.swift
+
+		updatePath := func() error {
+			if fileData, ok := tileData["file-data"].(map[string]any); ok {
+				dockEntry.Path = fileData["_CFURLString"].(string)
+				u, err := url.Parse(dockEntry.Path)
+				if err != nil {
+					return err
+				}
+				dockEntry.Path = u.Path
+			}
+			return nil
+		}
+		switch tileType {
+		case "file-tile":
+			if err := updatePath(); err != nil {
+				return err
+			}
+		case "directory-tile":
+			if err := updatePath(); err != nil {
+				return err
+			}
+			arrangement, ok := tileData["arrangement"].(uint64)
+			if !ok {
+				fmt.Printf("%T\n", tileData["arrangement"])
+				return fmt.Errorf("failed to get arrangement")
+			}
+			displayas, ok := tileData["displayas"].(uint64)
+			if !ok {
+				return fmt.Errorf("failed to get displayas")
+			}
+			showas, ok := tileData["showas"].(uint64)
+			if !ok {
+				return fmt.Errorf("failed to get showas")
+			}
+			// https://github.com/kcrawford/dockutil/blob/640c520ce142a5f21e56fda88a95b4e4d6576042/Sources/DockUtil/DockUtil.swift
+			sort := map[uint64]string{1: "name", 2: "dateadded", 3: "datemodified", 4: "datecreated", 5: "kind"}[arrangement]
+			display := map[uint64]string{1: "folder", 0: "stack"}[displayas]
+			view := map[uint64]string{0: "auto", 1: "fan", 2: "grid", 3: "list"}[showas]
+			dockEntry.Options = map[string]string{"sort": sort, "display": display, "view": view}
+		case "spacer-tile":
+			dockEntry.Options = map[string]string{"type": "spacer"}
+			// case "url-tile":
+		}
+		// fmt.Println(dockEntry)
+		entries = append(entries, dockEntry)
+		return nil
+	}
+	for _, entry := range persistentApps {
+		if err := addEntry(entry, "apps"); err != nil {
+			return nil, err
+		}
+	}
+	persistentOthers, ok := decodedMap["persistent-others"].([]any)
+	if !ok {
+		return nil, fmt.Errorf("failed to get persistent-others")
+	}
+	for _, entry := range persistentOthers {
+		if err := addEntry(entry, "others"); err != nil {
+			return nil, err
+		}
+	}
+	return entries, nil
 }

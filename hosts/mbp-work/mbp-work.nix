@@ -104,45 +104,6 @@
     # brew link --overwrite --force mysql-client@5.7
   };
 
-  local.dock.enable = true;
-  local.dock.entries = [
-    { path = "/System/Applications/Launchpad.app/"; }
-    { path = "/System/Applications/Clock.app/"; }
-    { path = "/System/Applications/Weather.app/"; }
-    { path = "/System/Applications/Messages.app/"; }
-    { path = "/System/Applications/Calendar.app/"; }
-    { path = "/System/Applications/Notes.app/"; }
-    { path = "/System/Applications/Reminders.app/"; }
-    { path = "/System/Applications/Stocks.app/"; }
-    # { path = "/Applications/Spotify.app/"; }
-    { path = ""; options = "--type spacer"; }
-    { path = "/Applications/Slack.app/"; }
-    { path = "~/Applications/Gmail.app/"; }
-    { path = "/Applications/1Password.app/"; }
-    { path = "/Applications/Arc.app/"; }
-    { path = "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/"; }
-    { path = ""; options = "--type spacer"; }
-    { path = "/Applications/Visual Studio Code.app/"; }
-    { path = "/Applications/Visual Studio Code - Insiders.app/"; }
-    { path = "/Applications/Sublime Text.app/"; }
-    { path = "/Applications/Zed.app/"; }
-    { path = "/Applications/GoLand.app/"; }
-    { path = "/Applications/Sublime Merge.app/"; }
-    { path = "/Applications/iTerm.app/"; }
-    { path = "/Applications/Sequel Ace.app/"; }
-    { path = "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/"; }
-    { path = ""; options = "--type spacer"; }
-    { path = "/System/Applications/Utilities/Activity Monitor.app/"; }
-    { path = "/System/Applications/Utilities/Console.app/"; }
-    { path = "/System/Applications/App Store.app/"; }
-    { path = "/System/Applications/System Settings.app/"; }
-    # { path = "/Applications/Mac Mouse Fix.app/"; }
-    { path = "/System/Applications/Utilities/Screen Sharing.app/"; }
-
-    { path = "/Applications/"; section = "others"; options = "--sort datemodified --view grid --display folder"; }
-    { path = "~/Downloads/"; section = "others"; options = "--sort dateadded --view fan --display stack"; }
-    { path = "~/Documents/Screenshots/"; section = "others"; options = "--sort datemodified --view grid --display stack"; }
-  ];
   system.defaults = {
     CustomUserPreferences = {
       "com.apple.screencapture" = {

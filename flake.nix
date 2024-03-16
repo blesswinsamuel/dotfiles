@@ -75,7 +75,6 @@
             }
             ./commons/commons.nix
             ./commons/darwin-commons.nix
-            ./modules/macos-dock
           ] ++ extraModules;
         };
 
