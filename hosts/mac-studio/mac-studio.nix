@@ -79,7 +79,7 @@
       "alfred"
       "raycast"
       "iterm2"
-      "monitorcontrol"
+      "betterdisplay"
       "forklift"
       "trex"
       "shottr"

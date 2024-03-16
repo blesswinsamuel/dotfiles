@@ -164,6 +164,12 @@ cat ${config.age.secrets.wakatimeApiKey.path}'';
     pkgs.bandwhich
     pkgs.bottom
 
+    # Utilities
+
+    # Experimental Utilities
+    pkgs.gping
+    pkgs.trippy
+
     # Common Utilities
     pkgsMaster.go-task
     pkgs.jq

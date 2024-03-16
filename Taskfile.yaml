@@ -61,4 +61,4 @@ tasks:
       - brew cleanup
       - nix flake update
       - nix store gc
-      - docker system prune -f -a --volumes
+      - docker system prune -f -a --volumes || true

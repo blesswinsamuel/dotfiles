@@ -89,5 +89,7 @@
     pkgs.bitwarden-cli
     pkgs.gh
     pkgs.doppler
+
+    # pkgs.home-assistant-cli
   ];
 }

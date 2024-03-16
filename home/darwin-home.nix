@@ -20,6 +20,19 @@
       source = ./sublime-text/Preferences.sublime-settings;
     };
 
+    ".config/skhd/skhdrc" = {
+      enable = true;
+      source = ./skhd/skhdrc;
+    };
+    ".config/wezterm/wezterm.lua" = {
+      enable = true;
+      source = ./wezterm/wezterm.lua;
+    };
+    ".config/yabai/yabairc" = {
+      enable = true;
+      source = ./yabai/yabairc;
+    };
+
     # "bin/code".source = config.lib.file.mkOutOfStoreSymlink "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code";
     # "bin/code-tunnel".source = config.lib.file.mkOutOfStoreSymlink "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code-tunnel";
     # "bin/subl".source = config.lib.file.mkOutOfStoreSymlink "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl";
@@ -37,6 +50,7 @@
     pngpaste # Paste image files from clipboard to file on MacOS
     mas
     dockutil
+    # skhd # Simple hotkey daemon for macOS
   ];
 
   programs.fish = {
