@@ -106,7 +106,7 @@ hosts:
           # - { path: "/Applications/Spotify.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Slack.app/" }
-          - { path: "$HOME/Applications/Gamil.app/" }
+          - { path: "$HOME/Applications/Gmail.app/" }
           - { path: "/Applications/1Password.app/" }
           - { path: "/Applications/Arc.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
@@ -129,5 +129,5 @@ hosts:
           - { path: "/System/Applications/Utilities/Screen Sharing.app/" }
 
           - { path: "/Applications/", section: "others", options: { sort: datemodified, view: grid, display: folder } }
-          - { path: "~/Downloads/", section: "others", options: { sort: dateadded, view: fan, display: stack } }
-          - { path: "~/Documents/Screenshots/", section: "others", options: { sort: datemodified, view: grid, display: stack } }
+          - { path: "$HOME/Downloads/", section: "others", options: { sort: dateadded, view: fan, display: stack } }
+          - { path: "$HOME/Documents/Screenshots/", section: "others", options: { sort: datemodified, view: grid, display: stack } }

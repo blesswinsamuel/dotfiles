@@ -183,6 +183,13 @@ func main() {
 			log.Fatal().Err(err).Msgf("failed to get absolute path")
 		}
 		log.Debug().Str("source", source).Str("destination", destination).Str("operation", file.Operation).Msgf(">> processing file")
+		parentDir := path.Dir(destination)
+		if _, err := os.Stat(parentDir); os.IsNotExist(err) {
+			log.Info().Str("parentDir", parentDir).Msgf("creating parent directory")
+			if err := os.MkdirAll(parentDir, 0755); err != nil {
+				log.Fatal().Err(err).Msgf("failed to create parent directory")
+			}
+		}
 		switch file.Operation {
 		case "symlink":
 			if stats, err := os.Lstat(destination); err == nil {
