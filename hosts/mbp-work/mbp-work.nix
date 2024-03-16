@@ -44,6 +44,8 @@
       "google-drive"
 
       "licecap"
+      "kap"
+      "keycastr"
       "slack"
       "visual-studio-code"
       # "zoom"
@@ -70,10 +72,13 @@
       # "sshpass"
       # "the_silver_searcher"
 
-      # "go"
+      "go"
       "python@3.10"
       "make"
-      "nvm"
+      # "nvm"
+      "yarn"
+
+      "golangci-lint"
 
       # "stern"
       # "curl"
@@ -87,7 +92,9 @@
       # "yq"
       "openssl"
       { name = "mysql-client@5.7"; link = true; }
+      "mysql@5.7"
       # "s3cmd"
+      "vault"
       "terraform"
       # "awscli"
       # "doctl"

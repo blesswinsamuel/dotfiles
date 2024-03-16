@@ -38,6 +38,11 @@ if type -q kubecolor
     end
 end
 
+function kubectl-get-all-namespaced
+    kubectl get (string join ',' (kubectl api-resources --namespaced --verbs list -o name)) $argv
+    # kubectl -n $argv get (string join ',' (kubectl api-resources --namespaced --verbs list -o name))
+end
+
 if type -q kubecolor
     function kubectl --wraps kubecolor --description 'alias kubectl to kubecolor'
         kubecolor $argv
