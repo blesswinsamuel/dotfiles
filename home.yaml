@@ -1,18 +1,17 @@
 profiles:
   common:
     files:
-      .hushlogin: { source: ./hushlogin/hushlogin }
-      .config/skhd/skhdrc: { source: ./skhd/skhdrc }
-      .config/wezterm/wezterm.lua: { source: ./wezterm/wezterm.lua }
-      .config/yabai/yabairc: { source: ./yabai/yabairc }
-      .config/starship.toml: { source: ./starship/starship.toml }
-      .config/git/config: { source: ./git/config, operation: copy, template: true }
-      .wakatime.cfg: { source: ./wakatime/wakatime.cfg, operation: copy, template: true }
+      .hushlogin: { source: ./home/hushlogin/hushlogin }
+      .config/skhd/skhdrc: { source: ./home/skhd/skhdrc }
+      .config/wezterm/wezterm.lua: { source: ./home/wezterm/wezterm.lua }
+      .config/yabai/yabairc: { source: ./home/yabai/yabairc }
+      .config/starship.toml: { source: ./home/starship/starship.toml }
+      .config/git/config: { source: ./home/git/config, operation: copy, template: true }
+      .wakatime.cfg: { source: ./home/wakatime/wakatime.cfg, operation: copy, template: true }
   darwin:
     files:
-      Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings:
-        { source: ./sublime-text/Package Control.sublime-settings }
-      Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./sublime-text/Preferences.sublime-settings }
+      Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings: { source: ./home/sublime-text/Package Control.sublime-settings }
+      Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./home/sublime-text/Preferences.sublime-settings }
   linux:
 hosts:
   Blesswins-Mac-Studio:

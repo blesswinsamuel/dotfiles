@@ -100,7 +100,7 @@ func getSecretConfig() (map[string]SecretConfig, error) {
 	}
 
 	secretConfig := map[string]SecretConfig{}
-	secretConfigFile, err := filepath.Abs("../secrets/config.json.age")
+	secretConfigFile, err := filepath.Abs("./config.yaml.age")
 	if err != nil {
 		return nil, err
 	}
