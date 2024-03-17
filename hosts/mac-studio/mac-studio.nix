@@ -90,6 +90,10 @@
     pkgs.gh
     pkgs.doppler
 
+    pkgs.teller
+    pkgs.git-secrets
+    pkgs.gitleaks
+
     # pkgs.home-assistant-cli
   ];
 
