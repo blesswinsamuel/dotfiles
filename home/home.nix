@@ -35,11 +35,6 @@
     enable = true;
   };
 
-  programs.vim = {
-    enable = true;
-    extraConfig = builtins.readFile ./vim/vimrc;
-  };
-
   programs.zsh = {
     enable = true;
     initExtra = builtins.readFile ./zsh/zshrc;

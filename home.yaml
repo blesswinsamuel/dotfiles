@@ -6,6 +6,7 @@ profiles:
       .config/wezterm/wezterm.lua: { source: ./home/wezterm/wezterm.lua }
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }
       .config/starship.toml: { source: ./home/starship/starship.toml }
+      .vimrc: { source: ./home/vim/vimrc }
       .config/git/config: { source: ./home/git/config, operation: copy, template: true }
       .wakatime.cfg: { source: ./home/wakatime/wakatime.cfg, operation: copy, template: true }
   darwin:
