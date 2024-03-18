@@ -7,14 +7,25 @@ tasks:
 
   edit-config:
     cmds:
-      - age -d -i ~/.ssh/id_ed25519 ./config.yaml.age > /tmp/config.yaml
+      - age -d -i ~/.ssh/id_ed25519 ./config.yaml.age > /tmp/config.yaml.orig
+      - defer: rm /tmp/config.yaml.orig
+      - cp /tmp/config.yaml.orig /tmp/config.yaml
+      - defer: rm /tmp/config.yaml
       - $EDITOR /tmp/config.yaml
-      - curl https://github.com/blesswinsamuel.keys | age -R - /tmp/config.yaml > ./config.yaml.age
+      - |
+        if ! cmp -s /tmp/config.yaml.orig /tmp/config.yaml; then
+          echo "Updating config.yaml.age"
+          curl -s https://github.com/blesswinsamuel.keys | age -R - /tmp/config.yaml > ./config.yaml.age
+        fi
 
   darwin-init:
     cmds:
       - nix run nix-darwin -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
       - chsh -s /run/current-system/sw/bin/fish
+
+  run-home:
+    cmds:
+      - go run .
 
   switch:
     cmds:
@@ -26,7 +37,7 @@ tasks:
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
-      - go run .
+      - task: run-home
     vars:
       MACHINE:
         sh: |

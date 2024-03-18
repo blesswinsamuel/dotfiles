@@ -35,7 +35,7 @@
     conflictstyle = "diff3"
 
 [user]
-    email = "{{ .Secrets.git.email }}"
+    email = "{{ .Secrets.Git.Email }}"
     name = "Blesswin Samuel"
 
 # [credential]

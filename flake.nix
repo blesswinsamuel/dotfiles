@@ -28,7 +28,7 @@
         config.allowUnfree = true;
       };
 
-      nixosSystem = { system, extraModules, systemConfig, extraHomeModules }: hostName:
+      nixosSystem = { system, extraModules, systemConfig, extraHomeModules ? [ ] }: hostName:
         let
           pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -53,7 +53,7 @@
             ./commons/nixos-commons.nix
           ] ++ extraModules;
         };
-      darwinSystem = { system, extraModules, systemConfig, extraHomeModules }: hostName:
+      darwinSystem = { system, extraModules, systemConfig, extraHomeModules ? [ ] }: hostName:
         let
           pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -94,13 +94,13 @@
         Blesswins-Mac-Studio = darwinSystem {
           system = "aarch64-darwin";
           extraModules = [ ./hosts/mac-studio/mac-studio.nix ];
-          extraHomeModules = [ ./hosts/mac-studio/mac-studio-home.nix ];
+          # extraHomeModules = [ ./hosts/mac-studio/mac-studio-home.nix ];
           systemConfig = { username = "blesswinsamuel"; };
         };
         RQHFR2KPF2 = darwinSystem {
           system = "aarch64-darwin";
           extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
-          extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
+          # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
           systemConfig = { username = "bsamuel"; };
         };
       };

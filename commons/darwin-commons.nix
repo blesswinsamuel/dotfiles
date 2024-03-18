@@ -30,6 +30,15 @@
 
   users.users.${systemConfig.username} = {
     home = "/Users/${systemConfig.username}";
+
+    packages = with pkgs; [
+      # Mac tools
+      duti
+      pngpaste # Paste image files from clipboard to file on MacOS
+      mas
+      dockutil
+      # skhd # Simple hotkey daemon for macOS
+    ];
   };
 
   # # The platform the configuration will be used on.

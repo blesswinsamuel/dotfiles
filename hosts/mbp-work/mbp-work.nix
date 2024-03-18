@@ -1,4 +1,38 @@
-{ self, pkgs, lib, config, secrets, systemConfig, ... }: {
+{ self, pkgs, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
+  users.users.${systemConfig.username}.packages = [
+    # pkgsMaster.go
+    pkgsMaster.nodejs
+
+    # pkgsMaster.terraform
+    pkgsMaster.docker-client
+    pkgsMaster.stern
+    pkgsMaster.kubectl
+    pkgsMaster.kubectx
+    pkgsMaster.kubetail
+    pkgsMaster.kubernetes-helm
+    pkgsMaster.direnv
+    pkgsMaster.kcat
+    pkgsMaster.redis
+    pkgsMaster.gnumake
+    pkgsMaster.kapp
+    pkgsMaster.k9s
+
+    # 3rd party cloud service tools
+    pkgsMaster.awscli2
+    pkgsMaster.s3cmd
+    pkgsMaster.gh
+    pkgsMaster.doctl
+
+    # Network tools
+    pkgs.nmap
+    pkgs.inetutils
+    pkgs.iperf
+
+    # pkgs.aws-iam-authenticator
+    # pkgs.code-server
+    # pkgs.openvscode-server
+  ];
+
   homebrew = {
     taps = [
       # "homebrew/bundle"

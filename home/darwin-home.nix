@@ -10,15 +10,6 @@
     pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
   '';
 
-  home.packages = with pkgs; [
-    # Mac tools
-    duti
-    pngpaste # Paste image files from clipboard to file on MacOS
-    mas
-    dockutil
-    # skhd # Simple hotkey daemon for macOS
-  ];
-
   programs.fish = {
     # fix path variable order - https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
     # https://d12frosted.io/posts/2021-05-21-path-in-fish-with-nix-darwin.html
