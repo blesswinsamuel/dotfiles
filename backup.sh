@@ -5,11 +5,6 @@ BACKUP_DIRECTORY="$HOME/Backup"
 
 mackup backup
 
-ls -1 /Applications > "$BACKUP_DIRECTORY/Applications-List.txt"
-brew list > "$BACKUP_DIRECTORY/brew-list.txt"
-mas list > "$BACKUP_DIRECTORY/mas-list.txt"
-brew bundle dump --file=- > "$BACKUP_DIRECTORY/brew-bundle.txt"
-
 cp -R ~/Downloads "$BACKUP_DIRECTORY/Downloads"
 cp -R ~/.ssh "$BACKUP_DIRECTORY/.ssh"
 mkdir -p $BACKUP_DIRECTORY/.kaggle

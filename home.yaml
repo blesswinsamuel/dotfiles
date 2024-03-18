@@ -13,6 +13,17 @@ profiles:
     files:
       Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings: { source: ./home/sublime-text/Package Control.sublime-settings }
       Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./home/sublime-text/Preferences.sublime-settings }
+    macos:
+      # /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -dump | grep '[[:space:]]uti:' | awk '{ print $2 }' | sort | uniq
+      # https://superuser.com/questions/273756/how-to-change-default-app-for-all-files-of-particular-file-type-through-terminal
+      # https://superuser.com/a/1720935/136654
+      # swda getUTIs
+      # bundle id = osascript -e 'id of app "Visual Studio Code"'
+      defaultApplications:
+        # org.yaml.yaml: /Applications/Visual Studio Code.app
+        # public.yaml: /Applications/Visual Studio Code.app
+        uti:net.daringfireball.markdown: /Applications/Visual Studio Code.app
+        uti:org.go.source: /Applications/Visual Studio Code.app
   linux:
 hosts:
   Blesswins-Mac-Studio:

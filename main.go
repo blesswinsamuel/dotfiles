@@ -34,22 +34,28 @@ type Profile struct {
 	SecretProfile string          `yaml:"secretProfile"`
 }
 
-func (p *Profile) MergeProfile(p2 Profile) {
+func (p *Profile) Merge(p2 Profile) {
 	if p.Files == nil {
 		p.Files = p2.Files
 	} else {
 		maps.Copy(p.Files, p2.Files)
 	}
+	if p.SecretProfile == "" {
+		p.SecretProfile = p2.SecretProfile
+	}
 	if p.MacOS.Dock.Entries == nil {
 		p.MacOS.Dock.Entries = p2.MacOS.Dock.Entries
 	}
-	if p.SecretProfile == "" {
-		p.SecretProfile = p2.SecretProfile
+	if p.MacOS.DefaultApplications == nil {
+		p.MacOS.DefaultApplications = p2.MacOS.DefaultApplications
+	} else {
+		maps.Copy(p.MacOS.DefaultApplications, p2.MacOS.DefaultApplications)
 	}
 }
 
 type MacOs struct {
-	Dock MacOsDock `yaml:"dock"`
+	Dock                MacOsDock         `yaml:"dock"`
+	DefaultApplications map[string]string `yaml:"defaultApplications"`
 }
 
 type MacOsDock struct {
@@ -156,12 +162,12 @@ func main() {
 	// }
 	profile := config.Profiles["common"]
 	if p, ok := config.Profiles[runtimeOS]; ok {
-		profile.MergeProfile(p)
+		profile.Merge(p)
 	}
 	if p, ok := config.Hosts[hostname]; ok {
-		profile.MergeProfile(p)
+		profile.Merge(p)
 	} else if p, ok := config.Hosts[computerName]; ok {
-		profile.MergeProfile(p)
+		profile.Merge(p)
 	}
 
 	secretConfigAll, err := getSecretConfig()
@@ -171,6 +177,7 @@ func main() {
 	secrets := SecretConfig{}
 	maps.Copy(secrets, secretConfigAll["common"])
 	maps.Copy(secrets, secretConfigAll[profile.SecretProfile])
+	// log.Info().Interface("profile", profile).Interface("secrets", secrets).Msgf("got config")
 	log.Info().Str("profile", profile.SecretProfile).Interface("secrets", secrets).Msgf("got secret config")
 
 	for destination, file := range profile.Files {
@@ -303,6 +310,67 @@ func main() {
 		}
 		if err := exec.Command("killall", "Dock").Run(); err != nil {
 			log.Fatal().Err(err).Msgf("failed to restart dock")
+		}
+	}
+
+	if len(profile.MacOS.DefaultApplications) > 0 {
+		currentSchemes := map[string]string{}
+		outSchemes, err := exec.Command("swda", "getSchemes").Output()
+		if err != nil {
+			log.Fatal().Err(err).Msgf("failed to get schemes")
+		}
+		for _, line := range strings.Split(string(outSchemes), "\n") {
+			if line == "" {
+				continue
+			}
+			parts := strings.Split(line, "\t\t\t\t")
+			currentSchemes["scheme:"+parts[0]] = parts[1]
+		}
+		outUTIs, err := exec.Command("swda", "getUTIs").Output()
+		if err != nil {
+			log.Fatal().Err(err).Msgf("failed to get schemes")
+		}
+		for _, line := range strings.Split(string(outUTIs), "\n") {
+			if line == "" {
+				continue
+			}
+			parts := strings.Split(line, "\t\t\t\t")
+			currentSchemes["uti:"+parts[0]] = parts[1]
+		}
+		for key, application := range profile.MacOS.DefaultApplications {
+			key := strings.Split(key, ":")
+			if len(key) != 2 {
+				log.Fatal().Msgf("invalid key")
+			}
+			keyType := key[0]
+			schemeOrUTI := key[1]
+			argName := ""
+			switch keyType {
+			case "scheme":
+				argName = "--URL"
+			case "uti":
+				argName = "--UTI"
+			default:
+				log.Fatal().Msgf("unsupported key type")
+			}
+			// var currentApplication string
+			// out, err := exec.Command("swda", "getHandler", argName, schemeOrUTI).Output()
+			// if err == nil {
+			// 	currentApplication = strings.TrimSpace(string(out))
+			// 	if currentApplication == application {
+			// 		log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
+			// 		continue
+			// 	}
+			// }
+			currentApplication := currentSchemes[keyType+":"+schemeOrUTI]
+			if currentApplication == application {
+				log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
+				continue
+			}
+			log.Info().Str("uti", schemeOrUTI).Str("application", application).Str("currentApplication", currentApplication).Msgf("setting default application")
+			if err := exec.Command("swda", "setHandler", argName, schemeOrUTI, "--app", application).Run(); err != nil {
+				log.Fatal().Err(err).Msgf("failed to set default application")
+			}
 		}
 	}
 }
