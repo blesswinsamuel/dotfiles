@@ -51,11 +51,17 @@ func (p *Profile) Merge(p2 Profile) {
 	} else {
 		maps.Copy(p.MacOS.DefaultApplications, p2.MacOS.DefaultApplications)
 	}
+	if p.MacOS.CustomPreferences == nil {
+		p.MacOS.CustomPreferences = p2.MacOS.CustomPreferences
+	} else {
+		maps.Copy(p.MacOS.CustomPreferences, p2.MacOS.CustomPreferences)
+	}
 }
 
 type MacOs struct {
-	Dock                MacOsDock         `yaml:"dock"`
-	DefaultApplications map[string]string `yaml:"defaultApplications"`
+	Dock                MacOsDock                 `yaml:"dock"`
+	DefaultApplications map[string]string         `yaml:"defaultApplications"`
+	CustomPreferences   map[string]map[string]any `yaml:"customPreferences"` // defaults write
 }
 
 type MacOsDock struct {
@@ -315,28 +321,25 @@ func main() {
 
 	if len(profile.MacOS.DefaultApplications) > 0 {
 		currentSchemes := map[string]string{}
+		parseSwdaOut := func(out []byte, keyType string) {
+			for _, line := range strings.Split(string(out), "\n") {
+				if line == "" {
+					continue
+				}
+				parts := strings.Split(line, "\t\t\t\t")
+				currentSchemes[keyType+":"+parts[0]] = parts[1]
+			}
+		}
 		outSchemes, err := exec.Command("swda", "getSchemes").Output()
 		if err != nil {
 			log.Fatal().Err(err).Msgf("failed to get schemes")
 		}
-		for _, line := range strings.Split(string(outSchemes), "\n") {
-			if line == "" {
-				continue
-			}
-			parts := strings.Split(line, "\t\t\t\t")
-			currentSchemes["scheme:"+parts[0]] = parts[1]
-		}
+		parseSwdaOut(outSchemes, "scheme")
 		outUTIs, err := exec.Command("swda", "getUTIs").Output()
 		if err != nil {
 			log.Fatal().Err(err).Msgf("failed to get schemes")
 		}
-		for _, line := range strings.Split(string(outUTIs), "\n") {
-			if line == "" {
-				continue
-			}
-			parts := strings.Split(line, "\t\t\t\t")
-			currentSchemes["uti:"+parts[0]] = parts[1]
-		}
+		parseSwdaOut(outUTIs, "uti")
 		for key, application := range profile.MacOS.DefaultApplications {
 			key := strings.Split(key, ":")
 			if len(key) != 2 {
@@ -368,8 +371,8 @@ func main() {
 				continue
 			}
 			log.Info().Str("uti", schemeOrUTI).Str("application", application).Str("currentApplication", currentApplication).Msgf("setting default application")
-			if err := exec.Command("swda", "setHandler", argName, schemeOrUTI, "--app", application).Run(); err != nil {
-				log.Fatal().Err(err).Msgf("failed to set default application")
+			if out, err := exec.Command("swda", "setHandler", argName, schemeOrUTI, "--app", application).CombinedOutput(); err != nil {
+				log.Fatal().Err(err).Msgf("failed to set default application: %s", out)
 			}
 		}
 	}

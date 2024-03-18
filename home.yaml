@@ -15,15 +15,49 @@ profiles:
       Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./home/sublime-text/Preferences.sublime-settings }
     macos:
       # /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -dump | grep '[[:space:]]uti:' | awk '{ print $2 }' | sort | uniq
-      # https://superuser.com/questions/273756/how-to-change-default-app-for-all-files-of-particular-file-type-through-terminal
-      # https://superuser.com/a/1720935/136654
       # swda getUTIs
-      # bundle id = osascript -e 'id of app "Visual Studio Code"'
+      # swda getSchemes
       defaultApplications:
         # org.yaml.yaml: /Applications/Visual Studio Code.app
         # public.yaml: /Applications/Visual Studio Code.app
         uti:net.daringfireball.markdown: /Applications/Visual Studio Code.app
+        uti:public.plain-text: /Applications/Visual Studio Code.app
         uti:org.go.source: /Applications/Visual Studio Code.app
+        uti:public.mpeg-4: /Applications/IINA.app # mp4
+        uti:com.apple.m4a-audio: /Applications/IINA.app # m4a
+      # https://github.com/LnL7/nix-darwin/pull/557/files
+      # customize settings that not supported by nix-darwin directly
+      # see the source code of https://github.com/rgcr/m-cli to get all the available options
+      # or
+      # https://macos-defaults.com/
+      # https://github.com/yannbertrand/macos-defaults
+      # https://apple.stackexchange.com/a/358609
+      # https://daiderd.com/nix-darwin/manual/index.html
+      customPreferences:
+        com.apple.screencapture:
+          ### Change screenshot location
+          # Alternative method: Cmd + Shift + 5 -> Options -> Save to Other location -> ~/Documents/Screenshots
+          location: "$HOME/Documents/Screenshots"
+        com.googlecode.iterm2:
+          CopySelection: 0
+          # PrefsCustomFolder: "$HOME/dotfiles/configs/iterm2"
+        com.apple.AppleMultitouchTrackpad:
+          # https://macos-defaults.com/trackpad/trackpadthreefingerdrag.html
+          # https://support.apple.com/en-in/guide/mac-help/unac899/mac
+          # Settings -> Accessibility -> Pointer Control -> Trackpad Options -> Dragging Style -> Three Finger Drag
+          TrackpadThreeFingerDrag: 1
+          # Tap to click
+          Clicking: 1
+        com.apple.menuextra.clock:
+          ### Hide Menubar Clock
+          # https://www.tech-otaku.com/mac/setting-the-date-and-time-format-for-the-macos-menu-bar-clock-using-terminal/
+          IsAnalog: true
+        # com.apple.controlcenter:
+        #   NSStatusItem Visible Battery: 0
+        # com.apple.Spotlight:
+        #   # Hide spotlight icon
+        #   NSStatusItem Visible Item-0: 0
+        # com.apple.custommenu.apps: [NSGlobalDomain]
   linux:
 hosts:
   Blesswins-Mac-Studio:

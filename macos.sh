@@ -7,16 +7,6 @@
 ### Close any open System Preferences panes, to prevent them from overriding settings we’re about to change
 osascript -e 'tell application "System Preferences" to quit'
 
-### Change screenshot location
-# defaults read com.apple.screencapture
-defaults write com.apple.screencapture location ~/Documents/Screenshots
-# Alternative method: Cmd + Shift + 5 -> Options -> Save to Other location -> ~/Documents/Screenshots
-
-### Hide Menubar Clock
-# https://www.tech-otaku.com/mac/setting-the-date-and-time-format-for-the-macos-menu-bar-clock-using-terminal/
-# defaults read com.apple.menuextra.clock
-defaults write com.apple.menuextra.clock IsAnalog -bool true
-
 ### Show full URL in Safari
 # https://macos-defaults.com/safari/showfullurlinsmartsearchfield.html
 # defaults read com.apple.safari
