@@ -15,10 +15,11 @@
     nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
 
+    system-manager = { url = "github:numtide/system-manager"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     # nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin" };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
+  outputs = inputs@{ self, nix-darwin, system-manager, home-manager, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
     let
       inherit (self.lib) attrValues makeOverridable mkForce optionalAttrs singleton;
 
@@ -37,6 +38,30 @@
         nixpkgs-unstable.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
+          modules = [
+            home-manager.nixosModules.home-manager
+            {
+              # https://mipmip.github.io/home-manager-option-search/
+              # networking.hostName = hostName;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
+              home-manager.users.${systemConfig.username} = inputs: {
+                imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHomeModules;
+              };
+            }
+            ./commons/commons.nix
+            ./commons/nixos-commons.nix
+          ] ++ extraModules;
+        };
+      otherNixSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
+        let
+          pkgs = genPkgs system nixpkgs-unstable;
+          pkgsMaster = genPkgs system nixpkgs-master;
+          pkgsStable = genPkgs system nixpkgs-stable;
+        in
+        system-manager.lib.makeSystemConfig {
+          extraSpecialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             home-manager.nixosModules.home-manager
             {
@@ -89,7 +114,9 @@
           extraHomeModules = [ ];
           systemConfig = { username = "blesswinsamuel"; };
         };
-        my-workstation = nixosSystem {
+      };
+      systemConfigs = processConfigurations {
+        my-workstation = otherNixSystem {
           system = "x86_64-linux";
           # extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
           # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
