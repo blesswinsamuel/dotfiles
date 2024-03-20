@@ -10,6 +10,8 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 # Install homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+nix run nixpkgs#git clone https://github.com/blesswinsamuel/dotfiles
+
 # printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
 # /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
 

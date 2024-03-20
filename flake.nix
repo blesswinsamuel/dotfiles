@@ -28,7 +28,7 @@
         config.allowUnfree = true;
       };
 
-      nixosSystem = { system, extraModules, systemConfig, extraHomeModules ? [ ] }: hostName:
+      nixosSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
         let
           pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -53,7 +53,7 @@
             ./commons/nixos-commons.nix
           ] ++ extraModules;
         };
-      darwinSystem = { system, extraModules, systemConfig, extraHomeModules ? [ ] }: hostName:
+      darwinSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
         let
           pkgs = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -88,6 +88,12 @@
           extraModules = [ ./hosts/hp-chromebox/hp-chromebox.nix ];
           extraHomeModules = [ ];
           systemConfig = { username = "blesswinsamuel"; };
+        };
+        my-workstation = nixosSystem {
+          system = "x86_64-linux";
+          # extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
+          # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
+          systemConfig = { username = "bsamuel"; };
         };
       };
       darwinConfigurations = processConfigurations {

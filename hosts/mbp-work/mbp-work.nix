@@ -1,10 +1,11 @@
 { self, pkgs, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
   users.users.${systemConfig.username}.packages = [
+    pkgs.rustup
     # pkgsMaster.go
     pkgsMaster.nodejs
 
     # pkgsMaster.terraform
-    pkgsMaster.docker-client
+    # pkgsMaster.docker-client
     pkgsMaster.stern
     pkgsMaster.kubectl
     pkgsMaster.kubectx
@@ -27,6 +28,9 @@
     pkgs.nmap
     pkgs.inetutils
     pkgs.iperf
+
+    pkgsMaster.libllvm
+    pkgsMaster.rsync
 
     # pkgs.aws-iam-authenticator
     # pkgs.code-server

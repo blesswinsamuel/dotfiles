@@ -183,7 +183,6 @@
       "shottr"
       "rectangle"
       "alt-tab"
-      "swiftdefaultappsprefpane"
       "tailscale"
 
       ## Media

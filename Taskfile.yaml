@@ -23,6 +23,18 @@ tasks:
       - nix run nix-darwin -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
       - chsh -s /run/current-system/sw/bin/fish
 
+  init:
+    cmds:
+      - |
+        {{- if eq .MACHINE "Mac" }}
+        nix run nix-darwin -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        {{- else if eq .MACHINE "Linux" }}
+        nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        {{- else }}
+        echo "Unsupported OS"
+        {{- end }}
+      - chsh -s /run/current-system/sw/bin/fish
+
   run-home:
     cmds:
       - go run .

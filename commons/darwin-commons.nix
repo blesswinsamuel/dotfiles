@@ -81,6 +81,7 @@
     # If an app isn't available in the Mac App Store, or the version in the App Store has
     # limitiations, e.g., Transmit, install the Homebrew Cask.
     casks = [
+      "swiftdefaultappsprefpane"
     ];
 
     # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
