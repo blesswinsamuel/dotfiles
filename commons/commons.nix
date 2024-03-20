@@ -75,6 +75,8 @@
       pkgs.git
       pkgs.git-lfs
       pkgs.delta
+
+      pkgsMaster.fish
     ];
   };
 }

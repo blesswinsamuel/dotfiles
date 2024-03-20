@@ -23,13 +23,10 @@
     };
   };
 
-  programs.fish = {
-    enable = true;
-    functions = {
-      fish_greeting = "";
-    };
-    interactiveShellInit = (builtins.readFile ./fish/env_vars.fish) + "\n" + (builtins.readFile ./fish/aliases.fish) + "\n" + (builtins.readFile ./fish/config.fish);
-  };
+  # programs.fish = {
+  #   enable = true;
+  #   interactiveShellInit = (builtins.readFile ./fish/env_vars.fish) + "\n" + (builtins.readFile ./fish/aliases.fish) + "\n" + (builtins.readFile ./fish/config.fish);
+  # };
 
   programs.starship = {
     enable = true;
