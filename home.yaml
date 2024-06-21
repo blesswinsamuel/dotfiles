@@ -11,6 +11,7 @@ profiles:
       .config/starship.toml: { source: ./home/starship/starship.toml }
       .vimrc: { source: ./home/vim/vimrc }
       .config/git/config: { source: ./home/git/config, operation: copy, template: true }
+      .config/git/allowed_signers: { source: ./home/git/allowed_signers.tmpl, operation: copy, template: true }
       .wakatime.cfg: { source: ./home/wakatime/wakatime.cfg, operation: copy, template: true }
   darwin:
     files:
