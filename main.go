@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io"
 	"maps"
@@ -101,7 +102,6 @@ func getComputerName() (string, error) {
 type SecretConfig map[string]any
 
 func getSecretConfig() (map[string]SecretConfig, error) {
-	privateKeyFile := path.Join(os.Getenv("HOME"), ".ssh", "id_ed25519")
 	privateKey, err := os.ReadFile(privateKeyFile)
 	if err != nil {
 		log.Fatal().Err(err).Msgf("failed to read private key")
@@ -134,7 +134,12 @@ func getSecretConfig() (map[string]SecretConfig, error) {
 	return secretConfig, nil
 }
 
+var privateKeyFile string
+
 func main() {
+	flag.StringVar(&privateKeyFile, "private-key-file", path.Join(os.Getenv("HOME"), ".ssh", "id_ed25519"), "private key file")
+	flag.Parse()
+
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 

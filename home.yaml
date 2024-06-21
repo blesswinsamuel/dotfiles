@@ -21,11 +21,16 @@ profiles:
       # /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -dump | grep '[[:space:]]uti:' | awk '{ print $2 }' | sort | uniq
       # swda getUTIs
       # swda getSchemes
+      # touch /tmp/file.ts && mdls -name kMDItemContentType /tmp/file.ts && rm /tmp/file.ts
+      # touch /tmp/file.ts && mdls -name kMDItemContentTypeTree /tmp/file.ts && rm /tmp/file.ts
+      # touch /tmp/file.ts && mdls -name kMDItemKind /tmp/file.ts && rm /tmp/file.ts
       defaultApplications:
         # org.yaml.yaml: /Applications/Visual Studio Code.app
         # public.yaml: /Applications/Visual Studio Code.app
         uti:net.daringfireball.markdown: /Applications/Visual Studio Code.app
         uti:public.plain-text: /Applications/Visual Studio Code.app
+        uti:public.typescript: /Applications/Visual Studio Code.app
+        uti:public.tsx: /Applications/Visual Studio Code.app
         uti:org.go.source: /Applications/Visual Studio Code.app
         uti:public.mpeg-4: /Applications/IINA.app # mp4
         uti:com.apple.m4a-audio: /Applications/IINA.app # m4a
@@ -93,7 +98,8 @@ hosts:
           - { path: "/Applications/Slack.app/" }
           - { path: "/Applications/Numbers.app/" }
           - { options: { type: spacer } }
-          - { path: "/Applications/Bitwarden.app/" }
+          - { path: "$HOME/Applications/YT Music.app/" }
+          # - { path: "/Applications/Bitwarden.app/" }
           - { path: "/Applications/Telegram.app/" }
           - { path: "/Applications/1Password.app/" }
           - { path: "/Applications/Arc.app/" }
@@ -157,7 +163,7 @@ hosts:
           - { path: "/Applications/Slack.app/" }
           - { path: "$HOME/Applications/Gmail.app/" }
           - { path: "/Applications/1Password.app/" }
-          - { path: "/Applications/Arc.app/" }
+          # - { path: "/Applications/Arc.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Visual Studio Code.app/" }

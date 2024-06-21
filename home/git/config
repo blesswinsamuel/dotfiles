@@ -3,14 +3,14 @@
     c = "commit"
     ch = "checkout"
     o = "open"
-    open = "!fish -c git-open"
+    open = "!fish -i -c git-open"
     s = "status"
     st = "stash"
     t = "tree"
     tree = "log --graph --decorate --pretty=oneline --abbrev-commit"
 
 [commit]
-    gpgSign = true
+    gpgsign = true
 
 [core]
     pager = "delta"
@@ -37,6 +37,13 @@
 [user]
     email = "{{ .Secrets.Git.Email }}"
     name = "Blesswin Samuel"
+    signingkey = "{{ .Secrets.Git.SigningKey }}"
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 # [credential]
 # 	helper = osxkeychain

@@ -3,11 +3,11 @@ version: 3
 tasks:
   print-config:
     cmds:
-      - age -d -i ~/.ssh/id_ed25519 ./config.yaml.age
+      - age -d -i <(op read "op://Private/Personal SSH Key ED25519/private key") ./config.yaml.age
 
   edit-config:
     cmds:
-      - age -d -i ~/.ssh/id_ed25519 ./config.yaml.age > /tmp/config.yaml.orig
+      - age -d -i <(op read "op://Private/Personal SSH Key ED25519/private key") ./config.yaml.age > /tmp/config.yaml.orig
       - defer: rm /tmp/config.yaml.orig
       - cp /tmp/config.yaml.orig /tmp/config.yaml
       - defer: rm /tmp/config.yaml
@@ -37,7 +37,7 @@ tasks:
 
   run-home:
     cmds:
-      - go run .
+      - go run . -private-key-file <(op read "op://Private/Personal SSH Key ED25519/private key")
 
   switch:
     cmds:

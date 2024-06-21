@@ -28,9 +28,10 @@
     pkgs.kapp
     pkgs.kubectl
     pkgs.kubernetes-helm
-    pkgs.kopia
+    # pkgs.kopia
     pkgs.krew
     pkgs.stern
+    pkgs.kubie
 
     # Docker
     pkgs.podman
@@ -38,9 +39,9 @@
     pkgs.podman-tui
 
     # Infrastructure management
-    pkgsMaster.terraform
+    # pkgsMaster.terraform
     # nodePackages.cdk8s-cli
-    pkgsMaster.nodePackages.cdktf-cli
+    # pkgsMaster.nodePackages.cdktf-cli
 
     # TUI
     pkgs.k9s
@@ -88,7 +89,6 @@
     pkgs.awscli2
     pkgs.bitwarden-cli
     pkgs.gh
-    pkgs.doppler
 
     pkgs.teller
     pkgs.git-secrets
@@ -114,6 +114,7 @@
       "homebrew/cask-fonts"
       "homebrew/cask-versions"
       "homebrew/services"
+      "hashicorp/tap"
       "wez/wezterm"
       # "davrodpin/mole"
       # "hidetatz/tap"
@@ -124,13 +125,21 @@
 
       # "alajmo/mani"
       # "autozimu/formulas"
-      # "dopplerhq/cli"
       # "filebrowser/tap"
       # "filosottile/musl-cross"
       # "moonrepo/tap"
       # "pulumi/tap"
       # "vmware-tanzu/carvel"
     ];
+    brews = [
+      "llvm" # for ebpf xdp dev
+      "hashicorp/tap/terraform" # nix takes a lot of time
+      # "cdktf" # nix takes a lot of time - use npm install --global cdktf-cli@latest
+      "go"
+      "unison"
+      "switchaudio-osx"
+    ];
+
     masApps = {
       "Xcode" = 497799835;
       "The Unarchiver" = 425424353;
@@ -253,11 +262,6 @@
       "logseq"
       "readdle-spark"
       "syncthing"
-    ];
-    brews = [
-      "go"
-      "unison"
-      "switchaudio-osx"
     ];
   };
 }

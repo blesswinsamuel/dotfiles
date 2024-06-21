@@ -3,6 +3,7 @@
     # "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
     # "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"
     # "'/Applications/Visual Studio Code.app/Contents/Resources/app/bin'"
+    "/opt/homebrew/opt/llvm/bin"
     "$HOME/bin"
     "/opt/homebrew/bin"
     "$HOME/.cargo/bin"
@@ -11,11 +12,15 @@
     # "/usr/local/sbin"
     # "/usr/local/bin"
     # "/opt/homebrew/bin"
-    # "~/.config/yarn/global/node_modules/.bin/"
+    # "$HOME/.config/yarn/global/node_modules/.bin/"
     # "~/.gem/ruby/2.7.0/bin"
     # "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/"
     # "~/.krew/bin"
   ];
+  # brew - /usr/local/sbin /usr/local/bin
+  # pipx - ~/.local/bin
+  # go   - ~/go/bin
+  # set -gx PATH $PATH "$(brew --prefix)/opt/python/libexec/bin" # unversioned python binaries
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
