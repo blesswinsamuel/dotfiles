@@ -41,7 +41,7 @@
       duti
       pngpaste # Paste image files from clipboard to file on MacOS
       mas
-      dockutil
+      # dockutil # Error: Package ‘swift-wrapper-5.8’ in /nix/store/038zs5b21569pjv6v0dwhi6fd95jbzvx-source/pkgs/development/compilers/swift/compiler/default.nix:700 is marked as broken, refusing to evaluate.
       # skhd # Simple hotkey daemon for macOS
     ];
   };

@@ -18,6 +18,7 @@ profiles:
       .hushlogin: { source: ./home/hushlogin/hushlogin }
       Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings: { source: ./home/sublime-text/Package Control.sublime-settings }
       Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./home/sublime-text/Preferences.sublime-settings }
+      Library/Application Support/Sublime Merge/Packages/User/Default (OSX).sublime-keymap: { source: ./home/sublime-merge/Default (OSX).sublime-keymap }
     macos:
       # /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -dump | grep '[[:space:]]uti:' | awk '{ print $2 }' | sort | uniq
       # swda getUTIs
@@ -85,7 +86,6 @@ hosts:
           - { path: "/System/Applications/Calendar.app/" }
           - { path: "/System/Applications/Notes.app/" }
           - { path: "/System/Applications/Stocks.app/" }
-          # - { path: "/Applications/Obsidian.app/" }
           - { path: "/System/Applications/Reminders.app/" }
           - { path: "/System/Applications/Music.app/" }
           # - { path: "/Applications/Spotify.app/" }
@@ -109,6 +109,7 @@ hosts:
           - { path: "/Applications/Firefox.app/" }
           - { path: "/Applications/IINA.app/" }
           - { options: { type: spacer } }
+          - { path: "/Applications/Obsidian.app/" }
           - { path: "/Applications/OrbStack.app/" }
           - { path: "/Applications/Visual Studio Code.app/" }
           - { path: "/Applications/Sublime Text.app/" }

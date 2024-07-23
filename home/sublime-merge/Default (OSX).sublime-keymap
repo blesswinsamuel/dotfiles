@@ -1,0 +1,12 @@
+[
+    {
+        "keys": ["option+up"],
+		"command": "move_commit",
+		"args": { "commit": "$commit", "down": false },
+    },
+    {
+        "keys": ["option+down"],
+		"command": "move_commit",
+		"args": { "commit": "$commit", "down": true },
+    },
+]

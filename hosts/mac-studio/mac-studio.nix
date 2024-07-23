@@ -262,6 +262,9 @@
       "logseq"
       "readdle-spark"
       "syncthing"
+
+      # Temp
+      "blackhole-2ch"
     ];
   };
 }
