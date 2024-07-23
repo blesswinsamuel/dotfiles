@@ -16,3 +16,7 @@ end
 
 set -gx HOMEBREW_NO_INSTALL_UPGRADE 1
 set -gx HOMEBREW_NO_AUTO_UPDATE 1
+
+set -gx VOLTA_HOME "$HOME/.volta"
+
+set -gx PATH "$VOLTA_HOME/bin" $PATH

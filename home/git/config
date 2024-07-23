@@ -8,6 +8,7 @@
     st = "stash"
     t = "tree"
     tree = "log --graph --decorate --pretty=oneline --abbrev-commit"
+    hs = "log --pretty='%C(yellow)%h %C(cyan)%cd %Cblue%aN%C(auto)%d %Creset%s' --date=relative"
 
 [commit]
     gpgsign = true

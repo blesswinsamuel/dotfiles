@@ -163,11 +163,14 @@ hosts:
           # - { path: "/Applications/Spotify.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Slack.app/" }
-          - { path: "$HOME/Applications/Gmail.app/" }
+          # - { path: "$HOME/Applications/Gmail.app/" }
           - { path: "/Applications/1Password.app/" }
-          # - { path: "/Applications/Arc.app/" }
+          - { path: "/Applications/Arc.app/" }
+          # - { path: "/Applications/Google Chrome.app/" }
+          - { path: "/Applications/Firefox.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
           - { options: { type: spacer } }
+          - { path: "/Applications/Obsidian.app/" }
           - { path: "/Applications/Visual Studio Code.app/" }
           - { path: "/Applications/Visual Studio Code - Insiders.app/" }
           - { path: "/Applications/Sublime Text.app/" }

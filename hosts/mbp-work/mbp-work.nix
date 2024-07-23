@@ -1,8 +1,9 @@
 { self, pkgs, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
   users.users.${systemConfig.username}.packages = [
     pkgs.rustup
+    pkgs.volta
     # pkgsMaster.go
-    pkgsMaster.nodejs
+    # pkgsMaster.nodejs
 
     # pkgsMaster.terraform
     # pkgsMaster.docker-client
@@ -55,6 +56,7 @@
     casks = [
       "alfred"
       "arc"
+      "firefox"
       "font-jetbrains-mono"
       # "fork"
       # "github"
@@ -94,6 +96,7 @@
       "fly"
     ];
     brews = [
+      "unison"
       # "grafana"
       # "zookeeper"
       # "kafka"
@@ -113,8 +116,9 @@
       "go"
       "python@3.10"
       "make"
-      # "nvm"
-      "yarn"
+      # "corepack"
+      # "node@16"
+      # "yarn"
 
       "golangci-lint"
 
@@ -149,5 +153,10 @@
         location = "~/Documents/Screenshots";
       };
     };
+  };
+
+  environment.variables = {
+    CTHULHU_DIR = "$HOME/dev/digitalocean/cthulhu";
+    DEV_TARGET_ARCH = "arm64";
   };
 }
