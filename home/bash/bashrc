@@ -1,0 +1,22 @@
+# # Commands that should be applied only for interactive shells.
+# [[ $- == *i* ]] || return
+
+# HISTFILESIZE=100000
+# HISTSIZE=10000
+
+# shopt -s histappend
+# shopt -s checkwinsize
+# shopt -s extglob
+# shopt -s globstar
+# shopt -s checkjobs
+
+
+
+# if [[ ! -v BASH_COMPLETION_VERSINFO ]]; then
+#   . "/nix/store/5zy0g7sf89vhcwf1ly2hcycfi2b67702-bash-completion-2.14.0/etc/profile.d/bash_completion.sh"
+# fi
+
+
+if [[ $TERM != "dumb" ]]; then
+  eval "$(starship init bash)"
+fi

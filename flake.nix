@@ -13,12 +13,11 @@
 
     # Environment/system management
     nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
-    home-manager = { url = "github:nix-community/home-manager"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
 
     # nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin" };
   };
 
-  outputs = inputs@{ self, nix-darwin, home-manager, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
     let
       inherit (self.lib) attrValues makeOverridable mkForce optionalAttrs singleton;
 
@@ -39,17 +38,6 @@
           inherit system;
           specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
-            home-manager.nixosModules.home-manager
-            {
-              # https://mipmip.github.io/home-manager-option-search/
-              # networking.hostName = hostName;
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
-              home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ./home/nixos-home.nix ] ++ extraHomeModules;
-              };
-            }
             ./commons/commons.nix
             ./commons/nixos-commons.nix
           ] ++ extraModules;
@@ -64,16 +52,6 @@
           inherit system;
           specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
-            home-manager.darwinModules.home-manager
-            {
-              # networking.hostName = hostName;
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit systemConfig pkgsMaster pkgsStable; };
-              home-manager.users.${systemConfig.username} = inputs: {
-                imports = [ ./home/home.nix ./home/darwin-home.nix ] ++ extraHomeModules;
-              };
-            }
             ./commons/commons.nix
             ./commons/darwin-commons.nix
           ] ++ extraModules;

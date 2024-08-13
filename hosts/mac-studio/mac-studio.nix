@@ -103,11 +103,6 @@
   #   userEmail = "my_git_username@gmail.com";
   # };
 
-
-
-  # Optionally, use home-manager.extraSpecialArgs to pass
-  # arguments to home.nix
-
   homebrew = {
     taps = [
       "homebrew/bundle"

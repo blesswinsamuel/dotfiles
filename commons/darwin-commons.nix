@@ -49,15 +49,6 @@
   # # The platform the configuration will be used on.
   # nixpkgs.hostPlatform = "aarch64-darwin";
 
-  # https://nix-community.github.io/home-manager/
-  # https://nix-community.github.io/home-manager/options.xhtml
-  # https://nix-community.github.io/home-manager/nixos-options.xhtml
-  # https://nix-community.github.io/home-manager/nix-darwin-options.xhtml
-  # https://nix-community.github.io/home-manager/release-notes.xhtml
-  # https://nixos.wiki/wiki/Home_Manager
-  # https://mipmip.github.io/home-manager-option-search/?query=
-
-
   # https://github.com/dustinlyons/nixos-config/blob/c8099eef3b3eedb429f5084c37aba3de5781204c/modules/darwin/home-manager.nix#L30
   # https://github.com/LnL7/nix-darwin/blob/master/modules/homebrew.nix
   homebrew = {

@@ -31,7 +31,6 @@
     packages = [
       # Nix
       pkgs.nixpkgs-fmt
-      pkgs.home-manager
       pkgs.nixos-rebuild
 
       # Linux
@@ -77,6 +76,9 @@
       pkgs.delta
 
       pkgsMaster.fish
+      pkgs.zsh
+      pkgs.bashInteractive
+      pkgs.starship
     ];
   };
 }

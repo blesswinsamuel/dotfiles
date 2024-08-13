@@ -13,6 +13,11 @@ profiles:
       .config/git/config: { source: ./home/git/config, operation: copy, template: true }
       .config/git/allowed_signers: { source: ./home/git/allowed_signers.tmpl, operation: copy, template: true }
       .wakatime.cfg: { source: ./home/wakatime/wakatime.cfg, operation: copy, template: true }
+      .zshrc: { source: ./home/zsh/zshrc }
+      .zshenv: { source: ./home/zsh/zshenv }
+      .bashrc: { source: ./home/bash/bashrc }
+      .bash_profile: { source: ./home/bash/bash_profile }
+      .config/tmux/tmux.conf: { source: ./home/tmux/tmux.conf }
   darwin:
     files:
       .hushlogin: { source: ./home/hushlogin/hushlogin }
@@ -103,7 +108,7 @@ hosts:
           # - { path: "/Applications/Bitwarden.app/" }
           - { path: "/Applications/Telegram.app/" }
           - { path: "/Applications/1Password.app/" }
-          - { path: "/Applications/Arc.app/" }
+          # - { path: "/Applications/Arc.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
           - { path: "/Applications/Google Chrome.app/" }
           - { path: "/Applications/Firefox.app/" }
@@ -165,7 +170,7 @@ hosts:
           - { path: "/Applications/Slack.app/" }
           # - { path: "$HOME/Applications/Gmail.app/" }
           - { path: "/Applications/1Password.app/" }
-          - { path: "/Applications/Arc.app/" }
+          # - { path: "/Applications/Arc.app/" }
           # - { path: "/Applications/Google Chrome.app/" }
           - { path: "/Applications/Firefox.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
