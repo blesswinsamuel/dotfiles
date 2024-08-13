@@ -162,5 +162,6 @@
   environment.variables = {
     CTHULHU_DIR = "$HOME/dev/digitalocean/cthulhu";
     DEV_TARGET_ARCH = "arm64";
+    OP_SSH_KEY_REF = "op://Private/Work SSH Key/private key";
   };
 }

@@ -1,16 +1,16 @@
 version: 3
 
 vars:
-  SSH_KEY_REF: '{{ env "SSH_KEY_REF" | default "op://Private/Personal SSH Key ED25519/private key" }}'
+  OP_SSH_KEY_REF: '{{ env "OP_SSH_KEY_REF" | default "op://Private/Personal SSH Key/private key" }}'
 
 tasks:
   print-config:
     cmds:
-      - age -d -i <(op read "op://Private/Personal SSH Key ED25519/private key") ./config.yaml.age
+      - age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age
 
   edit-config:
     cmds:
-      - age -d -i <(op read "op://Private/Personal SSH Key ED25519/private key") ./config.yaml.age > /tmp/config.yaml.orig
+      - age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age > /tmp/config.yaml.orig
       - defer: rm /tmp/config.yaml.orig
       - cp /tmp/config.yaml.orig /tmp/config.yaml
       - defer: rm /tmp/config.yaml
@@ -40,7 +40,7 @@ tasks:
 
   run-home:
     cmds:
-      - go run . -private-key-file <(op read "{{.SSH_KEY_REF}}")
+      - go run . -private-key-file <(op read "{{ .OP_SSH_KEY_REF }}")
 
   switch:
     cmds:
