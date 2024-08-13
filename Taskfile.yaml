@@ -1,5 +1,8 @@
 version: 3
 
+vars:
+  SSH_KEY_REF: '{{ env "SSH_KEY_REF" | default "op://Private/Personal SSH Key ED25519/private key" }}'
+
 tasks:
   print-config:
     cmds:
@@ -37,7 +40,7 @@ tasks:
 
   run-home:
     cmds:
-      - go run . -private-key-file <(op read "op://Private/Personal SSH Key ED25519/private key")
+      - go run . -private-key-file <(op read "{{.SSH_KEY_REF}}")
 
   switch:
     cmds:

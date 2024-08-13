@@ -36,7 +36,9 @@
     # pkgs.aws-iam-authenticator
     # pkgs.code-server
     # pkgs.openvscode-server
-  ];
+
+    pkgs.darwin.apple_sdk.frameworks.Security
+  ]; #++ (builtins.attrValues pkgs.darwin.apple_sdk.frameworks);
 
   homebrew = {
     taps = [
@@ -76,7 +78,7 @@
       # "tableplus"
       "tailscale"
       "trex"
-      "visual-studio-code-insiders"
+      "visual-studio-code@insiders"
       # "wezterm"
       "iina"
       "zed"
@@ -142,6 +144,8 @@
       # "doctl"
       # "kcat"
       # "redis"
+
+      "beekeeper-studio"
     ];
     # brew link --overwrite --force mysql-client@5.7
   };
