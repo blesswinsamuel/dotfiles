@@ -56,6 +56,12 @@ bindsym $super+Down focus down
 bindsym $super+Up focus up
 bindsym $super+Right focus right
 
+# change workspace focus
+bindsym $super+$alt+j workspace prev
+bindsym $super+$alt+semicolon workspace next
+bindsym $super+$alt+Left workspace prev
+bindsym $super+$alt+Right workspace next
+
 # move focused window
 bindsym $super+Shift+j move left
 bindsym $super+Shift+k move down
@@ -150,31 +156,44 @@ bindsym $super+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $super+Shift+r restart
 
-bindsym $super+r mode "resize"
-
 # resize window (you can also use the mouse for that)
+bindsym $super+r mode "resize"
 mode "resize" {
-    # These bindings trigger as soon as you enter the resize mode
-
-    # Pressing left will shrink the window’s width.
-    # Pressing right will grow the window’s width.
-    # Pressing up will shrink the window’s height.
-    # Pressing down will grow the window’s height.
     bindsym j resize shrink width 10 px or 10 ppt
     bindsym k resize grow height 10 px or 10 ppt
     bindsym l resize shrink height 10 px or 10 ppt
     bindsym semicolon resize grow width 10 px or 10 ppt
 
-    # same bindings, but for the arrow keys
     bindsym Left resize shrink width 10 px or 10 ppt
     bindsym Down resize grow height 10 px or 10 ppt
     bindsym Up resize shrink height 10 px or 10 ppt
     bindsym Right resize grow width 10 px or 10 ppt
 
-    # back to normal: Enter or Escape or $alt+r
     bindsym Return mode "default"
     bindsym Escape mode "default"
     bindsym $super+r mode "default"
+    bindsym $super+m mode "move" focus floating
+}
+
+# Move floating window
+bindsym $super+m mode "move" focus floating
+mode "move" {
+    bindsym $alt+Tab focus right
+
+    bindsym j move up 20px
+    bindsym k move left 20px
+    bindsym l move down 20px
+    bindsym semicolon move right 20px
+
+    bindsym Up move up 20px
+    bindsym Left move left 20px
+    bindsym Down move down 20px
+    bindsym Right move right 20px
+
+    bindsym Escape mode "default"
+    bindsym Return mode "default"
+    bindsym $super+m mode "default"
+    bindsym $super+r mode "resize"
 }
 
 # Print screen
