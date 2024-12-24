@@ -59,6 +59,10 @@ if status is-interactive
         eval conda "shell.fish" hook $argv | source
     end
 
+    if type -q mise
+        mise activate fish | source
+    end
+
     if test "$TERM" != dumb
         eval (starship init fish)
     end

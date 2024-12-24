@@ -20,3 +20,7 @@
 if [[ $TERM != "dumb" ]]; then
   eval "$(starship init bash)"
 fi
+
+if type "mise" > /dev/null; then
+  eval "$(mise activate bash)"
+fi

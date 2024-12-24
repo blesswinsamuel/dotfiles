@@ -1,10 +1,5 @@
 { self, pkgs, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
   users.users.${systemConfig.username}.packages = [
-    pkgs.rustup
-    pkgs.volta
-    # pkgsMaster.go
-    # pkgsMaster.nodejs
-
     # pkgsMaster.terraform
     # pkgsMaster.docker-client
     pkgsMaster.stern
@@ -18,6 +13,7 @@
     pkgsMaster.gnumake
     pkgsMaster.kapp
     pkgsMaster.k9s
+    pkgsMaster.tilt
 
     # 3rd party cloud service tools
     pkgsMaster.awscli2
@@ -76,7 +72,7 @@
       "sublime-text"
       # "syncthing"
       # "tableplus"
-      "tailscale"
+      # "tailscale"
       "trex"
       "visual-studio-code@insiders"
       # "wezterm"
@@ -96,6 +92,11 @@
       "iterm2"
       "docker"
       "fly"
+
+      "beekeeper-studio"
+      "postman"
+      "wireshark"
+      "insomnia"
     ];
     brews = [
       "unison"
@@ -115,14 +116,14 @@
       # "sshpass"
       # "the_silver_searcher"
 
-      "go"
-      "python@3.10"
+      # "go"
+      # "python@3.10"
       "make"
       # "corepack"
       # "node@16"
       # "yarn"
 
-      "golangci-lint"
+      # "golangci-lint"
 
       # "stern"
       # "curl"
@@ -144,8 +145,6 @@
       # "doctl"
       # "kcat"
       # "redis"
-
-      "beekeeper-studio"
     ];
     # brew link --overwrite --force mysql-client@5.7
   };

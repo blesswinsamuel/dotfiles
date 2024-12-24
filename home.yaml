@@ -184,6 +184,7 @@ hosts:
           - { path: "/Applications/Sublime Merge.app/" }
           - { path: "/Applications/iTerm.app/" }
           - { path: "/Applications/Sequel Ace.app/" }
+          - { path: "/Applications/Beekeeper Studio.app/" }
           - { path: "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/" }
           - { options: { type: spacer } }
           - { path: "/System/Applications/Utilities/Activity Monitor.app/" }

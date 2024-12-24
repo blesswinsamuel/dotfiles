@@ -37,6 +37,12 @@
       # libgccjit # gcc
       pkgs.coreutils-full
 
+      # Languages
+      pkgs.rustup
+      pkgs.mise
+      pkgs.uv
+      pkgs.go
+
       # Better tools
       pkgs.prettyping
       pkgs.bat
@@ -69,6 +75,7 @@
       pkgs.yq-go
       pkgs.tree
       pkgs.tldr
+      pkgs.mprocs
 
       # Git
       pkgs.git

@@ -1,19 +1,5 @@
 { self, pkgs, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
   users.users.${systemConfig.username}.packages = [
-    # Languages
-    pkgs.rustup
-    # pkgsMaster.go
-    pkgs.nodejs
-    pkgs.python3
-    pkgs.deno
-    pkgsMaster.bun
-
-    pkgsStable.poetry
-    pkgs.virtualenv
-    pkgsStable.pipx
-    pkgs.yarn
-    pkgs.python311Packages.pip
-
     # mongodb
     # mongosh
     # mongodb-tools
@@ -53,7 +39,6 @@
 
     # Tools
     pkgs.autossh
-    pkgs.mprocs
     pkgs.direnv
     pkgs.atuin
     pkgs.just
