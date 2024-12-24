@@ -72,7 +72,7 @@
 
     # 3rd party cloud service tools
     pkgs.awscli2
-    pkgs.bitwarden-cli
+    # pkgs.bitwarden-cli
     pkgs.gh
 
     pkgs.teller

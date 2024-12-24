@@ -76,6 +76,7 @@
       pkgs.tree
       pkgs.tldr
       pkgs.mprocs
+      pkgs.miniserve # quickly serve some files over http (written in rust)
 
       # Git
       pkgs.git
