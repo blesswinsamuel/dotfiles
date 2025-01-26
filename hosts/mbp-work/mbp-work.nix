@@ -23,7 +23,7 @@
 
     # Network tools
     pkgs.nmap
-    pkgs.inetutils
+    # pkgs.inetutils
     pkgs.iperf
 
     pkgsMaster.libllvm
@@ -54,11 +54,12 @@
     casks = [
       "alfred"
       "arc"
+      "google-chrome"
       "firefox"
       "font-jetbrains-mono"
       # "fork"
-      # "github"
-      # "istat-menus"
+      "github"
+      "istat-menus"
       "itsycal"
       "keepingyouawake"
       "1password"
@@ -94,9 +95,14 @@
       "fly"
 
       "beekeeper-studio"
+      "tableplus"
       "postman"
       "wireshark"
       "insomnia"
+      "fork"
+
+      "ghostty"
+      "spotify"
     ];
     brews = [
       "unison"

@@ -18,7 +18,7 @@
     wget
     curl
     git
-    openssh
+    # openssh
   ];
 
   environment.shells = [
@@ -57,6 +57,9 @@
       pkgs.uv
       pkgs.go
 
+      # Dev tools
+      pkgsMaster.colima
+
       # Better tools
       pkgs.prettyping
       pkgs.bat
@@ -69,6 +72,7 @@
       pkgs.dua # Disk Usage Analyzer
       pkgs.erdtree # File-tree visualizer and disk usage analyzer that is aware of .gitignore and hidden file rules
       pkgs.htop
+      pkgs.btop
       pkgs.difftastic
       pkgs.duf
       pkgs.sd

@@ -39,6 +39,7 @@ profiles:
         uti:public.typescript: /Applications/Visual Studio Code.app
         uti:public.tsx: /Applications/Visual Studio Code.app
         uti:org.go.source: /Applications/Visual Studio Code.app
+        uti:public.python-script: /Applications/Visual Studio Code.app
         uti:public.mpeg-4: /Applications/IINA.app # mp4
         uti:com.apple.m4a-audio: /Applications/IINA.app # m4a
       # https://github.com/LnL7/nix-darwin/pull/557/files
@@ -176,6 +177,7 @@ hosts:
           # - { path: "/Applications/Google Chrome.app/" }
           - { path: "/Applications/Firefox.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
+          - { path: "/Applications/Spotify.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Obsidian.app/" }
           - { path: "/Applications/Visual Studio Code.app/" }
@@ -183,10 +185,13 @@ hosts:
           - { path: "/Applications/Sublime Text.app/" }
           - { path: "/Applications/Zed.app/" }
           - { path: "/Applications/GoLand.app/" }
+          - { path: "/Applications/GitHub Desktop.app/" }
           - { path: "/Applications/Sublime Merge.app/" }
           - { path: "/Applications/iTerm.app/" }
+          - { path: "/Applications/Ghostty.app/" }
           - { path: "/Applications/Sequel Ace.app/" }
           - { path: "/Applications/Beekeeper Studio.app/" }
+          - { path: "/Applications/TablePlus.app/" }
           - { path: "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/" }
           - { options: { type: spacer } }
           - { path: "/System/Applications/Utilities/Activity Monitor.app/" }

@@ -31,7 +31,7 @@ type Config struct {
 
 type Profile struct {
 	Files         map[string]File `yaml:"files"`
-	MacOS         MacOs           `yaml:"macos"`
+	MacOS         MacOS           `yaml:"macos"`
 	SecretProfile string          `yaml:"secretProfile"`
 }
 
@@ -59,13 +59,13 @@ func (p *Profile) Merge(p2 Profile) {
 	}
 }
 
-type MacOs struct {
-	Dock                MacOsDock                 `yaml:"dock"`
+type MacOS struct {
+	Dock                MacOSDock                 `yaml:"dock"`
 	DefaultApplications map[string]string         `yaml:"defaultApplications"`
 	CustomPreferences   map[string]map[string]any `yaml:"customPreferences"` // defaults write
 }
 
-type MacOsDock struct {
+type MacOSDock struct {
 	Entries []DockEntry `yaml:"entries"`
 }
 
