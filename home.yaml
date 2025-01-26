@@ -148,6 +148,7 @@ hosts:
           - { path: "/Applications/Logic Pro X.app/" }
           - { path: "/Applications/Pianoteq 8 STAGE/Pianoteq 8 STAGE.app/" }
           - { path: "/Applications/EVO.app/" }
+          - { path: "/System/Applications/iPhone Mirroring.app/" }
 
           - { path: "/Applications/", section: "others", options: { sort: datemodified, view: grid, display: folder } }
           - { path: "$HOME/Downloads/", section: "others", options: { sort: dateadded, view: fan, display: stack } }
@@ -165,6 +166,7 @@ hosts:
           - { path: "/System/Applications/Notes.app/" }
           - { path: "/System/Applications/Reminders.app/" }
           - { path: "/System/Applications/Stocks.app/" }
+          - { path: "/System/Applications/Home.app/" }
           # - { path: "/Applications/Spotify.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Slack.app/" }

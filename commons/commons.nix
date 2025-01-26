@@ -1,4 +1,13 @@
-{ self, pkgs, pkgsMaster, lib, config, systemConfig, ... }: {
+{
+  self,
+  pkgs,
+  pkgsMaster,
+  lib,
+  config,
+  systemConfig,
+  ...
+}:
+{
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   # or
@@ -12,7 +21,10 @@
     openssh
   ];
 
-  environment.shells = [ pkgs.fish pkgs.zsh ];
+  environment.shells = [
+    pkgs.fish
+    pkgs.zsh
+  ];
 
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
@@ -30,8 +42,10 @@
 
     packages = [
       # Nix
-      pkgs.nixpkgs-fmt
+      pkgs.nixpkgs-fmt # deprecated
+      pkgs.nixfmt-rfc-style
       pkgs.nixos-rebuild
+      pkgs.nil # nix language server
 
       # Linux
       # libgccjit # gcc

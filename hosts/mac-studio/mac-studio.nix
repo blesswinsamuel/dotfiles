@@ -71,7 +71,7 @@
     pkgs.openconnect
 
     # 3rd party cloud service tools
-    pkgs.awscli2
+    # pkgsMaster.awscli2
     # pkgs.bitwarden-cli
     pkgs.gh
 
@@ -115,7 +115,6 @@
       "llvm" # for ebpf xdp dev
       "hashicorp/tap/terraform" # nix takes a lot of time
       # "cdktf" # nix takes a lot of time - use npm install --global cdktf-cli@latest
-      "go"
       "unison"
       "switchaudio-osx"
     ];
@@ -241,7 +240,7 @@
       "hammerspoon"
       "logseq"
       "readdle-spark"
-      "syncthing"
+      # "syncthing"
 
       # Temp
       "blackhole-2ch"
