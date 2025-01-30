@@ -103,6 +103,10 @@
 
       "ghostty"
       "spotify"
+
+      "gitify"
+      # "devhub"
+      "trailer"
     ];
     brews = [
       "unison"

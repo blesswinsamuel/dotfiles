@@ -174,8 +174,8 @@ hosts:
           # - { path: "$HOME/Applications/Gmail.app/" }
           - { path: "/Applications/1Password.app/" }
           # - { path: "/Applications/Arc.app/" }
-          # - { path: "/Applications/Google Chrome.app/" }
           - { path: "/Applications/Firefox.app/" }
+          - { path: "/Applications/Google Chrome.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
           - { path: "/Applications/Spotify.app/" }
           - { options: { type: spacer } }
@@ -184,15 +184,16 @@ hosts:
           - { path: "/Applications/Visual Studio Code - Insiders.app/" }
           - { path: "/Applications/Sublime Text.app/" }
           - { path: "/Applications/Zed.app/" }
-          - { path: "/Applications/GoLand.app/" }
+          # - { path: "/Applications/GoLand.app/" }
           - { path: "/Applications/GitHub Desktop.app/" }
           - { path: "/Applications/Sublime Merge.app/" }
-          - { path: "/Applications/iTerm.app/" }
-          - { path: "/Applications/Ghostty.app/" }
           - { path: "/Applications/Sequel Ace.app/" }
           - { path: "/Applications/Beekeeper Studio.app/" }
           - { path: "/Applications/TablePlus.app/" }
+          - { path: "/Applications/Postman.app/" }
           - { path: "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/" }
+          - { path: "/Applications/iTerm.app/" }
+          - { path: "/Applications/Ghostty.app/" }
           - { options: { type: spacer } }
           - { path: "/System/Applications/Utilities/Activity Monitor.app/" }
           - { path: "/System/Applications/Utilities/Console.app/" }
