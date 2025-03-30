@@ -1,9 +1,9 @@
-{ self, pkgs, pkgsMaster, lib, config, systemConfig, ... }: {
+{ self, pkgsUnstable, pkgsMaster, lib, config, systemConfig, ... }: {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   # or
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgsUnstable; [
     vim
     tmux
     wget
@@ -12,9 +12,9 @@
     # openssh
   ];
 
-  environment.shells = [
-    pkgs.fish
-    pkgs.zsh
+  environment.shells = with pkgsUnstable; [
+    fish
+    zsh
   ];
 
   # Necessary for using flakes on this system.
@@ -33,69 +33,69 @@
 
     packages = [
       # Nix
-      pkgs.nixpkgs-fmt # deprecated
-      pkgs.nixfmt-rfc-style
-      pkgs.nixos-rebuild
-      pkgs.nil # nix language server
+      pkgsUnstable.nixpkgs-fmt # deprecated
+      pkgsUnstable.nixfmt-rfc-style
+      pkgsUnstable.nixos-rebuild
+      pkgsUnstable.nil # nix language server
 
       # Linux
       # libgccjit # gcc
-      pkgs.coreutils-full
+      pkgsUnstable.coreutils-full
 
       # Languages
-      pkgs.rustup
-      pkgs.mise
-      pkgs.uv
-      pkgs.go
+      pkgsUnstable.rustup
+      pkgsUnstable.mise
+      pkgsUnstable.uv
+      pkgsUnstable.go
 
       # Dev tools
       pkgsMaster.colima
 
       # Better tools
-      pkgs.prettyping
-      pkgs.bat
-      pkgs.dog # DNS client like dig
-      pkgs.ripgrep
-      pkgs.eza
-      pkgs.fd
-      pkgs.fzf
-      pkgs.ncdu
-      pkgs.dua # Disk Usage Analyzer
-      pkgs.erdtree # File-tree visualizer and disk usage analyzer that is aware of .gitignore and hidden file rules
-      pkgs.htop
-      pkgs.btop
-      pkgs.difftastic
-      pkgs.duf
-      pkgs.sd
-      pkgs.zellij # terminal multiplexer
-      pkgs.bandwhich
-      pkgs.bottom
+      pkgsUnstable.prettyping
+      pkgsUnstable.bat
+      pkgsUnstable.dog # DNS client like dig
+      pkgsUnstable.ripgrep
+      pkgsUnstable.eza
+      pkgsUnstable.fd
+      pkgsUnstable.fzf
+      pkgsUnstable.ncdu
+      pkgsUnstable.dua # Disk Usage Analyzer
+      pkgsUnstable.erdtree # File-tree visualizer and disk usage analyzer that is aware of .gitignore and hidden file rules
+      pkgsUnstable.htop
+      pkgsUnstable.btop
+      pkgsUnstable.difftastic
+      pkgsUnstable.duf
+      pkgsUnstable.sd
+      pkgsUnstable.zellij # terminal multiplexer
+      pkgsUnstable.bandwhich
+      pkgsUnstable.bottom
 
       # Utilities
-      pkgs.age
+      pkgsUnstable.age
 
       # Experimental Utilities
-      pkgs.gping
-      pkgs.trippy
+      pkgsUnstable.gping
+      pkgsUnstable.trippy
 
       # Common Utilities
       pkgsMaster.go-task
-      pkgs.jq
-      pkgs.yq-go
-      pkgs.tree
-      pkgs.tldr
-      pkgs.mprocs
-      pkgs.miniserve # quickly serve some files over http (written in rust)
+      pkgsUnstable.jq
+      pkgsUnstable.yq-go
+      pkgsUnstable.tree
+      pkgsUnstable.tldr
+      pkgsUnstable.mprocs
+      pkgsUnstable.miniserve # quickly serve some files over http (written in rust)
 
       # Git
-      pkgs.git
-      pkgs.git-lfs
-      pkgs.delta
+      pkgsUnstable.git
+      pkgsUnstable.git-lfs
+      pkgsUnstable.delta
 
       pkgsMaster.fish
-      pkgs.zsh
-      pkgs.bashInteractive
-      pkgs.starship
+      pkgsUnstable.zsh
+      pkgsUnstable.bashInteractive
+      pkgsUnstable.starship
     ];
   };
 }

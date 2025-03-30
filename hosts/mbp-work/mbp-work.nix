@@ -1,4 +1,4 @@
-{ self, pkgs, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
+{ self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
   users.users.${systemConfig.username}.packages = [
     # pkgsMaster.terraform
     # pkgsMaster.docker-client
@@ -22,9 +22,9 @@
     pkgsMaster.doctl
 
     # Network tools
-    pkgs.nmap
+    pkgsUnstable.nmap
     # pkgs.inetutils
-    pkgs.iperf
+    pkgsUnstable.iperf
 
     pkgsMaster.libllvm
     pkgsMaster.rsync
@@ -33,8 +33,8 @@
     # pkgs.code-server
     # pkgs.openvscode-server
 
-    pkgs.darwin.apple_sdk.frameworks.Security
-  ]; #++ (builtins.attrValues pkgs.darwin.apple_sdk.frameworks);
+    pkgsUnstable.darwin.apple_sdk.frameworks.Security
+  ]; #++ (builtins.attrValues pkgsUnstable.darwin.apple_sdk.frameworks);
 
   homebrew = {
     taps = [

@@ -1,11 +1,11 @@
-{ self, pkgs, lib, config, systemConfig, ... }: {
+{ self, pkgsUnstable, lib, config, systemConfig, ... }: {
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${systemConfig.username} = {
     isNormalUser = true;
     description = "Blesswin Samuel";
     hashedPassword = systemConfig.userHashedPassword;
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
+    packages = with pkgsUnstable; [
       firefox
       #  thunderbird
     ];
@@ -85,7 +85,7 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgsUnstable; [
     pciutils
     usbutils
     lm_sensors

@@ -1,28 +1,28 @@
-{ self, pkgs, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
+{ self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
   users.users.${systemConfig.username}.packages = [
     # mongodb
     # mongosh
     # mongodb-tools
-    pkgs.redis
-    pkgs.postgresql_14
-    pkgs.mailhog
+    pkgsUnstable.redis
+    pkgsUnstable.postgresql_14
+    pkgsUnstable.mailhog
     # grafana
     # traefik
     # victoriametrics
 
     # Kubernetes
-    pkgs.kapp
-    pkgs.kubectl
-    pkgs.kubernetes-helm
+    pkgsUnstable.kapp
+    pkgsUnstable.kubectl
+    pkgsUnstable.kubernetes-helm
     # pkgs.kopia
-    pkgs.krew
-    pkgs.stern
-    pkgs.kubie
+    pkgsUnstable.krew
+    pkgsUnstable.stern
+    pkgsUnstable.kubie
 
     # Docker
-    pkgs.podman
-    pkgs.podman-compose
-    pkgs.podman-tui
+    pkgsUnstable.podman
+    pkgsUnstable.podman-compose
+    pkgsUnstable.podman-tui
 
     # Infrastructure management
     # pkgsMaster.terraform
@@ -30,54 +30,54 @@
     # pkgsMaster.nodePackages.cdktf-cli
 
     # TUI
-    pkgs.k9s
-    pkgs.gitui
+    pkgsUnstable.k9s
+    pkgsUnstable.gitui
 
     # pkgs.yt-dlp
     # pkgs.ffmpeg
     # pkgs.imagemagick
 
     # Tools
-    pkgs.autossh
-    pkgs.direnv
-    pkgs.atuin
-    pkgs.just
-    pkgs.neovim
-    pkgs.gojq
-    pkgs.hey # HTTP load generator, ApacheBench (ab) replacement
-    pkgs.rclone
-    pkgs.qpdf
-    pkgs.pv
-    pkgs.gnused
+    pkgsUnstable.autossh
+    pkgsUnstable.direnv
+    pkgsUnstable.atuin
+    pkgsUnstable.just
+    pkgsUnstable.neovim
+    pkgsUnstable.gojq
+    pkgsUnstable.hey # HTTP load generator, ApacheBench (ab) replacement
+    pkgsUnstable.rclone
+    pkgsUnstable.qpdf
+    pkgsUnstable.pv
+    pkgsUnstable.gnused
     # pkgs.gnutar
     # pkgs.gzip
     # pkgs.unzip
-    pkgs.tree
-    pkgs.websocat
-    pkgs.xh
+    pkgsUnstable.tree
+    pkgsUnstable.websocat
+    pkgsUnstable.xh
     # pkgsMaster.unison
-    pkgs.hexyl # command line hex viewer
+    pkgsUnstable.hexyl # command line hex viewer
     # qrcp # transfer files over Wi-Fi from your computer to a mobile device by scanning a QR code without leaving the terminal
-    pkgs.smartmontools # tools for monitoring the health of hard drives
-    pkgs.syncthing # continuous file synchronization program
-    pkgs.wakeonlan # sends magic packets to wake up network-devices
-    pkgs.mkcert # simple tool for making locally-trusted development certificates
-    pkgs.delta # syntax-highlighting pager for git
+    pkgsUnstable.smartmontools # tools for monitoring the health of hard drives
+    pkgsUnstable.syncthing # continuous file synchronization program
+    pkgsUnstable.wakeonlan # sends magic packets to wake up network-devices
+    pkgsUnstable.mkcert # simple tool for making locally-trusted development certificates
+    pkgsUnstable.delta # syntax-highlighting pager for git
 
     # Network tools
-    pkgs.nmap
-    pkgs.inetutils
-    pkgs.iperf
-    pkgs.openconnect
+    pkgsUnstable.nmap
+    pkgsUnstable.inetutils
+    pkgsUnstable.iperf
+    pkgsUnstable.openconnect
 
     # 3rd party cloud service tools
     # pkgsMaster.awscli2
     # pkgs.bitwarden-cli
-    pkgs.gh
+    pkgsUnstable.gh
 
-    pkgs.teller
-    pkgs.git-secrets
-    pkgs.gitleaks
+    pkgsUnstable.teller
+    pkgsUnstable.git-secrets
+    pkgsUnstable.gitleaks
 
     # pkgs.home-assistant-cli
   ];

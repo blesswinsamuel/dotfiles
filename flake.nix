@@ -30,13 +30,13 @@
 
       nixosSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
         let
-          pkgs = genPkgs system nixpkgs-unstable;
+          pkgsUnstable = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
           pkgsStable = genPkgs system nixpkgs-stable;
         in
         nixpkgs-unstable.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
+          specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             ./commons/commons.nix
             ./commons/nixos-commons.nix
@@ -44,13 +44,13 @@
         };
       darwinSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
         let
-          pkgs = genPkgs system nixpkgs-unstable;
+          pkgsUnstable = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
           pkgsStable = genPkgs system nixpkgs-stable;
         in
         nix-darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit self pkgs pkgsMaster pkgsStable inputs systemConfig; };
+          specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             ./commons/commons.nix
             ./commons/darwin-commons.nix

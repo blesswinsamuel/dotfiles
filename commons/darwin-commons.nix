@@ -1,4 +1,4 @@
-{ self, pkgs, lib, config, systemConfig, ... }: {
+{ self, pkgsUnstable, lib, config, systemConfig, ... }: {
   environment.systemPath = [
     # "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
     # "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"
@@ -24,7 +24,7 @@
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  # nix.package = pkgs.nix;
+  # nix.package = pkgsUnstable.nix;
 
   # Set Git commit hash for darwin-version.
   system.configurationRevision = self.rev or self.dirtyRev or null;
@@ -36,7 +36,7 @@
   users.users.${systemConfig.username} = {
     home = "/Users/${systemConfig.username}";
 
-    packages = with pkgs; [
+    packages = with pkgsUnstable; [
       # Mac tools
       duti
       pngpaste # Paste image files from clipboard to file on MacOS
