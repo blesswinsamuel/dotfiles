@@ -7,7 +7,6 @@ profiles:
       .config/fish/functions/fish_greeting.fish: { source: ./home/fish/functions/fish_greeting.fish }
       .config/skhd/skhdrc: { source: ./home/skhd/skhdrc }
       .config/wezterm/wezterm.lua: { source: ./home/wezterm/wezterm.lua }
-      .config/yabai/yabairc: { source: ./home/yabai/yabairc }
       .config/starship.toml: { source: ./home/starship/starship.toml }
       .vimrc: { source: ./home/vim/vimrc }
       .config/git/config: { source: ./home/git/config, operation: copy, template: true }
@@ -20,6 +19,7 @@ profiles:
       .config/tmux/tmux.conf: { source: ./home/tmux/tmux.conf }
   darwin:
     files:
+      .config/yabai/yabairc: { source: ./home/yabai/yabairc }
       .hushlogin: { source: ./home/hushlogin/hushlogin }
       Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings: { source: ./home/sublime-text/Package Control.sublime-settings }
       Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./home/sublime-text/Preferences.sublime-settings }
