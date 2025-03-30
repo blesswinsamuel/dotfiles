@@ -14,10 +14,11 @@
     # Environment/system management
     nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
 
+    disko = { url = "github:nix-community/disko"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     # nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin" };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs-unstable, nixpkgs-master, nixpkgs-stable, disko }:
     let
       inherit (self.lib) attrValues makeOverridable mkForce optionalAttrs singleton;
 
@@ -34,10 +35,11 @@
           pkgsMaster = genPkgs system nixpkgs-master;
           pkgsStable = genPkgs system nixpkgs-stable;
         in
-        nixpkgs-unstable.lib.nixosSystem {
+        nixpkgs-stable.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
+            disko.nixosModules.disko
             ./commons/commons.nix
             ./commons/nixos-commons.nix
           ] ++ extraModules;

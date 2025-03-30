@@ -93,6 +93,7 @@
       "goland"
       "iterm2"
       "docker"
+      "devpod"
       "fly"
 
       "beekeeper-studio"

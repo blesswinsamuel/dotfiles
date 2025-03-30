@@ -4,12 +4,24 @@
     isNormalUser = true;
     description = "Blesswin Samuel";
     hashedPassword = systemConfig.userHashedPassword;
+    openssh.authorizedKeys.keys = systemConfig.authorizedKeys;
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgsUnstable; [
-      firefox
-      #  thunderbird
-    ];
   };
+
+  users.users.root = {
+    openssh.authorizedKeys.keys = systemConfig.authorizedKeys;
+    hashedPassword = systemConfig.rootHashedPassword;
+  };
+
+  environment.systemPackages = with pkgsUnstable; [
+    pciutils
+    usbutils
+    lm_sensors
+
+    # KDE
+    libsForQt5.kconfig
+    kdePackages.plasma-browser-integration
+  ];
 
   services.xserver.enable = true; # optional
   services.displayManager.sddm.enable = true;
@@ -63,7 +75,6 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -84,12 +95,6 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgsUnstable; [
-    pciutils
-    usbutils
-    lm_sensors
-  ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
@@ -127,11 +132,7 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   # https://nixos.org/manual/nixos/unstable/release-notes
-  system.stateVersion = "24.11"; # Did you read the comment?
-
-  # for remote builds
-  users.users.root.openssh.authorizedKeys.keys = systemConfig.authorizedKeys;
-  users.users.root.hashedPassword = systemConfig.rootHashedPassword;
+  system.stateVersion = "24.05"; # Did you read the comment?
 
   users.mutableUsers = false;
   services.openssh.settings.PasswordAuthentication = false;
@@ -150,4 +151,6 @@
   };
 
   services.timesyncd.enable = true;
+
+  services.libinput.touchpad.naturalScrolling = true;
 }

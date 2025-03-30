@@ -70,6 +70,7 @@ tasks:
   # nixos vscode remote target - https://github.com/microsoft/vscode-remote-release/issues/103#issuecomment-1060907227, https://github.com/microsoft/vscode-remote-release/issues/648#issuecomment-503148523
   switch-nixos-remote:
     cmds:
+      #  --install-bootloader (for upgrades)
       - nixos-rebuild --fast --build-host root@hp-laptop --target-host root@hp-laptop switch --flake .#hp-laptop {{ .CLI_ARGS }}
 
   maintanence:

@@ -22,8 +22,8 @@
   # go   - ~/go/bin
   # set -gx PATH $PATH "$(brew --prefix)/opt/python/libexec/bin" # unversioned python binaries
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  # # Auto upgrade nix package and the daemon service.
+  # services.nix-daemon.enable = true;
   # nix.package = pkgsUnstable.nix;
 
   # Set Git commit hash for darwin-version.

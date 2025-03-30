@@ -80,6 +80,13 @@
     pkgsUnstable.gitleaks
 
     # pkgs.home-assistant-cli
+
+    # GUIs
+    pkgsUnstable.firefox
+    pkgsUnstable.google-chrome
+    pkgsUnstable.vscode
+    pkgsUnstable._1password-gui
+    # pkgsUnstable._1password-cli
   ];
 
   # programs.git = {
