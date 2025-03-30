@@ -70,7 +70,7 @@ tasks:
   # nixos vscode remote target - https://github.com/microsoft/vscode-remote-release/issues/103#issuecomment-1060907227, https://github.com/microsoft/vscode-remote-release/issues/648#issuecomment-503148523
   switch-nixos-remote:
     cmds:
-      - nixos-rebuild --use-remote-sudo --fast --build-host blesswinsamuel@homelab-hp-chromebox-wifi --target-host blesswinsamuel@homelab-hp-chromebox-wifi switch --flake ~/dotfiles#hp-chromebox {{ .CLI_ARGS }}
+      - nixos-rebuild --fast --build-host root@hp-laptop --target-host root@hp-laptop switch --flake .#hp-laptop {{ .CLI_ARGS }}
 
   maintanence:
     cmds:

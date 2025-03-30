@@ -7,7 +7,7 @@
     # Package sets
     # https://github.com/NixOS/nixos-org-configurations/blob/master/channels.nix
     nixpkgs-master = { url = "github:NixOS/nixpkgs/master"; };
-    nixpkgs-stable = { url = "github:NixOS/nixpkgs/nixos-24.05"; };
+    nixpkgs-stable = { url = "github:NixOS/nixpkgs/nixos-24.11"; };
     # nixpkgs-darwin-stable = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin"; };
     nixpkgs-unstable = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
 
@@ -62,17 +62,23 @@
     in
     {
       nixosConfigurations = processConfigurations {
-        hp-chromebox = nixosSystem {
+        hp-laptop = nixosSystem {
           system = "x86_64-linux";
-          extraModules = [ ./hosts/hp-chromebox/hp-chromebox.nix ];
-          extraHomeModules = [ ];
-          systemConfig = { username = "blesswinsamuel"; };
-        };
-        my-workstation = nixosSystem {
-          system = "x86_64-linux";
-          # extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
+          extraModules = [
+            ./hosts/hp-laptop/hp-laptop-hardware-configuration.nix
+            ./hosts/hp-laptop/hp-laptop-disk-config.nix
+            ./hosts/hp-laptop/hp-laptop.nix
+          ];
           # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
-          systemConfig = { username = "bsamuel"; };
+          systemConfig = {
+            username = "blesswinsamuel";
+            authorizedKeys = [
+              # cat ~/.ssh/id_ed25519.pub | pbcopy
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
+            ];
+            rootHashedPassword = "$y$j9T$Qnv1FPJ76Q2.nY6U2d/m..$JzPVeJwn9X/q9K2OjcZMVXqke/AJ7DuLmAzgKX6oQR4"; # nix run nixpkgs#mkpasswd --command 'mkpasswd xxx'
+            userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
+          };
         };
       };
       darwinConfigurations = processConfigurations {
