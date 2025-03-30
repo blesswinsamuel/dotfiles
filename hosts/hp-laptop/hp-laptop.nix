@@ -1,4 +1,5 @@
 { self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
+  networking.hostName = "hp-laptop";
   users.users.${systemConfig.username}.packages = [
     # mongodb
     # mongosh
@@ -81,18 +82,38 @@
 
     # pkgs.home-assistant-cli
 
+    pkgsUnstable.xclip
+
     # GUIs
-    pkgsUnstable.firefox
     pkgsUnstable.google-chrome
     pkgsUnstable.vscode
-    pkgsUnstable._1password-gui
-    # pkgsUnstable._1password-cli
+    pkgsUnstable.telegram-desktop
+    pkgsUnstable.slack
+    pkgsUnstable.sublime-merge
+    pkgsUnstable.sublime4
+    pkgsUnstable.github-desktop
+    pkgsUnstable.zed-editor
+    pkgsUnstable.obsidian
+    pkgsUnstable.ghostty
   ];
-
-  # programs.git = {
-  #   enable = true;
-  #   userName  = "my_git_username";
-  #   userEmail = "my_git_username@gmail.com";
-  # };
-
+  fonts.packages = with pkgsUnstable; [
+    # (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    # fira-code
+    # droid-sans-mono
+    # jetbrains-mono
+    nerd-fonts.fira-code
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.jetbrains-mono
+  ];
+  programs.firefox.enable = true;
+  programs.firefox.package = pkgsUnstable.firefox;
+  nixpkgs.config.firefox.enablePlasmaBrowserIntegration = true;
+  programs.chromium.enablePlasmaBrowserIntegration = true;
+  programs._1password.enable = true;
+  programs._1password.package = pkgsUnstable._1password-cli;
+  programs._1password-gui.enable = true;
+  programs._1password-gui.package = pkgsUnstable._1password-gui;
+  # programs._1password-gui.polkitPolicyOwners = ["blesswinsamuel"];
+  services.tailscale.enable = true;
+  security.polkit.enable = true;
 }

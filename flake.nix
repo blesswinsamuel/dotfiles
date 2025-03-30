@@ -27,6 +27,10 @@
         # https://nixos.wiki/wiki/Unfree_Software
         config.allowUnfree = true;
         # config.allowBroken = true;
+
+        config.permittedInsecurePackages = [
+          "openssl-1.1.1w"
+        ];
       };
 
       nixosSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:

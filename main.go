@@ -268,6 +268,7 @@ func main() {
 				buf := bytes.NewBuffer([]byte{})
 				if err := t.Execute(buf, map[string]any{
 					"Secrets": secrets,
+					"OS":      runtime.GOOS,
 				}); err != nil {
 					log.Fatal().Err(err).Msgf("failed to execute template")
 				}
@@ -288,6 +289,11 @@ func main() {
 			log.Fatal().Str("operation", file.Operation).Msgf("unsupported operation")
 		}
 	}
+	configureDock(profile)
+	configureDefaultApplications(profile)
+}
+
+func configureDock(profile Profile) {
 	for i, entry := range profile.MacOS.Dock.Entries {
 		if entry.Section == "" {
 			entry.Section = "apps"
@@ -296,6 +302,10 @@ func main() {
 			entry.Path = strings.Replace(entry.Path, "$HOME", os.Getenv("HOME"), -1)
 		}
 		profile.MacOS.Dock.Entries[i] = entry
+	}
+	if len(profile.MacOS.Dock.Entries) == 0 {
+		log.Info().Msgf("no dock entries to configure")
+		return
 	}
 	// profile.MacOS.Dock.Entries
 	dockEntries, err := getCurrentDockEntries()
@@ -321,64 +331,6 @@ func main() {
 		}
 		if err := exec.Command("killall", "Dock").Run(); err != nil {
 			log.Fatal().Err(err).Msgf("failed to restart dock")
-		}
-	}
-
-	if len(profile.MacOS.DefaultApplications) > 0 {
-		currentSchemes := map[string]string{}
-		parseSwdaOut := func(out []byte, keyType string) {
-			for _, line := range strings.Split(string(out), "\n") {
-				if line == "" {
-					continue
-				}
-				parts := strings.Split(line, "\t\t\t\t")
-				currentSchemes[keyType+":"+parts[0]] = parts[1]
-			}
-		}
-		outSchemes, err := exec.Command("swda", "getSchemes").Output()
-		if err != nil {
-			log.Fatal().Err(err).Msgf("failed to get schemes")
-		}
-		parseSwdaOut(outSchemes, "scheme")
-		outUTIs, err := exec.Command("swda", "getUTIs").Output()
-		if err != nil {
-			log.Fatal().Err(err).Msgf("failed to get schemes")
-		}
-		parseSwdaOut(outUTIs, "uti")
-		for key, application := range profile.MacOS.DefaultApplications {
-			key := strings.Split(key, ":")
-			if len(key) != 2 {
-				log.Fatal().Msgf("invalid key")
-			}
-			keyType := key[0]
-			schemeOrUTI := key[1]
-			argName := ""
-			switch keyType {
-			case "scheme":
-				argName = "--URL"
-			case "uti":
-				argName = "--UTI"
-			default:
-				log.Fatal().Msgf("unsupported key type")
-			}
-			// var currentApplication string
-			// out, err := exec.Command("swda", "getHandler", argName, schemeOrUTI).Output()
-			// if err == nil {
-			// 	currentApplication = strings.TrimSpace(string(out))
-			// 	if currentApplication == application {
-			// 		log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
-			// 		continue
-			// 	}
-			// }
-			currentApplication := currentSchemes[keyType+":"+schemeOrUTI]
-			if currentApplication == application {
-				log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
-				continue
-			}
-			log.Info().Str("uti", schemeOrUTI).Str("application", application).Str("currentApplication", currentApplication).Msgf("setting default application")
-			if out, err := exec.Command("swda", "setHandler", argName, schemeOrUTI, "--app", application).CombinedOutput(); err != nil {
-				log.Fatal().Err(err).Msgf("failed to set default application: %s", out)
-			}
 		}
 	}
 }
@@ -497,4 +449,64 @@ func getCurrentDockEntries() ([]DockEntry, error) {
 		}
 	}
 	return entries, nil
+}
+
+func configureDefaultApplications(profile Profile) {
+	if len(profile.MacOS.DefaultApplications) > 0 {
+		currentSchemes := map[string]string{}
+		parseSwdaOut := func(out []byte, keyType string) {
+			for _, line := range strings.Split(string(out), "\n") {
+				if line == "" {
+					continue
+				}
+				parts := strings.Split(line, "\t\t\t\t")
+				currentSchemes[keyType+":"+parts[0]] = parts[1]
+			}
+		}
+		outSchemes, err := exec.Command("swda", "getSchemes").Output()
+		if err != nil {
+			log.Fatal().Err(err).Msgf("failed to get schemes")
+		}
+		parseSwdaOut(outSchemes, "scheme")
+		outUTIs, err := exec.Command("swda", "getUTIs").Output()
+		if err != nil {
+			log.Fatal().Err(err).Msgf("failed to get schemes")
+		}
+		parseSwdaOut(outUTIs, "uti")
+		for key, application := range profile.MacOS.DefaultApplications {
+			key := strings.Split(key, ":")
+			if len(key) != 2 {
+				log.Fatal().Msgf("invalid key")
+			}
+			keyType := key[0]
+			schemeOrUTI := key[1]
+			argName := ""
+			switch keyType {
+			case "scheme":
+				argName = "--URL"
+			case "uti":
+				argName = "--UTI"
+			default:
+				log.Fatal().Msgf("unsupported key type")
+			}
+			// var currentApplication string
+			// out, err := exec.Command("swda", "getHandler", argName, schemeOrUTI).Output()
+			// if err == nil {
+			// 	currentApplication = strings.TrimSpace(string(out))
+			// 	if currentApplication == application {
+			// 		log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
+			// 		continue
+			// 	}
+			// }
+			currentApplication := currentSchemes[keyType+":"+schemeOrUTI]
+			if currentApplication == application {
+				log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
+				continue
+			}
+			log.Info().Str("uti", schemeOrUTI).Str("application", application).Str("currentApplication", currentApplication).Msgf("setting default application")
+			if out, err := exec.Command("swda", "setHandler", argName, schemeOrUTI, "--app", application).CombinedOutput(); err != nil {
+				log.Fatal().Err(err).Msgf("failed to set default application: %s", out)
+			}
+		}
+	}
 }

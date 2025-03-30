@@ -44,16 +44,17 @@ tasks:
 
   switch:
     cmds:
-      - |
+      - |-
         {{- if eq .MACHINE "Mac" }}
-        darwin-rebuild switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        darwin-rebuild switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
-        sudo nixos-rebuild switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        sudo nixos-rebuild switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
       - task: run-home
     vars:
+      HOSTNAME: { sh: "echo ${HOSTNAME:-$(hostname)}" }
       MACHINE:
         sh: |
           unameOut="$(uname -s)"
