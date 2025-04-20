@@ -95,6 +95,7 @@
     pkgsUnstable.zed-editor
     pkgsUnstable.obsidian
     pkgsUnstable.ghostty
+    pkgsUnstable.kdePackages.krdc
   ];
   fonts.packages = with pkgsUnstable; [
     # (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })

@@ -2,6 +2,7 @@
 /* https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css)#completely-hide-native-tabs-strip */
 /* set toolkit.legacyUserProfileCustomizations.stylesheets to true */
 /* ln -s "$HOME/dotfiles/home/firefox/chrome" "$HOME/Library/Application Support/Firefox/Profiles/acxuismp.default-release/chrome" */
+/* ln -s "$HOME/dotfiles/home/firefox/chrome" "$HOME/.mozilla/firefox/o2ypm327.default/chrome" */
 
 /* #main-window #titlebar {
   overflow: hidden;

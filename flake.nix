@@ -28,6 +28,7 @@
         config.allowUnfree = true;
         # config.allowBroken = true;
 
+        # for krdc
         config.permittedInsecurePackages = [
           "openssl-1.1.1w"
         ];
