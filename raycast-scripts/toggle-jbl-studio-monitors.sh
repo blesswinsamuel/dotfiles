@@ -17,7 +17,7 @@
 curl -s -X POST \
     -H "Authorization: Bearer $(op read 'op://Dev/Lab K8S homelab/HOME_ASSISTANT_API_TOKEN_FOR_CONFIG_RELOAD')" \
     -H "Content-Type: application/json" \
-    --data '{"entity_id": "switch.den_wipro_jbl_studio_monitors_socket"}' \
+    --data '{"entity_id": "switch.studio_monitors_wipro_10a_plug"}' \
     http://homelab-nas.home.lan:8123/api/services/switch/toggle
 
 echo "Toggled JBL Studio Monitors"

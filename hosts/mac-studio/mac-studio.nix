@@ -165,6 +165,7 @@
       "alfred"
       "raycast"
       "iterm2"
+      "ghostty"
       "betterdisplay"
       "forklift"
       "trex"

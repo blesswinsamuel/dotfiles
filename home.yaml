@@ -132,6 +132,7 @@ hosts:
           # - { path: "/Applications/Cyberduck.app/" }
           # - { path: "/Applications/Warp.app/" }
           - { path: "/Applications/iTerm.app/" }
+          - { path: "/Applications/Ghostty.app/" }
           # - { path: "/Applications/IntelliJ IDEA.app/" }
           # - { path: "/Applications/Lens.app/" }
           - { options: { type: spacer } }
