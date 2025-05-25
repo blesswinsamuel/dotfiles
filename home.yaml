@@ -193,7 +193,7 @@ hosts:
           - { path: "/Applications/Beekeeper Studio.app/" }
           - { path: "/Applications/TablePlus.app/" }
           - { path: "/Applications/Postman.app/" }
-          - { path: "/Applications/Docker.app/Contents/MacOS/Docker Desktop.app/" }
+          - { path: "/Applications/OrbStack.app/" }
           - { path: "/Applications/iTerm.app/" }
           - { path: "/Applications/Ghostty.app/" }
           - { options: { type: spacer } }

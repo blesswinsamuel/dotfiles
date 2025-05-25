@@ -15,6 +15,8 @@
     pkgsMaster.k9s
     pkgsMaster.tilt
 
+    pkgsMaster.graphviz
+
     # 3rd party cloud service tools
     pkgsMaster.awscli2
     pkgsMaster.s3cmd
@@ -92,7 +94,8 @@
       "1password-cli"
       "goland"
       "iterm2"
-      "docker"
+      # "docker"
+      "orbstack"
       "devpod"
       "fly"
 

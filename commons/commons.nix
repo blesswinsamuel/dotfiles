@@ -48,9 +48,6 @@
       pkgsUnstable.uv
       pkgsUnstable.go
 
-      # Dev tools
-      pkgsMaster.colima
-
       # Better tools
       pkgsUnstable.prettyping
       pkgsUnstable.bat
