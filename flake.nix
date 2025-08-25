@@ -7,7 +7,7 @@
     # Package sets
     # https://github.com/NixOS/nixos-org-configurations/blob/master/channels.nix
     nixpkgs-master = { url = "github:NixOS/nixpkgs/master"; };
-    nixpkgs-stable = { url = "github:NixOS/nixpkgs/nixos-24.11"; };
+    nixpkgs-stable = { url = "github:NixOS/nixpkgs/nixos-25.05"; };
     # nixpkgs-darwin-stable = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin"; };
     nixpkgs-unstable = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
 

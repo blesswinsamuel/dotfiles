@@ -46,7 +46,7 @@ tasks:
     cmds:
       - |-
         {{- if eq .MACHINE "Mac" }}
-        darwin-rebuild switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
+        sudo darwin-rebuild switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
         sudo nixos-rebuild switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else }}

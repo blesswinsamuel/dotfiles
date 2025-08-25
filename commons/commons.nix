@@ -84,6 +84,7 @@
       pkgsUnstable.tldr
       pkgsUnstable.mprocs
       pkgsUnstable.miniserve # quickly serve some files over http (written in rust)
+      pkgsUnstable.dprint
 
       # Git
       pkgsUnstable.git

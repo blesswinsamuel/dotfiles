@@ -120,6 +120,7 @@ hosts:
           - { path: "/Applications/Obsidian.app/" }
           - { path: "/Applications/OrbStack.app/" }
           - { path: "/Applications/Visual Studio Code.app/" }
+          - { path: "/Applications/Visual Studio Code - Insiders.app/" }
           - { path: "/Applications/Sublime Text.app/" }
           # - { path: "/Applications/Zed.app/" }
           # - { path: "/Applications/Lapce.app/" }
@@ -149,7 +150,7 @@ hosts:
           - { path: "/Applications/Final Cut Pro.app/" }
           - { path: "/Applications/GarageBand.app/" }
           - { path: "/Applications/MainStage.app/" }
-          - { path: "/Applications/Logic Pro X.app/" }
+          - { path: "/Applications/Logic Pro.app/" }
           - { path: "/Applications/Pianoteq 8 STAGE/Pianoteq 8 STAGE.app/" }
           - { path: "/Applications/EVO.app/" }
           - { path: "/System/Applications/iPhone Mirroring.app/" }

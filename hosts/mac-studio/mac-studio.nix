@@ -184,6 +184,8 @@
       "intellij-idea"
       "sublime-text"
       "visual-studio-code"
+      "visual-studio-code@insiders"
+      "cursor"
       "sublime-merge"
       "fork"
       "github"
