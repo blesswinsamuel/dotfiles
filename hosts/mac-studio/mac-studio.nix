@@ -29,10 +29,6 @@
     # nodePackages.cdk8s-cli
     # pkgsMaster.nodePackages.cdktf-cli
 
-    # TUI
-    pkgsUnstable.k9s
-    pkgsUnstable.gitui
-
     # pkgs.yt-dlp
     # pkgs.ffmpeg
     # pkgs.imagemagick
@@ -54,7 +50,6 @@
     # pkgs.unzip
     pkgsUnstable.tree
     pkgsUnstable.websocat
-    pkgsUnstable.xh
     # pkgsMaster.unison
     pkgsUnstable.hexyl # command line hex viewer
     # qrcp # transfer files over Wi-Fi from your computer to a mobile device by scanning a QR code without leaving the terminal
@@ -62,7 +57,6 @@
     pkgsUnstable.syncthing # continuous file synchronization program
     pkgsUnstable.wakeonlan # sends magic packets to wake up network-devices
     pkgsUnstable.mkcert # simple tool for making locally-trusted development certificates
-    pkgsUnstable.delta # syntax-highlighting pager for git
 
     # Network tools
     pkgsUnstable.nmap
@@ -79,6 +73,9 @@
     pkgsUnstable.git-secrets
     pkgsUnstable.gitleaks
 
+    pkgsUnstable.terraform
+    pkgsUnstable.buf
+
     # pkgs.home-assistant-cli
   ];
 
@@ -91,8 +88,6 @@
   homebrew = {
     taps = [
       "homebrew/bundle"
-      "homebrew/cask-fonts"
-      "homebrew/cask-versions"
       "homebrew/services"
       "hashicorp/tap"
       "wez/wezterm"
@@ -172,12 +167,12 @@
       "shottr"
       "rectangle"
       "alt-tab"
-      "tailscale"
+      "tailscale-app"
 
       ## Media
       "iina"
       "imageoptim"
-      "handbrake"
+      "handbrake-app"
       # "spotify"
 
       ## Dev Tools
@@ -191,7 +186,7 @@
       "github"
       "postico"
       "tableplus"
-      "wireshark"
+      "wireshark-app"
       "wezterm"
       # "fleet"
       "zed"

@@ -50,24 +50,42 @@
       pkgsUnstable.go
 
       # Better tools
-      pkgsUnstable.prettyping
-      pkgsUnstable.bat
-      pkgsUnstable.dog # DNS client like dig
-      pkgsUnstable.ripgrep
-      pkgsUnstable.eza
-      pkgsUnstable.fd
-      pkgsUnstable.fzf
+      pkgsUnstable.prettyping # Better ping
+      pkgsUnstable.bat # Alternative to cat
+      pkgsUnstable.ripgrep # Alternative to grep
+      pkgsUnstable.fd # Alternative to find
+      pkgsUnstable.fzf # Fuzzy finder
+      pkgsUnstable.zoxide # smarter cd command
+      pkgsUnstable.eza # modern replacement for ls
+      pkgsUnstable.xh # friendly curl alternative
+      pkgsUnstable.zellij # terminal multiplexer
+      pkgsUnstable.dust # fast and friendly alternative to du
+      pkgsUnstable.dua # disk usage analyzer and viewer
+      pkgsUnstable.yazi # terminal file manager
+      pkgsUnstable.hyperfine # command-line benchmarking tool
+      pkgsUnstable.evil-helix # modal text editor
+      pkgsUnstable.fselect # SQL-like find tool
+      pkgsUnstable.ncspot # Spotify client
+      pkgsUnstable.ripgrep-all # like ripgrep, but searches in PDFs, E-Books, Office files, zip files, etc.
+      pkgsUnstable.tokei # count lines of code
+      pkgsUnstable.wiki-tui # wikipedia reader in terminal
+      pkgsUnstable.just # command runner similar to make
+      pkgsUnstable.mask # command runner defined in a markdown file
+      pkgsUnstable.presenterm # terminal presentation tool
+      pkgsUnstable.kondo # find unused files and dependencies in your project
       pkgsUnstable.ncdu
-      pkgsUnstable.dua # Disk Usage Analyzer
       pkgsUnstable.erdtree # File-tree visualizer and disk usage analyzer that is aware of .gitignore and hidden file rules
       pkgsUnstable.htop
       pkgsUnstable.btop
       pkgsUnstable.difftastic
       pkgsUnstable.duf
       pkgsUnstable.sd
-      pkgsUnstable.zellij # terminal multiplexer
       pkgsUnstable.bandwhich
       pkgsUnstable.bottom
+
+      # TUI
+      pkgsUnstable.k9s
+      # pkgsUnstable.gitui # terminal UI for git
 
       # Utilities
       pkgsUnstable.age
@@ -77,7 +95,7 @@
       pkgsUnstable.trippy
 
       # Common Utilities
-      pkgsMaster.go-task
+      pkgsUnstable.go-task
       pkgsUnstable.jq
       pkgsUnstable.yq-go
       pkgsUnstable.tree
@@ -89,9 +107,10 @@
       # Git
       pkgsUnstable.git
       pkgsUnstable.git-lfs
-      pkgsUnstable.delta
+      pkgsUnstable.delta # syntax-highlighting pager for git
 
-      pkgsMaster.fish
+      pkgsUnstable.fish
+      pkgsUnstable.nushell
       pkgsUnstable.zsh
       pkgsUnstable.bashInteractive
       pkgsUnstable.starship

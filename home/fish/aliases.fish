@@ -72,6 +72,12 @@ if type -q eza
     end
     # abbr -g -a ls eza
 end
+# if type -q zoxide
+#     function cd --wraps zoxide --description 'alias cd to zoxide'
+#         zoxide --group $argv
+#     end
+#     # abbr -g -a cd zoxide
+# end
 if type -q prettyping
     function ping --wraps prettyping --description 'alias ping to prettyping'
         prettyping --nolegend $argv
@@ -144,7 +150,6 @@ function git-open
     set -l giturl $giturl/tree/$branch
     open $giturl
 end
-
 
 function sshrun --description 'run command over ssh'
     if test -z "$SSH_CLIENT"
