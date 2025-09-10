@@ -115,6 +115,11 @@
       pkgsUnstable.bashInteractive
       pkgsUnstable.starship
       pkgsUnstable.neovim
+      pkgsUnstable.lazygit
+
+      # Fonts
+      pkgsUnstable.nerd-fonts.fira-code
+      pkgsUnstable.nerd-fonts.jetbrains-mono
     ];
   };
 }

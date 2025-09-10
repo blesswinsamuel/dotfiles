@@ -55,16 +55,20 @@ if status is-interactive
         atuin init fish --disable-up-arrow | source
     end
 
-    if type -q conda
-        eval conda "shell.fish" hook $argv | source
-    end
+    # if type -q conda
+    #     eval conda "shell.fish" hook $argv | source
+    # end
 
     if type -q mise
         mise activate fish | source
     end
 
-    if test "$TERM" != dumb
-        eval (starship init fish)
+    if type -q zoxide
+        zoxide init fish | source
+    end
+
+    if type -q starship
+        starship init fish | source
     end
 end
 

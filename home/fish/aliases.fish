@@ -73,10 +73,10 @@ if type -q eza
     # abbr -g -a ls eza
 end
 # if type -q zoxide
-#     function cd --wraps zoxide --description 'alias cd to zoxide'
-#         zoxide --group $argv
+#     function cd --wraps z --description 'alias cd to z'
+#         z --group $argv
 #     end
-#     # abbr -g -a cd zoxide
+#     # abbr -g -a cd z
 # end
 if type -q prettyping
     function ping --wraps prettyping --description 'alias ping to prettyping'
