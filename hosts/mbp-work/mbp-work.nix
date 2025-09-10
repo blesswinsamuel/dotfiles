@@ -101,7 +101,7 @@
       "beekeeper-studio"
       "tableplus"
       "postman"
-      "wireshark"
+      "wireshark-app"
       "insomnia"
       "fork"
 
