@@ -114,6 +114,7 @@
       pkgsUnstable.zsh
       pkgsUnstable.bashInteractive
       pkgsUnstable.starship
+      pkgsUnstable.neovim
     ];
   };
 }

@@ -12,7 +12,6 @@
     pkgsMaster.redis
     pkgsMaster.gnumake
     pkgsMaster.kapp
-    pkgsMaster.k9s
     pkgsMaster.tilt
 
     pkgsMaster.graphviz
@@ -35,7 +34,7 @@
     # pkgs.code-server
     # pkgs.openvscode-server
 
-    pkgsUnstable.darwin.apple_sdk.frameworks.Security
+    # pkgsUnstable.darwin.apple_sdk.frameworks.Security
   ]; #++ (builtins.attrValues pkgsUnstable.darwin.apple_sdk.frameworks);
 
   homebrew = {

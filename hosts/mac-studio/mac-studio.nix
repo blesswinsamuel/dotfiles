@@ -38,7 +38,6 @@
     pkgsUnstable.direnv
     pkgsUnstable.atuin
     pkgsUnstable.just
-    pkgsUnstable.neovim
     pkgsUnstable.gojq
     pkgsUnstable.hey # HTTP load generator, ApacheBench (ab) replacement
     pkgsUnstable.rclone

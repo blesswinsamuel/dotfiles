@@ -12,7 +12,7 @@
     nixpkgs-unstable = { url = "github:NixOS/nixpkgs/nixpkgs-unstable"; };
 
     # Environment/system management
-    nix-darwin = { url = "github:LnL7/nix-darwin"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+    nix-darwin = { url = "github:nix-darwin/nix-darwin/master"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
 
     disko = { url = "github:nix-community/disko"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
     # nixpkgs-darwin = { url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin" };
