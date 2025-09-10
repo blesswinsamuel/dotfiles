@@ -57,8 +57,6 @@
       "arc"
       "google-chrome"
       "firefox"
-      "font-jetbrains-mono"
-      "font-jetbrains-mono-nerd-font"
       # "fork"
       "github"
       "istat-menus"

@@ -114,8 +114,17 @@
       pkgsUnstable.zsh
       pkgsUnstable.bashInteractive
       pkgsUnstable.starship
+
+      # VIM
       pkgsUnstable.neovim
+      pkgsUnstable.luajitPackages.luarocks
       pkgsUnstable.lazygit
+      pkgsUnstable.ast-grep
+      pkgsUnstable.lua51Packages.lua
+      pkgsUnstable.tree-sitter
+      pkgsUnstable.imagemagick_light
+      pkgsUnstable.ghostscript_headless
+      pkgsUnstable.mermaid-cli
 
       # Fonts
       pkgsUnstable.nerd-fonts.fira-code

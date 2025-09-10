@@ -199,15 +199,6 @@
       # "homebrew/cask-drivers/audient-evo"
       # "homebrew/cask-drivers/yamaha-usb-midi-driver"
 
-      # Fonts
-      "font-jetbrains-mono-nerd-font"
-      # "font-fira-code"
-      # "font-hack"
-      # "font-hasklig"  # Source Code Pro with ligatures
-      # "font-source-code-pro"
-      # "font-inconsolata"
-      # "font-noto-sans"
-
       "1password"
       "1password-cli"
       "arduino-ide"
