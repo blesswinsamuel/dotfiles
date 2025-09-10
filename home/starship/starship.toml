@@ -14,49 +14,50 @@ $shell$character"""
 format = '[\[$symbol$context( \($namespace\))\]]($style) '
 style = "cyan"
 disabled = false
+symbol = "󱃾 "
 
 [golang]
-symbol = "GO "
+symbol = " "
 format = '[\[$symbol$version\]]($style) '
 style = "bold cyan"
 
 [python]
-symbol = "🐍 "
+symbol = " "
 format = '[\[${symbol}${pyenv_prefix}(${version})( \($virtualenv\))\]]($style) '
 # style = "bold yellow"
 
 [conda]
-symbol = "🅒 "
+symbol = " "
 format = '[\[$symbol$environment\]]($style) '
 style = "bold green"
 
 [docker_context]
-symbol = "🐳 "
+symbol = " "
 format = '[\[$symbol$context\]]($style) '
 # style = "blue bold"
 
 [nodejs]
-symbol = "⬢ "
+symbol = " "
 format = '[\[$symbol$version\]]($style) '
 # style = "bold green"
 
 [terraform]
-symbol = "💠 "
+symbol = "󱁢 "
 format = '[\[$symbol$workspace\]]($style) '
 # style = "blue bold"
 
 [rust]
-symbol = "🦀 "
+symbol = "󱘗 "
 format = '[\[$symbol$version\]]($style) '
 # style = "bold red"
 
 [aws]
 format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
 # style = "bold yellow"
-symbol = "🅰 "
+symbol = " "
 
 [nix_shell]
-symbol = "❄️  "
+symbol = "  "
 format = '[\[$symbol$state( \($name\))\]]($style) '
 
 [time]
@@ -66,9 +67,12 @@ time_format = "%d-%m-%y %H:%M:%S"
 style = "green"
 
 [git_branch]
-symbol = "⎇ "
+symbol = " "
 format = '([\($symbol$branch(:$remote_branch)\)]($style) )'
 style = "bold green"
+
+[git_commit]
+tag_symbol = '  '
 
 [git_status]
 format = '([\[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind\]]($style) )'

@@ -31,7 +31,6 @@
     # pkgsMaster.nodePackages.cdktf-cli
 
     # TUI
-    pkgsUnstable.k9s
     pkgsUnstable.gitui
 
     # pkgs.yt-dlp
@@ -53,9 +52,7 @@
     # pkgs.gnutar
     # pkgs.gzip
     # pkgs.unzip
-    pkgsUnstable.tree
     pkgsUnstable.websocat
-    pkgsUnstable.xh
     # pkgsMaster.unison
     pkgsUnstable.hexyl # command line hex viewer
     # qrcp # transfer files over Wi-Fi from your computer to a mobile device by scanning a QR code without leaving the terminal
@@ -96,15 +93,6 @@
     pkgsUnstable.obsidian
     pkgsUnstable.ghostty
     pkgsUnstable.kdePackages.krdc
-  ];
-  fonts.packages = with pkgsUnstable; [
-    # (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
-    # fira-code
-    # droid-sans-mono
-    # jetbrains-mono
-    nerd-fonts.fira-code
-    nerd-fonts.droid-sans-mono
-    nerd-fonts.jetbrains-mono
   ];
   programs.firefox.enable = true;
   programs.firefox.package = pkgsUnstable.firefox;

@@ -125,10 +125,15 @@
       pkgsUnstable.imagemagick_light
       pkgsUnstable.ghostscript_headless
       pkgsUnstable.mermaid-cli
-
-      # Fonts
-      pkgsUnstable.nerd-fonts.fira-code
-      pkgsUnstable.nerd-fonts.jetbrains-mono
     ];
   };
+  fonts.packages = with pkgsUnstable; [
+    # (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
+    # fira-code
+    # droid-sans-mono
+    # jetbrains-mono
+    nerd-fonts.fira-code
+    # nerd-fonts.droid-sans-mono
+    nerd-fonts.jetbrains-mono
+  ];
 }
