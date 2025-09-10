@@ -17,6 +17,7 @@ profiles:
       .bashrc: { source: ./home/bash/bashrc }
       .bash_profile: { source: ./home/bash/bash_profile }
       .config/tmux/tmux.conf: { source: ./home/tmux/tmux.conf }
+      .config/nvim: { source: ./home/nvim }
   darwin:
     files:
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }

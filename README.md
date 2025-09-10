@@ -24,8 +24,6 @@ nix run nixpkgs#go-task -- switch -- --verbose
 
 nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
 nix-channel --update nixpkgs
-
-git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 ```
 
 ## Brew commands
