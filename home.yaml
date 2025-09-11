@@ -123,7 +123,9 @@ hosts:
           - { path: "/Applications/Visual Studio Code.app/" }
           - { path: "/Applications/Visual Studio Code - Insiders.app/" }
           - { path: "/Applications/Sublime Text.app/" }
-          # - { path: "/Applications/Zed.app/" }
+          - { path: "/Applications/Zed.app/" }
+          - { path: "/Applications/Cursor.app/" }
+          - { path: "/Applications/Windsurf.app/" }
           # - { path: "/Applications/Lapce.app/" }
           - { path: "/Applications/Sublime Merge.app/" }
           # - { path: "/Applications/Fork.app/" }

@@ -177,9 +177,6 @@
       ## Dev Tools
       "intellij-idea"
       "sublime-text"
-      "visual-studio-code"
-      "visual-studio-code@insiders"
-      "cursor"
       "sublime-merge"
       "fork"
       "github"
@@ -194,6 +191,13 @@
       "gitkraken"
       "pgadmin4"
       "hex-fiend"
+
+      # coding
+      "visual-studio-code"
+      "visual-studio-code@insiders"
+      "cursor"
+      "claude-code"
+      "windsurf"
 
       # Drivers
       # "homebrew/cask-drivers/audient-evo"
