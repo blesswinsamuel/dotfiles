@@ -64,7 +64,7 @@ if status is-interactive
     end
 
     if type -q zoxide
-        zoxide init fish | source
+        zoxide init fish --cmd cd | source
     end
 
     if type -q starship

@@ -129,9 +129,9 @@
   };
   fonts.packages = with pkgsUnstable; [
     # (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
-    # fira-code
+    fira-code
     # droid-sans-mono
-    # jetbrains-mono
+    jetbrains-mono
     nerd-fonts.fira-code
     # nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono
