@@ -22,11 +22,6 @@
     pkgsMaster.gh
     pkgsMaster.doctl
 
-    # Network tools
-    pkgsUnstable.nmap
-    # pkgs.inetutils
-    pkgsUnstable.iperf
-
     pkgsMaster.libllvm
     pkgsMaster.rsync
 

@@ -48,6 +48,7 @@
       pkgsUnstable.devbox
       pkgsUnstable.uv
       pkgsUnstable.go
+      pkgsUnstable.biome
 
       # Better tools
       pkgsUnstable.prettyping # Better ping
@@ -125,13 +126,18 @@
       pkgsUnstable.imagemagick_light
       pkgsUnstable.ghostscript_headless
       pkgsUnstable.mermaid-cli
+
+      # network
+      pkgsUnstable.iperf
+      pkgsUnstable.nmap
+      pkgsUnstable.inetutils
     ];
   };
   fonts.packages = with pkgsUnstable; [
     # (nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" ]; })
-    fira-code
+    # fira-code
     # droid-sans-mono
-    jetbrains-mono
+    # jetbrains-mono
     nerd-fonts.fira-code
     # nerd-fonts.droid-sans-mono
     nerd-fonts.jetbrains-mono

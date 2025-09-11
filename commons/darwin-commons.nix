@@ -34,7 +34,7 @@
   system.stateVersion = 4;
 
   system.primaryUser = systemConfig.username;
-  ids.gids.nixbld = 30000;
+  ids.gids.nixbld = 350;
 
   users.users.${systemConfig.username} = {
     home = "/Users/${systemConfig.username}";

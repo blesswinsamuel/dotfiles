@@ -62,12 +62,6 @@
     pkgsUnstable.mkcert # simple tool for making locally-trusted development certificates
     pkgsUnstable.delta # syntax-highlighting pager for git
 
-    # Network tools
-    pkgsUnstable.nmap
-    pkgsUnstable.inetutils
-    pkgsUnstable.iperf
-    pkgsUnstable.openconnect
-
     # 3rd party cloud service tools
     # pkgsMaster.awscli2
     # pkgs.bitwarden-cli
