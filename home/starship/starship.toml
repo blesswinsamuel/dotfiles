@@ -29,29 +29,29 @@ disabled = false
 # https://starship.rs/presets/bracketed-segments
 # https://starship.rs/presets/nerd-font
 [aws]
-format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
+format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\] '
 symbol = "  "
 # format = '[\[$symbol( [$profile](white))( $region)\]]($style) '
 # # style = "bold yellow"
 
 [bun]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [c]
-format = '\[[$symbol($version(-$name))]($style)\]'
+format = '\[[$symbol($version(-$name))]($style)\] '
 symbol = " "
 
 [cpp]
-format = '\[[$symbol($version(-$name))]($style)\]'
+format = '\[[$symbol($version(-$name))]($style)\] '
 symbol = " "
 
 [cmake]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [cmd_duration]
-format = '\[[⏱ $duration]($style)\]'
+format = '\[[⏱ $duration]($style)\] '
 min_time = 1
 show_milliseconds = true
 # style = "bold dimmed white"
@@ -60,106 +60,106 @@ show_notifications = true
 min_time_to_notify = 45_000
 
 [cobol]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [conda]
-format = '\[[$symbol$environment]($style)\]'
+format = '\[[$symbol$environment]($style)\] '
 symbol = " "
 # format = '[\[$symbol$environment\]]($style) '
 # style = "bold green"
 
 [crystal]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [daml]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [dart]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [deno]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [docker_context]
-format = '\[[$symbol$context]($style)\]'
+format = '\[[$symbol$context]($style)\] '
 symbol = " "
 # format = '[\[$symbol$context\]]($style) '
 # # style = "blue bold"
 
 [dotnet]
-format = '\[[$symbol($version)(🎯 $tfm)]($style)\]'
+format = '\[[$symbol($version)(🎯 $tfm)]($style)\] '
 
 [elixir]
-format = '\[[$symbol($version \(OTP $otp_version\))]($style)\]'
+format = '\[[$symbol($version \(OTP $otp_version\))]($style)\] '
 symbol = " "
 
 [elm]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [erlang]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [fennel]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [fossil_branch]
-format = '\[[$symbol$branch]($style)\]'
+format = '\[[$symbol$branch]($style)\] '
 symbol = " "
 
 [gcloud]
-format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
+format = '\[[$symbol$account(@$domain)(\($region\))]($style)\] '
 symbol = "  "
 
 [git_branch]
-format = '\[[$symbol$branch]($style)\]'
+format = '\[[$symbol$branch]($style)\] '
 symbol = " "
 # format = '([\($symbol$branch(:$remote_branch)\)]($style) )'
 # style = "bold green"
 
 [git_status]
-format = '([\[$all_status$ahead_behind\]]($style))'
-# format = '([\[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind\]]($style) )'
-# conflicted = "#[$count](white) " # ✕ =
-# ahead = "↑[$count](white)" # ⇡
-# behind = "↓[$count](white)" # ⇣
-# diverged = "⇕⇡$ahead_count⇣$behind_count"
-# untracked = "[…](bold yellow)[$count](white)" # ?
-# stashed = '[$](bold yellow)[$count](white)'
-# modified = "[±](bold yellow)[$count](white)" # !
-# staged = "[+](bold green)[$count](white)" # ●
-# renamed = "[»](bold blue)[$count](white)"
-# deleted = "[✕](bold purple)[$count](white)" # ✘
-# style = "bold red"
+# format = '([\[$all_status$ahead_behind\]]($style))'
+format = '([\[$conflicted$deleted$renamed$modified$staged$untracked$ahead_behind\]]($style) )'
+conflicted = "#[$count](white) "                                                               # ✕ =
+ahead = "↑[$count](white)"                                                                     # ⇡
+behind = "↓[$count](white)"                                                                    # ⇣
+diverged = "⇕⇡$ahead_count⇣$behind_count"
+untracked = "[…](bold yellow)[$count](white)"                                                  # ?
+stashed = '[\$](bold yellow)[$count](white)'
+modified = "[±](bold yellow)[$count](white)"                                                   # !
+staged = "[+](bold green)[$count](white)"                                                      # ●
+renamed = "[»](bold blue)[$count](white)"
+deleted = "[✕](bold purple)[$count](white)"                                                    # ✘
+style = "bold red"
 
 [golang]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 # format = '[\[$symbol$version\]]($style) '
 # style = "bold cyan"
 
 [gradle]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [guix_shell]
-format = '\[[$symbol]($style)\]'
+format = '\[[$symbol]($style)\] '
 symbol = " "
 
 [haskell]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [haxe]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [helm]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [directory]
 read_only = " 󰌾"
@@ -169,133 +169,133 @@ truncation_symbol = ".../"
 truncation_length = 8
 
 [hg_branch]
-format = '\[[$symbol$branch]($style)\]'
+format = '\[[$symbol$branch]($style)\] '
 symbol = " "
 
 [java]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [julia]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [kotlin]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [kubernetes]
-format = '\[[$symbol$context( \($namespace\))]($style)\]'
+format = '\[[$symbol$context( \($namespace\))]($style)\] '
 # format = '[\[$symbol$context( \($namespace\))\]]($style) '
 # style = "cyan"
 disabled = false
 symbol = "󱃾 "
 
 [lua]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [memory_usage]
-format = '\[$symbol[$ram( | $swap)]($style)\]'
+format = '\[$symbol[$ram( | $swap)]($style)\] '
 symbol = "󰍛 "
 
 [meson]
-format = '\[[$symbol$project]($style)\]'
+format = '\[[$symbol$project]($style)\] '
 symbol = "󰔷 "
 
 [nim]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = "󰆥 "
 
 [nix_shell]
-format = '\[[$symbol$state( \($name\))]($style)\]'
+format = '\[[$symbol$state( \($name\))]($style)\] '
 symbol = " "
 # format = '[\[$symbol$state( \($name\))\]]($style) '
 
 [nodejs]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 # format = '[\[$symbol$version\]]($style) '
 # # style = "bold green"
 
 [ocaml]
-format = '\[[$symbol($version)(\($switch_indicator$switch_name\))]($style)\]'
+format = '\[[$symbol($version)(\($switch_indicator$switch_name\))]($style)\] '
 symbol = " "
 
 [opa]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [openstack]
-format = '\[[$symbol$cloud(\($project\))]($style)\]'
+format = '\[[$symbol$cloud(\($project\))]($style)\] '
 
 [os]
-format = '\[[$symbol]($style)\]'
+format = '\[[$symbol]($style)\] '
 
 [package]
-format = '\[[$symbol$version]($style)\]'
+format = '\[[$symbol$version]($style)\] '
 symbol = "󰏗 "
 # format = '[\[$symbol$version\]]($style) '
 
 [perl]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [php]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [pijul_channel]
-format = '\[[$symbol$channel]($style)\]'
+format = '\[[$symbol$channel]($style)\] '
 symbol = " "
 
 [pixi]
-format = '\[[$symbol$version( $environment)]($style)\]'
+format = '\[[$symbol$version( $environment)]($style)\] '
 symbol = "󰏗 "
 
 [pulumi]
-format = '\[[$symbol$stack]($style)\]'
+format = '\[[$symbol$stack]($style)\] '
 
 [purescript]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [python]
-format = '\[[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)\]'
+format = '\[[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)\] '
 symbol = " "
 # format = '[\[${symbol}${pyenv_prefix}(${version})( \($virtualenv\))\]]($style) '
 # # style = "bold yellow"
 
 [raku]
-format = '\[[$symbol($version-$vm_version)]($style)\]'
+format = '\[[$symbol($version-$vm_version)]($style)\] '
 
 [red]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [ruby]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [rust]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = "󱘗 "
 # format = '[\[$symbol$version\]]($style) '
 # # style = "bold red"
 
 [scala]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [spack]
-format = '\[[$symbol$environment]($style)\]'
+format = '\[[$symbol$environment]($style)\] '
 
 [sudo]
-format = '\[[as $symbol]($style)\]'
+format = '\[[as $symbol]($style)\] '
 
 [swift]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [terraform]
-format = '\[[$symbol$workspace]($style)\]'
+format = '\[[$symbol$workspace]($style)\] '
 symbol = "󱁢 "
 # format = '[\[$symbol$workspace\]]($style) '
 # # style = "blue bold"
@@ -307,23 +307,23 @@ time_format = "%d-%m-%y %H:%M:%S"
 # style = "green"
 
 [username]
-format = '\[[$user]($style)\]'
+format = '\[[$user]($style)\] '
 # style_user = "bold dimmed green"
 # style_root = "bold red"
 # format = "[↯](bold yellow) [$user]($style)[@](bold dimmed white)"
 
 [vagrant]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [vlang]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [zig]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 symbol = " "
 
 [solidity]
-format = '\[[$symbol($version)]($style)\]'
+format = '\[[$symbol($version)]($style)\] '
 
 [buf]
 symbol = " "
