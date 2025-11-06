@@ -76,10 +76,6 @@
     isNormalUser = true;
     description = "Blesswin Samuel";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgsStable; [
-      kdePackages.kate
-      #  thunderbird
-    ];
   };
 
   # Allow unfree packages
@@ -121,6 +117,8 @@
   hardware.bluetooth.enable = true;
 
   users.users.${systemConfig.username}.packages = [
+    pkgsStable.kdePackages.kate
+
     # mongodb
     # mongosh
     # mongodb-tools
