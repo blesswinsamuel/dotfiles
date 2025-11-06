@@ -76,7 +76,7 @@
     isNormalUser = true;
     description = "Blesswin Samuel";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
+    packages = with pkgsStable; [
       kdePackages.kate
       #  thunderbird
     ];
@@ -87,7 +87,7 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgsStable; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
   ];
