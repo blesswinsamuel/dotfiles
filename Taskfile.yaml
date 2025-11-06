@@ -53,7 +53,7 @@ tasks:
 
   run-home:
     cmds:
-      - go run . -private-key-file <(op read "{{ .OP_SSH_KEY_REF }}")
+      - nix run nixpkgs#go run . -private-key-file <(op read "{{ .OP_SSH_KEY_REF }}")
 
   switch:
     cmds:
