@@ -37,7 +37,7 @@ tasks:
   darwin-init:
     cmds:
       - nix run nix-darwin -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
-      - chsh -s /run/current-system/sw/bin/fish
+      # - chsh -s /run/current-system/sw/bin/fish
 
   init:
     cmds:
@@ -49,7 +49,7 @@ tasks:
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
-      - chsh -s /run/current-system/sw/bin/fish
+      # - chsh -s /run/current-system/sw/bin/fish
 
   run-home:
     cmds:
