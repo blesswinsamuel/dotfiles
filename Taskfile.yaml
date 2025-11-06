@@ -45,7 +45,7 @@ tasks:
         {{- if eq .MACHINE "Mac" }}
         nix run nix-darwin -- switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
-        nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
+        sudo nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
