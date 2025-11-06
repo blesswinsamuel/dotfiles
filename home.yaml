@@ -18,6 +18,7 @@ profiles:
       .bash_profile: { source: ./home/bash/bash_profile }
       .config/tmux/tmux.conf: { source: ./home/tmux/tmux.conf }
       .config/nvim: { source: ./home/nvim }
+      .config/mise/config.toml: { source: ./home/mise/config.toml }
   darwin:
     files:
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }

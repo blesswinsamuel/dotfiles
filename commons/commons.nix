@@ -46,8 +46,8 @@
       pkgsUnstable.rustup
       pkgsUnstable.mise
       pkgsUnstable.devbox
-      pkgsUnstable.uv
-      pkgsUnstable.go
+      # pkgsUnstable.uv
+      # pkgsUnstable.go
       pkgsUnstable.biome
 
       # Better tools
@@ -130,7 +130,7 @@
       # network
       pkgsUnstable.iperf
       pkgsUnstable.nmap
-      pkgsUnstable.inetutils
+      # pkgsUnstable.inetutils # don't use this on mac because some tools like ifconfig are different
     ];
   };
   fonts.packages = with pkgsUnstable; [

@@ -1,4 +1,5 @@
 { self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
+  ids.gids.nixbld = 350;
   users.users.${systemConfig.username}.packages = [
     # mongodb
     # mongosh

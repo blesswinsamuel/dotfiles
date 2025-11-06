@@ -1,4 +1,5 @@
 { self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
+  ids.gids.nixbld = 30000;
   users.users.${systemConfig.username}.packages = [
     # pkgsMaster.terraform
     # pkgsMaster.docker-client
