@@ -2,6 +2,18 @@ version: 3
 
 vars:
   OP_SSH_KEY_REF: '{{ env "OP_SSH_KEY_REF" | default "op://Private/Personal SSH Key/private key" }}'
+  MACHINE:
+    sh: |
+      unameOut="$(uname -s)"
+      case "${unameOut}" in
+          Linux*)     machine=Linux;;
+          Darwin*)    machine=Mac;;
+          CYGWIN*)    machine=Cygwin;;
+          MINGW*)     machine=MinGw;;
+          MSYS_NT*)   machine=Git;;
+          *)          machine="UNKNOWN:${unameOut}"
+      esac
+      echo ${machine}
 
 tasks:
   print-config:
@@ -55,18 +67,6 @@ tasks:
       - task: run-home
     vars:
       HOSTNAME: { sh: "echo ${HOSTNAME:-$(hostname)}" }
-      MACHINE:
-        sh: |
-          unameOut="$(uname -s)"
-          case "${unameOut}" in
-              Linux*)     machine=Linux;;
-              Darwin*)    machine=Mac;;
-              CYGWIN*)    machine=Cygwin;;
-              MINGW*)     machine=MinGw;;
-              MSYS_NT*)   machine=Git;;
-              *)          machine="UNKNOWN:${unameOut}"
-          esac
-          echo ${machine}
 
   # nixos vscode remote target - https://github.com/microsoft/vscode-remote-release/issues/103#issuecomment-1060907227, https://github.com/microsoft/vscode-remote-release/issues/648#issuecomment-503148523
   switch-nixos-remote:
