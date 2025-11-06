@@ -14,6 +14,7 @@ vars:
           *)          machine="UNKNOWN:${unameOut}"
       esac
       echo ${machine}
+  HOSTNAME: { sh: "echo ${HOSTNAME:-$(hostname)}" }
 
 tasks:
   print-config:
@@ -42,9 +43,9 @@ tasks:
     cmds:
       - |
         {{- if eq .MACHINE "Mac" }}
-        nix run nix-darwin -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        nix run nix-darwin -- switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
-        nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
+        nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
@@ -65,8 +66,6 @@ tasks:
         echo "Unsupported OS"
         {{- end }}
       - task: run-home
-    vars:
-      HOSTNAME: { sh: "echo ${HOSTNAME:-$(hostname)}" }
 
   # nixos vscode remote target - https://github.com/microsoft/vscode-remote-release/issues/103#issuecomment-1060907227, https://github.com/microsoft/vscode-remote-release/issues/648#issuecomment-503148523
   switch-nixos-remote:
