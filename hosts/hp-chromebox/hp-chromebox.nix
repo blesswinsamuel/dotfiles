@@ -71,13 +71,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.blesswinsamuel = {
-    isNormalUser = true;
-    description = "Blesswin Samuel";
-    extraGroups = [ "networkmanager" "wheel" ];
-  };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -115,6 +108,13 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
   hardware.bluetooth.enable = true;
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.${systemConfig.username} = {
+    isNormalUser = true;
+    description = "Blesswin Samuel";
+    extraGroups = [ "networkmanager" "wheel" ];
+  };
 
   users.users.${systemConfig.username}.packages = [
     pkgsStable.kdePackages.kate
