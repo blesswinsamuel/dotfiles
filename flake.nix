@@ -44,9 +44,9 @@
           inherit system;
           specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
-            disko.nixosModules.disko
+            # disko.nixosModules.disko
             ./commons/commons.nix
-            ./commons/nixos-commons.nix
+            # ./commons/nixos-commons.nix
           ] ++ extraModules;
         };
       darwinSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
@@ -75,6 +75,23 @@
             ./hosts/hp-laptop/hp-laptop-hardware-configuration.nix
             ./hosts/hp-laptop/hp-laptop-disk-config.nix
             ./hosts/hp-laptop/hp-laptop.nix
+          ];
+          # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
+          systemConfig = {
+            username = "blesswinsamuel";
+            authorizedKeys = [
+              # cat ~/.ssh/id_ed25519.pub | pbcopy
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
+            ];
+            rootHashedPassword = "$y$j9T$Qnv1FPJ76Q2.nY6U2d/m..$JzPVeJwn9X/q9K2OjcZMVXqke/AJ7DuLmAzgKX6oQR4"; # nix run nixpkgs#mkpasswd --command 'mkpasswd xxx'
+            userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
+          };
+        };
+        hp-chromebox = nixosSystem {
+          system = "x86_64-linux";
+          extraModules = [
+            ./hosts/hp-chromebox/hp-chromebox-hardware-configuration.nix
+            ./hosts/hp-chromebox/hp-chromebox.nix
           ];
           # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
           systemConfig = {
