@@ -203,6 +203,8 @@
       pkgsUnstable.obsidian
       pkgsUnstable.ghostty
       pkgsUnstable.kdePackages.krdc
+
+      pkgsUnstable.go
     ];
   };
   programs.firefox.enable = true;
@@ -216,4 +218,67 @@
   # programs._1password-gui.polkitPolicyOwners = ["blesswinsamuel"];
   services.tailscale.enable = true;
   security.polkit.enable = true;
+
+  networking.firewall.allowedUDPPorts = [ 41641 ];
+
+  services.keyd = {
+    enable = true;
+
+    keyboards.default = {
+      ids = [ "*" ];
+
+      settings = {
+        main = {
+          # Cmd keys trigger the cmd layer
+          leftmeta = "layer(cmd)";
+          rightmeta = "layer(cmd)";
+
+          leftalt = "layer(alt)";
+          rightalt = "layer(alt)";
+
+          # Caps Lock acts as an additional Control key when held down, Esc when tapped
+          capslock = "overload(control, esc)";
+
+          # # Mac-like line navigation
+          # "C-a" = "home";
+          # "C-e" = "end";
+        };
+
+        "alt" = {
+          # Option based word navigation
+          left = "C-left";
+          right = "C-right";
+
+          backspace = "C-backspace"; # Delete previous word
+        };
+
+        "cmd" = {
+          # Essential shortcuts
+          a = "C-a"; # Select all
+          c = "C-c"; # Copy
+          v = "C-v"; # Paste
+          x = "C-x"; # Cut
+          z = "C-z"; # Undo
+          s = "C-s"; # Save
+          f = "C-f"; # Find
+          w = "C-w"; # Close tab
+          t = "C-t"; # New tab
+          q = "C-q"; # Quit
+          p = "C-p"; # Print
+          d = "C-d"; # Cmd + d in vscode
+          slash = "C-slash"; # comment/uncomment
+          space = "A-f1"; # Spotlight / Search
+          # tab = "A-tab"; # Next tab
+
+          # Text navigation and selection (Mac-like)
+          left = "home"; # Beginning of line
+          right = "end"; # End of line
+
+          up = "C-home"; # Top of document
+          down = "C-end"; # End of document
+          backspace = "C-u"; # Delete line
+        };
+      };
+    };
+  };
 }
