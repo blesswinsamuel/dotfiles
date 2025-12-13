@@ -230,8 +230,10 @@
       settings = {
         main = {
           # Cmd keys trigger the cmd layer
-          leftmeta = "layer(cmd)";
-          rightmeta = "layer(cmd)";
+          leftmeta = "overload(meta_mac, leftmeta)";
+          rightmeta = "overload(meta_mac, rightmeta)";
+          # leftmeta = "layer(meta_mac)";
+          # rightmeta = "layer(meta_mac)";
 
           leftalt = "layer(alt)";
           rightalt = "layer(alt)";
@@ -252,23 +254,34 @@
           backspace = "C-backspace"; # Delete previous word
         };
 
-        "cmd" = {
-          # Essential shortcuts
-          a = "C-a"; # Select all
-          c = "C-c"; # Copy
-          v = "C-v"; # Paste
-          x = "C-x"; # Cut
-          z = "C-z"; # Undo
-          s = "C-s"; # Save
-          f = "C-f"; # Find
-          w = "C-w"; # Close tab
-          t = "C-t"; # New tab
-          q = "C-q"; # Quit
-          p = "C-p"; # Print
-          d = "C-d"; # Cmd + d in vscode
-          slash = "C-slash"; # comment/uncomment
+        "meta_mac:C" = {
+          # # Essential shortcuts
+          # a = "C-a"; # Select all
+          # c = "C-c"; # Copy
+          # v = "C-v"; # Paste
+          # x = "C-x"; # Cut
+          # z = "C-z"; # Undo
+          # s = "C-s"; # Save
+          # f = "C-f"; # Find
+          # w = "C-w"; # Close tab
+          # t = "C-t"; # New tab
+          # q = "C-q"; # Quit
+          # p = "C-p"; # Print
+          # d = "C-d"; # Cmd + d in vscode
+          # slash = "C-slash"; # comment/uncomment
           space = "A-f1"; # Spotlight / Search
           # tab = "A-tab"; # Next tab
+
+          # Switch directly to an open tab (e.g., Firefox, VS Code)
+          "1" = "A-1";
+          "2" = "A-2";
+          "3" = "A-3";
+          "4" = "A-4";
+          "5" = "A-5";
+          "6" = "A-6";
+          "7" = "A-7";
+          "8" = "A-8";
+          "9" = "A-9";
 
           # Text navigation and selection (Mac-like)
           left = "home"; # Beginning of line
@@ -277,6 +290,26 @@
           up = "C-home"; # Top of document
           down = "C-end"; # End of document
           backspace = "C-u"; # Delete line
+
+          # As soon as 'tab' is pressed (but not yet released), switch to the 'app_switch_state' overlay
+          # Send a 'M-tab' key tap before entering 'app_switch_state'
+          tab = "swapm(app_switch_state, A-tab)";
+
+
+          # Meta-Backtick: Switch to the next window in the application group
+          # Default binding for 'cycle-group' in GNOME
+          "`" = "A-f6";
+        };
+
+        # 'app_switch_state' modifier layer; inherits from the 'Meta' modifier layer
+        "app_switch_state:A" = {
+          # Meta-Tab: Switch to the next application
+          "tab" = "A-tab";
+          "right" = "A-tab";
+
+          # Meta-Backtick: Switch to the previous application
+          "`" = "A-S-tab";
+          "left" = "A-S-tab";
         };
       };
     };

@@ -1,4 +1,9 @@
 { self, pkgsUnstable, lib, config, systemConfig, ... }: {
+  users.users.${systemConfig.username} = {
+    packages = [
+      pkgsUnstable.mise
+    ];
+  };
   environment.systemPath = [
     # "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
     # "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"

@@ -79,7 +79,7 @@ profiles:
         # com.apple.custommenu.apps: [NSGlobalDomain]
   linux:
 hosts:
-  hp-laptop:
+  hp-chromebox:
     secretProfile: personal
   Blesswins-Mac-Studio:
     secretProfile: personal
