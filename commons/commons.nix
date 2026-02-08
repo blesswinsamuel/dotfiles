@@ -82,6 +82,7 @@
       pkgsUnstable.sd
       pkgsUnstable.bandwhich
       pkgsUnstable.bottom
+      pkgsUnstable.sshs
 
       # TUI
       pkgsUnstable.k9s

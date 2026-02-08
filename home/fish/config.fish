@@ -78,3 +78,5 @@ source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 
 # Added by Windsurf
 fish_add_path /Users/bsamuel/.codeium/windsurf/bin
+# Added by Antigravity
+fish_add_path /Users/blesswinsamuel/.antigravity/antigravity/bin

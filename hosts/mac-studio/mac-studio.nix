@@ -1,5 +1,5 @@
 { self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
-  ids.gids.nixbld = 350;
+  # ids.gids.nixbld = 350;
   users.users.${systemConfig.username}.packages = [
     # mongodb
     # mongosh
@@ -102,7 +102,7 @@
     ];
     brews = [
       "llvm" # for ebpf xdp dev
-      "hashicorp/tap/terraform" # nix takes a lot of time
+      # "hashicorp/tap/terraform" # nix takes a lot of time
       # "cdktf" # nix takes a lot of time - use npm install --global cdktf-cli@latest
       "unison"
       "switchaudio-osx"
@@ -193,6 +193,7 @@
       "cursor"
       "claude-code"
       "windsurf"
+      "bruno"
 
       # Drivers
       # "homebrew/cask-drivers/audient-evo"

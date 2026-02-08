@@ -1,9 +1,4 @@
 { self, pkgsUnstable, lib, config, systemConfig, ... }: {
-  users.users.${systemConfig.username} = {
-    packages = [
-      pkgsUnstable.mise
-    ];
-  };
   environment.systemPath = [
     # "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
     # "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"
@@ -50,6 +45,8 @@
       mas
       # dockutil # Error: Package ‘swift-wrapper-5.8’ in /nix/store/038zs5b21569pjv6v0dwhi6fd95jbzvx-source/pkgs/development/compilers/swift/compiler/default.nix:700 is marked as broken, refusing to evaluate.
       # skhd # Simple hotkey daemon for macOS
+
+      mise
     ];
   };
 
