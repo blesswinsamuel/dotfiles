@@ -1,7 +1,9 @@
 [tools]
+biome = "latest"
 bun = "latest"
 deno = "latest"
 go = "latest"
 node = "latest"
 python = "latest"
+pulumi = "latest"
 uv = "latest"

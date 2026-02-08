@@ -1,5 +1,5 @@
 { self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
-  # ids.gids.nixbld = 350;
+  ids.gids.nixbld = 350;
   users.users.${systemConfig.username}.packages = [
     # mongodb
     # mongosh
@@ -194,6 +194,7 @@
       "claude-code"
       "windsurf"
       "bruno"
+      "transmit"
 
       # Drivers
       # "homebrew/cask-drivers/audient-evo"

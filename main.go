@@ -87,6 +87,12 @@ func getComputerName() (string, error) {
 		return "", nil
 	case "darwin":
 		// run `scutil --get LocalHostName`
+		{
+			hn, ok := os.LookupEnv("HOSTNAME")
+			if ok {
+				return hn, nil
+			}
+		}
 		hn, err := exec.Command("scutil", "--get", "LocalHostName").Output()
 		if err != nil {
 			return "", err

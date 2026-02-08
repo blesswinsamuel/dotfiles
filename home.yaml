@@ -86,7 +86,6 @@ hosts:
     macos:
       dock:
         entries:
-          - { path: "/System/Applications/Launchpad.app/" }
           - { path: "/Applications/ForkLift.app/" }
           - { path: "/System/Applications/Clock.app/" }
           - { path: "/System/Applications/Weather.app/" }
@@ -167,7 +166,6 @@ hosts:
     macos:
       dock:
         entries:
-          - { path: "/System/Applications/Launchpad.app/" }
           - { path: "/System/Applications/Clock.app/" }
           - { path: "/System/Applications/Weather.app/" }
           - { path: "/System/Applications/Messages.app/" }
