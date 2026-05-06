@@ -5,7 +5,7 @@
     # mongosh
     # mongodb-tools
     pkgsUnstable.redis
-    pkgsUnstable.postgresql_14
+    pkgsUnstable.postgresql
     pkgsUnstable.mailhog
     # grafana
     # traefik
@@ -112,16 +112,16 @@
       "Xcode" = 497799835;
       "The Unarchiver" = 425424353;
       "MainStage" = 634159523;
-      "Keynote" = 409183694;
+      "Keynote" = 361285480;
       "Final Cut Pro" = 424389933;
       "Home Assistant" = 1099568401;
       "TestFlight" = 899247664;
       # "Unsplash Wallpapers" = 1284863847;
-      "Pages" = 409201541;
+      "Pages" = 361309726;
       "GarageBand" = 682658836;
       # "Telegram" = 747648890;
       "Logic Pro" = 634148309;
-      "Numbers" = 409203825;
+      "Numbers" = 361304891;
       "Stockfish" = 801463932;
       # "Bitwarden" = 1352778147;
       # "Tailscale" = 1475387142;

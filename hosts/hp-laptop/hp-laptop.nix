@@ -5,7 +5,7 @@
     # mongosh
     # mongodb-tools
     pkgsUnstable.redis
-    pkgsUnstable.postgresql_14
+    pkgsUnstable.postgresql
     pkgsUnstable.mailhog
     # grafana
     # traefik
