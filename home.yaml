@@ -26,7 +26,7 @@ profiles:
       # OpenCode
       .config/opencode/AGENTS.md: { source: ./home/agents/AGENTS.md }
       .config/opencode/skills: { source: ./home/agents/skills }
-      .config/opencode/commands: { source: ./home/agents/opencode-commands }
+      .config/opencode/commands: { source: ./home/agents/commands }
       # Gemini CLI + Antigravity CLI
       .gemini/GEMINI.md: { source: ./home/agents/AGENTS.md }
       .gemini/skills: { source: ./home/agents/skills }
@@ -34,6 +34,7 @@ profiles:
       # Pi (pi.dev)
       .pi/agent/AGENTS.md: { source: ./home/agents/AGENTS.md }
       .pi/agent/skills: { source: ./home/agents/skills }
+      .pi/agent/prompts: { source: ./home/agents/commands }
       # Cursor
       .cursor/rules/agents.mdc: { source: ./home/agents/AGENTS.md }
       .cursor/skills: { source: ./home/agents/skills }
