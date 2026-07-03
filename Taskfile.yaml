@@ -73,6 +73,11 @@ tasks:
       #  --install-bootloader (for upgrades)
       - nixos-rebuild --fast --build-host root@hp-laptop --target-host root@hp-laptop switch --flake .#hp-laptop {{ .CLI_ARGS }}
 
+  brew-bundle:
+    desc: Install packages from Brewfile and remove anything not listed (prevents drift)
+    cmds:
+      - brew bundle install --global --cleanup --no-lock
+
   maintanence:
     cmds:
       - brew update
