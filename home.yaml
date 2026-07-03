@@ -31,7 +31,6 @@ profiles:
       .gemini/GEMINI.md: { source: ./home/agents/AGENTS.md }
       .gemini/skills: { source: ./home/agents/skills }
       .gemini/antigravity-cli/skills: { source: ./home/agents/skills }
-      .gemini/commands: { source: ./home/agents/gemini-commands }
       # Pi (pi.dev)
       .pi/agent/AGENTS.md: { source: ./home/agents/AGENTS.md }
       .pi/agent/skills: { source: ./home/agents/skills }
