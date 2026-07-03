@@ -1,4 +1,6 @@
 { self, pkgsUnstable, lib, config, systemConfig, ... }: {
+  homebrew.enable = false;
+
   environment.systemPath = [
     # "'/Applications/Sublime Text.app/Contents/SharedSupport/bin'"
     # "'/Applications/IntelliJ IDEA.app/Contents/MacOS'"

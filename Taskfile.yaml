@@ -73,16 +73,43 @@ tasks:
       #  --install-bootloader (for upgrades)
       - nixos-rebuild --fast --build-host root@hp-laptop --target-host root@hp-laptop switch --flake .#hp-laptop {{ .CLI_ARGS }}
 
-  brew-bundle:
+  brew-install:
     desc: Install packages from Brewfile and remove anything not listed (prevents drift)
     cmds:
-      - brew bundle install --global --cleanup --no-lock
+      - brew bundle install --global
+
+  doctor:
+    desc: Check system health (brew drift, nix flake staleness, mise, git status)
+    cmds:
+      - |
+        echo "=== Brew bundle - missing (would be installed) ==="
+        brew bundle check --verbose 2>&1 | grep -v "^The Brewfile" || true
+        echo ""
+        echo "=== Brew bundle - extra (would be cleaned up) ==="
+        brew bundle cleanup 2>&1 || true
+      - |
+        echo ""
+        echo "=== Brew outdated packages ==="
+        brew outdated || true
+      - |
+        echo ""
+        echo "=== Nix flake inputs ==="
+        nix flake metadata --no-update-lock-file ~/dotfiles 2>&1 | grep -E "Last modified|follows|path" | head -20 || true
+      - |
+        echo ""
+        echo "=== mise outdated tools ==="
+        mise outdated 2>/dev/null || echo "(mise not available or no config)"
+      - |
+        echo ""
+        echo "=== Dotfiles git status ==="
+        git -C ~/dotfiles status --short || true
 
   maintanence:
     cmds:
       - brew update
       - brew upgrade
       - brew cleanup
+      - mise upgrade
       - nix flake update
       - nix store gc
       # - nix-collect-garbage -d

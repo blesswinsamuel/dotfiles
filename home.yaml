@@ -44,9 +44,6 @@ profiles:
     files:
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }
       .hushlogin: { source: ./home/hushlogin/hushlogin }
-      # VSCode Copilot — macOS user data paths
-      Library/Application Support/Code/User/skills: { source: ./home/agents/skills }
-      Library/Application Support/Code - Insiders/User/skills: { source: ./home/agents/skills }
       Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings: { source: ./home/sublime-text/Package Control.sublime-settings }
       Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./home/sublime-text/Preferences.sublime-settings }
       Library/Application Support/Sublime Merge/Packages/User/Default (OSX).sublime-keymap: { source: ./home/sublime-merge/Default (OSX).sublime-keymap }
