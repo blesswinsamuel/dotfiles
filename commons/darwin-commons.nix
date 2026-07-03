@@ -61,33 +61,7 @@
     enable = true;
     onActivation = {
       autoUpdate = true;
-      cleanup = "zap";
+      cleanup = "none";
     };
-    global = {
-      brewfile = true;
-    };
-
-    taps = [
-    ];
-
-    # These app IDs are from using the mas CLI app
-    # mas = mac app store
-    # https://github.com/mas-cli/mas
-    #
-    # $ nix shell nixpkgs#mas
-    # $ mas search <app name>
-    #
-    masApps = { };
-    # If an app isn't available in the Mac App Store, or the version in the App Store has
-    # limitiations, e.g., Transmit, install the Homebrew Cask.
-    casks = [
-      "swiftdefaultappsprefpane"
-    ];
-
-    # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
-    # installed in `../home/default.nix` whenever possible.
-    brews = [
-      "dockutil"
-    ];
   };
 }

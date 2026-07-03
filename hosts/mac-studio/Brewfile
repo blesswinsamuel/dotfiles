@@ -1,0 +1,167 @@
+tap "homebrew/bundle"
+tap "homebrew/services"
+tap "hashicorp/tap"
+tap "wez/wezterm"
+# tap "davrodpin/mole"
+# tap "hidetatz/tap"
+# tap "mongodb/brew"
+# tap "oven-sh/bun"
+# tap "pyroscope-io/brew"
+# tap "wader/tap"
+
+# tap "alajmo/mani"
+# tap "autozimu/formulas"
+# tap "filebrowser/tap"
+# tap "filosottile/musl-cross"
+# tap "moonrepo/tap"
+# tap "pulumi/tap"
+# tap "vmware-tanzu/carvel"
+
+brew "dockutil"
+brew "llvm" # for ebpf xdp dev
+# brew "hashicorp/tap/terraform" # nix takes a lot of time
+# brew "cdktf" # nix takes a lot of time - use npm install --global cdktf-cli@latest
+brew "unison"
+brew "switchaudio-osx"
+
+mas "Xcode", id: 497799835
+mas "The Unarchiver", id: 425424353
+mas "MainStage", id: 634159523
+mas "Keynote", id: 361285480
+mas "Final Cut Pro", id: 424389933
+mas "Home Assistant", id: 1099568401
+mas "TestFlight", id: 899247664
+# mas "Unsplash Wallpapers", id: 1284863847
+mas "Pages", id: 361309726
+mas "GarageBand", id: 682658836
+# mas "Telegram", id: 747648890
+mas "Logic Pro", id: 634148309
+mas "Numbers", id: 361304891
+mas "Stockfish", id: 801463932
+# mas "Bitwarden", id: 1352778147
+# mas "Tailscale", id: 1475387142
+mas "Capo", id: 696977615
+mas "Deliveries", id: 290986013
+mas "AmorphousDiskMark", id: 1168254295
+mas "Color Picker", id: 1545870783
+mas "1Password for Safari", id: 1569813296
+mas "Blackmagic Disk Speed Test", id: 425264550
+mas "Day Progress", id: 6450280202
+mas "DevHub", id: 6476452351
+mas "Infuse", id: 1136220934
+mas "LocalSend", id: 1661733229
+mas "Readest", id: 6738622779
+mas "Telephone", id: 406825478
+mas "WhatsApp", id: 310633997
+
+# Browsers
+cask "arc"
+cask "firefox"
+cask "google-chrome"
+# cask "orion"
+# cask "microsoft-edge"
+# cask "vivaldi"
+
+# Password Managers
+cask "bitwarden"
+
+# Communication
+cask "slack"
+# cask "microsoft-teams"
+cask "telegram"
+
+# Utilities
+cask "istat-menus"
+cask "itsycal"
+cask "mac-mouse-fix"
+cask "alfred"
+cask "raycast"
+cask "iterm2"
+cask "ghostty"
+cask "betterdisplay"
+cask "forklift"
+cask "trex"
+cask "shottr"
+cask "rectangle"
+cask "alt-tab"
+cask "tailscale-app"
+
+## Media
+cask "iina"
+cask "imageoptim"
+cask "handbrake-app"
+# cask "spotify"
+
+## Dev Tools
+cask "intellij-idea"
+cask "sublime-text"
+cask "sublime-merge"
+cask "fork"
+cask "github"
+cask "postico"
+cask "tableplus"
+cask "wireshark-app"
+cask "wezterm"
+# cask "fleet"
+cask "zed"
+cask "warp"
+cask "cyberduck"
+cask "gitkraken"
+cask "pgadmin4"
+cask "hex-fiend"
+
+# coding
+cask "visual-studio-code"
+cask "visual-studio-code@insiders"
+cask "cursor"
+cask "claude-code"
+cask "windsurf"
+cask "bruno"
+cask "transmit"
+
+# Drivers
+# cask "homebrew/cask-drivers/audient-evo"
+# cask "homebrew/cask-drivers/yamaha-usb-midi-driver"
+
+cask "1password"
+cask "1password-cli"
+cask "arduino-ide"
+cask "lunar"
+cask "obsidian"
+cask "reaper"
+cask "sonixd"
+cask "syntax-highlight"
+cask "vlc"
+cask "lyricsx"
+cask "orbstack"
+cask "activitywatch"
+cask "balenaetcher"
+cask "keepingyouawake"
+cask "rustdesk"
+cask "spotify"
+# cask "tailscale"
+cask "lapce"
+cask "inkscape"
+cask "latest"
+cask "mimestream"
+cask "sigmaos"
+cask "utm"
+cask "appflowy"
+cask "lens"
+cask "signal"
+cask "hammerspoon"
+cask "logseq"
+cask "readdle-spark"
+# cask "syncthing"
+
+# Temp
+cask "blackhole-2ch"
+
+cask "swiftdefaultappsprefpane"
+cask "codexbar"
+cask "codex"
+cask "codex-app"
+cask "opencode-desktop"
+cask "antigravity"
+cask "antigravity-ide"
+cask "antigravity-cli"

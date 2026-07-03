@@ -83,6 +83,8 @@ hosts:
     secretProfile: personal
   Blesswins-Mac-Studio:
     secretProfile: personal
+    files:
+      .Brewfile: { source: ./hosts/mac-studio/Brewfile }
     macos:
       dock:
         entries:
@@ -163,6 +165,8 @@ hosts:
           - { path: "/Volumes/BleSSD/Screenshots/", section: "others", options: { sort: datemodified, view: grid, display: stack } }
   RQHFR2KPF2:
     secretProfile: work
+    files:
+      .Brewfile: { source: ./hosts/mbp-work/Brewfile }
     macos:
       dock:
         entries:
