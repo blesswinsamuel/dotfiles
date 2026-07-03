@@ -19,6 +19,28 @@ profiles:
       .config/tmux/tmux.conf: { source: ./home/tmux/tmux.conf }
       .config/nvim: { source: ./home/nvim }
       .config/mise/config.toml: { source: ./home/mise/config.toml }
+      # ── AI coding agents ─────────────────────────────────────────────────
+      # Claude Code
+      .claude/CLAUDE.md: { source: ./home/agents/AGENTS.md }
+      .claude/skills: { source: ./home/agents/skills }
+      # OpenCode
+      .config/opencode/AGENTS.md: { source: ./home/agents/AGENTS.md }
+      .config/opencode/skills: { source: ./home/agents/skills }
+      .config/opencode/commands: { source: ./home/agents/opencode-commands }
+      # Gemini CLI + Antigravity CLI
+      .gemini/GEMINI.md: { source: ./home/agents/AGENTS.md }
+      .gemini/skills: { source: ./home/agents/skills }
+      .gemini/antigravity-cli/skills: { source: ./home/agents/skills }
+      .gemini/commands: { source: ./home/agents/gemini-commands }
+      # Pi (pi.dev)
+      .pi/agent/AGENTS.md: { source: ./home/agents/AGENTS.md }
+      .pi/agent/skills: { source: ./home/agents/skills }
+      # Cursor
+      .cursor/rules/agents.mdc: { source: ./home/agents/AGENTS.md }
+      # VSCode Copilot (reference this file in: github.copilot.chat.codeGeneration.instructions)
+      .vscode/copilot-instructions.md: { source: ./home/agents/AGENTS.md }
+      # Agent Skills standard — shared across all harnesses
+      .agents/skills: { source: ./home/agents/skills }
   darwin:
     files:
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }
