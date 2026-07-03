@@ -106,7 +106,7 @@ hosts:
           - { path: "/System/Applications/Home.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Slack.app/" }
-          - { path: "/Applications/Numbers.app/" }
+          - { path: "/Applications/Numbers Creator Studio.app/" }
           - { options: { type: spacer } }
           - { path: "$HOME/Applications/YT Music.app/" }
           # - { path: "/Applications/Bitwarden.app/" }

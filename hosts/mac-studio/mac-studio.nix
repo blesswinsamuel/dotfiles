@@ -1,4 +1,15 @@
-{ self, pkgsUnstable, pkgsStable, pkgsMaster, lib, config, secrets, systemConfig, ... }: {
+{
+  self,
+  pkgsUnstable,
+  pkgsStable,
+  pkgsMaster,
+  lib,
+  config,
+  secrets,
+  systemConfig,
+  ...
+}:
+{
   ids.gids.nixbld = 350;
   users.users.${systemConfig.username}.packages = [
     # mongodb
@@ -129,6 +140,16 @@
       "Deliveries" = 290986013;
       "AmorphousDiskMark" = 1168254295;
       "Color Picker" = 1545870783;
+
+      "1Password for Safari" = 1569813296;
+      "Blackmagic Disk Speed Test" = 425264550;
+      "Day Progress" = 6450280202;
+      "DevHub" = 6476452351;
+      "Infuse" = 1136220934;
+      "LocalSend" = 1661733229;
+      "Readest" = 6738622779;
+      "Telephone" = 406825478;
+      "WhatsApp" = 310633997;
     };
     casks = [
       # Browsers
@@ -233,6 +254,14 @@
 
       # Temp
       "blackhole-2ch"
+
+      "codexbar"
+      "codex"
+      "codex-app"
+      "opencode-desktop"
+      "antigravity"
+      "antigravity-ide"
+      "antigravity-cli"
     ];
   };
 }

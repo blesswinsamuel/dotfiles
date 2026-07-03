@@ -13,6 +13,8 @@
     hashedPassword = systemConfig.rootHashedPassword;
   };
 
+  environment.enableAllTerminfo = true;
+
   environment.systemPackages = with pkgsUnstable; [
     pciutils
     usbutils
