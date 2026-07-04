@@ -76,7 +76,7 @@ tasks:
   brew-install:
     desc: Install packages from Brewfile and remove anything not listed (prevents drift)
     cmds:
-      - brew bundle install --global
+      - brew bundle install --file ~/.Brewfile
 
   doctor:
     desc: Check system health (brew drift, nix flake staleness, mise, git status)
