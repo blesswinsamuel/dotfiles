@@ -44,6 +44,7 @@
 
       # Languages
       pkgsUnstable.rustup
+      pkgsMaster.mise
       pkgsUnstable.devbox
       # pkgsUnstable.uv
       # pkgsUnstable.go

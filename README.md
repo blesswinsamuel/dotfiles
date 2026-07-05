@@ -26,6 +26,19 @@ nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
 nix-channel --update nixpkgs
 ```
 
+## Install - NixOS
+
+```bash
+sudo nano /etc/nixos/configuration.nix
+#  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+sudo nixos-rebuild switch
+
+nix run nixpkgs#git clone https://github.com/blesswinsamuel/dotfiles
+
+nix run nixpkgs#go-task -- init # first run
+```
+
+
 ## Brew commands
 
 ```bash
