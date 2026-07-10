@@ -125,6 +125,8 @@
     };
 }
 
+
+# Why no Home Manager? See README.md § Architecture.
 # /Users/blesswinsamuel/.nix-profile/bin - via home-manager.home.packages option (home-manager)
 # /etc/profiles/per-user/blesswinsamuel/bin - via users.users.<name>.packages option (nix-darwin)
 # /run/current-system/sw/bin - via environment.systemPackages (nix-darwin)

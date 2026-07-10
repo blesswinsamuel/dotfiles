@@ -38,6 +38,44 @@ nix run nixpkgs#git clone https://github.com/blesswinsamuel/dotfiles
 nix run nixpkgs#go-task -- init # first run
 ```
 
+## Architecture
+
+This repo uses [nix-darwin](https://github.com/nix-darwin/nix-darwin) / NixOS for system packages, a custom Go tool for dotfiles, and Homebrew Brewfiles for macOS GUI apps. Home Manager was tried briefly (Jan–Aug 2024) and removed.
+
+| Layer | Tool | Responsibility |
+| ----- | ---- | ---------------- |
+| System packages | [flake.nix](flake.nix) + [commons/commons.nix](commons/commons.nix) | CLI tools, shells, fonts via `users.users.<name>.packages` and `environment.systemPackages` |
+| Dotfiles | [home.yaml](home.yaml) + [main.go](main.go) | Symlink/copy configs into `$HOME`; age-templated secrets; macOS dock and default apps |
+| GUI / macOS apps | per-host `Brewfile` (symlinked by `home.yaml`) | Casks, taps, mas; `homebrew.enable = false` in [commons/darwin-commons.nix](commons/darwin-commons.nix) |
+
+`task switch` runs `darwin-rebuild`/`nixos-rebuild`, then `task run-home` (see [Taskfile.yaml](Taskfile.yaml)).
+
+### Why not Home Manager?
+
+**Primary reason: slow iteration on dotfiles.** With Home Manager, shell and editor configs lived in Nix modules (`programs.zsh`, `programs.fish`, `programs.tmux`, etc.). Every tweak to a `.zshrc`-equivalent required a full `darwin-rebuild switch` / Nix build — too slow for day-to-day dotfile editing.
+
+The current setup separates concerns:
+
+- **Dotfiles** are plain files under `home/` (e.g. [home/zsh/zshrc](home/zsh/zshrc), [home/fish/config.fish](home/fish/config.fish)), symlinked into `$HOME` by `go run .`
+- **Most edits are instant** — change the file in the repo and open a new shell; the symlink means `$HOME` sees it immediately, with no Nix rebuild
+- **Nix rebuild only for system changes** — adding/removing packages, nix-darwin defaults, host modules
+- **`task run-home` is cheap** — re-applies symlinks, templates, dock/prefs; not a Nix evaluation
+
+Home Manager conflates "edit my shell config" with "rebuild my system"; this repo keeps those on separate paths.
+
+Other reasons that contributed:
+
+1. **Overlap with the custom home tool** — HM `programs.*` duplicated what `home.yaml` already symlinked; shell configs moved fully into `home.yaml` when HM was removed
+2. **Shell integration friction** — HM-generated zsh/fish init caused double `compinit`, `NIX_PROFILES` fpath wiring, and [home-manager#177](https://github.com/nix-community/home-manager/issues/177) history-option ordering issues
+3. **macOS extras in the Go tool** — dock (`dockutil`), default apps (`swda`), plist prefs — applied by `main.go`, not HM
+4. **Secret templating, multi-path agent symlinks, Brewfile separation** — additional benefits of `home.yaml` + Go tool
+
+**Tradeoffs:**
+
+- No HM home generations / rollback for dotfiles
+- Shell completions and program modules must be wired manually in dotfiles
+- System changes still require a Nix rebuild; only dotfile edits are fast
+- Two apply steps for a full sync (`darwin-rebuild` + `go run .`), but dotfile-only changes skip the rebuild entirely
 
 ## Brew commands
 
