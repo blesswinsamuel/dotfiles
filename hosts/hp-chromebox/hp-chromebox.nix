@@ -181,7 +181,6 @@
       # 3rd party cloud service tools
       # pkgsMaster.awscli2
       # pkgs.bitwarden-cli
-      pkgsUnstable.gh
 
       pkgsUnstable.teller
       pkgsUnstable.git-secrets

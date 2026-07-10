@@ -72,13 +72,11 @@
     # 3rd party cloud service tools
     # pkgsMaster.awscli2
     # pkgs.bitwarden-cli
-    pkgsUnstable.gh
 
     pkgsUnstable.teller
     pkgsUnstable.git-secrets
     pkgsUnstable.gitleaks
 
-    pkgsUnstable.terraform
     pkgsUnstable.buf
 
     # pkgs.home-assistant-cli

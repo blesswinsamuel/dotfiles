@@ -20,7 +20,6 @@
     # 3rd party cloud service tools
     pkgsMaster.awscli2
     pkgsMaster.s3cmd
-    pkgsMaster.gh
     pkgsMaster.doctl
 
     pkgsMaster.libllvm
