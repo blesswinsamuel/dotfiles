@@ -59,8 +59,8 @@ if status is-interactive
     #     eval conda "shell.fish" hook $argv | source
     # end
 
-    if type -q mise
-        mise activate fish | source
+    if test -d "$HOME/.local/share/mise/shims"
+        fish_add_path --global --move --path "$HOME/.local/share/mise/shims"
     end
 
     if type -q zoxide
@@ -69,6 +69,9 @@ if status is-interactive
 
     if type -q starship
         starship init fish | source
+        functions -e fish_right_prompt
+        function fish_right_prompt
+        end
     end
 end
 
