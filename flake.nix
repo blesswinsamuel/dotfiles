@@ -104,6 +104,11 @@
             userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
           };
         };
+        bsamuel-dev = nixosSystem {
+          system = "x86_64-linux";
+          extraModules = [ ./hosts/bsamuel-dev/bsamuel-dev.nix ];
+          systemConfig = { username = "bsamuel"; };
+        };
       };
       darwinConfigurations = processConfigurations {
         Blesswins-Mac-Studio = darwinSystem {
@@ -124,7 +129,6 @@
       # darwinPackages = self.darwinConfigurations."Blesswins-Mac-Studio".pkgs;
     };
 }
-
 
 # Why no Home Manager? See README.md § Architecture.
 # /Users/blesswinsamuel/.nix-profile/bin - via home-manager.home.packages option (home-manager)
