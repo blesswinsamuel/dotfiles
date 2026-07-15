@@ -59,8 +59,8 @@ if status is-interactive
     #     eval conda "shell.fish" hook $argv | source
     # end
 
-    if test -d "$HOME/.local/share/mise/shims"
-        fish_add_path --global --move --path "$HOME/.local/share/mise/shims"
+    if type -q mise
+        eval (mise activate fish --shims)
     end
 
     if type -q zoxide
