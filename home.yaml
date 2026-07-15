@@ -184,6 +184,8 @@ hosts:
           - { path: "/Applications/", section: "others", options: { sort: datemodified, view: grid, display: folder } }
           - { path: "$HOME/Downloads/", section: "others", options: { sort: dateadded, view: fan, display: stack } }
           - { path: "/Volumes/BleSSD/Screenshots/", section: "others", options: { sort: datemodified, view: grid, display: stack } }
+  bsamuel-dev:
+    secretProfile: work
   RQHFR2KPF2:
     secretProfile: work
     files:
