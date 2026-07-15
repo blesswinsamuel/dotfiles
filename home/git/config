@@ -44,7 +44,9 @@
     format = ssh
 
 [gpg "ssh"]
+{{- if and (ne .Hostname "bsamuel-dev") (ne .ComputerName "bsamuel-dev") }}
     program = "{{ if eq .OS "darwin" }}/Applications/1Password.app/Contents/MacOS/op-ssh-sign{{ else if eq .OS "linux" }}/run/current-system/sw/bin/op-ssh-sign{{ end }}"
+{{- end }}
     allowedSignersFile = "~/.config/git/allowed_signers"
 
 # [credential]

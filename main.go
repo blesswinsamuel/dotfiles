@@ -273,8 +273,10 @@ func main() {
 				}
 				buf := bytes.NewBuffer([]byte{})
 				if err := t.Execute(buf, map[string]any{
-					"Secrets": secrets,
-					"OS":      runtime.GOOS,
+					"Secrets":      secrets,
+					"OS":           runtime.GOOS,
+					"Hostname":     hostname,
+					"ComputerName": computerName,
 				}); err != nil {
 					log.Fatal().Err(err).Msgf("failed to execute template")
 				}
