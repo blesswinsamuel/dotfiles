@@ -231,17 +231,17 @@ tasks:
           doctl compute image delete "$existing" --force || true
         fi
 
+        # image create does not support --format/--no-header; use JSON output.
         doctl compute image create "{{ .DO_IMAGE_NAME }}" \
           --image-url "$image_url" \
           --region "$region" \
           --image-distribution Unknown \
           --tag-names nixos \
-          --format ID,Name,Status \
-          --no-header > "{{ .STATE_DIR }}/image.create.tmp"
+          -o json > "{{ .STATE_DIR }}/image.create.tmp"
 
-        image_id=$(awk '{print $1}' "{{ .STATE_DIR }}/image.create.tmp")
-        image_name=$(awk '{print $2}' "{{ .STATE_DIR }}/image.create.tmp")
-        image_status=$(awk '{print $3}' "{{ .STATE_DIR }}/image.create.tmp")
+        image_id=$(jq -r '.[0].id // .id' "{{ .STATE_DIR }}/image.create.tmp")
+        image_name=$(jq -r '.[0].name // .name' "{{ .STATE_DIR }}/image.create.tmp")
+        image_status=$(jq -r '.[0].status // .status' "{{ .STATE_DIR }}/image.create.tmp")
 
         echo "Waiting for custom image $image_id to become available..."
         for i in $(seq 1 120); do
