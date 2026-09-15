@@ -180,7 +180,10 @@ task do:image:build-and-teardown
 
 # 3) Provision a lasting dev droplet from the custom image
 task do:dev:up
-task do:dev:ssh
+task do:dev:ssh   # then: sudo tailscale up
+
+# 4) Block all public inbound ports (DO cloud firewall); access via Tailscale only
+task do:dev:block-ports
 
 # Tear down
 task do:dev:down
