@@ -299,20 +299,11 @@ tasks:
         final_status=$(doctl compute image get "$image_id" -o json | jq -r '.[0].status // empty')
         if [ "$final_status" != "available" ]; then
           echo "Timed out waiting for image $image_id (status=$final_status)" >&2
+          echo "Spaces object left in place for retry/debug: $image_url" >&2
           exit 1
         fi
 
-        jq -n \
-          --arg id "$image_id" \
-          --arg name "$image_name" \
-          --arg region "$region" \
-          --arg status "$final_status" \
-          --arg spaces_url "$image_url" \
-          '{id:$id,name:$name,region:$region,status:$status,spaces_url:$spaces_url}' \
-          > "{{ .IMAGE_STATE }}"
-        rm -f "{{ .STATE_DIR }}/image.create.tmp"
-
-        echo "Removing Spaces object (custom image already imported)..."
+        echo "Image available — removing Spaces object s3://${spaces_bucket}/${object_key} ..."
         ssh {{ .SSH_OPTS }} "root@$ip" \
           env \
             AWS_ACCESS_KEY_ID="{{ .SPACES_KEY }}" \
@@ -329,8 +320,20 @@ tasks:
         fi
         nix shell nixpkgs#awscli2 -c aws s3 rm \
           "s3://${SPACES_BUCKET}/${OBJECT_KEY}" \
-          --endpoint-url "$SPACES_ENDPOINT" || true
+          --endpoint-url "$SPACES_ENDPOINT"
         REMOTE
+        echo "Spaces object deleted."
+
+        jq -n \
+          --arg id "$image_id" \
+          --arg name "$image_name" \
+          --arg region "$region" \
+          --arg status "$final_status" \
+          --arg spaces_url "$image_url" \
+          --arg spaces_object "$object_key" \
+          '{id:$id,name:$name,region:$region,status:$status,spaces_url:$spaces_url,spaces_object:$spaces_object,spaces_deleted:true}' \
+          > "{{ .IMAGE_STATE }}"
+        rm -f "{{ .STATE_DIR }}/image.create.tmp"
 
         echo "Custom image ready: $image_name ($image_id)"
         echo "State written to {{ .IMAGE_STATE }}"
