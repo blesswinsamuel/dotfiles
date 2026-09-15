@@ -25,8 +25,6 @@ vars:
       else
         echo ""
       fi
-  # Hosts that are not NixOS / nix-darwin (home tool only)
-  HOME_ONLY_HOSTS: work-management-droplet
 
 tasks:
   _require-host-id:
@@ -84,14 +82,7 @@ tasks:
         {{- if eq .MACHINE "Mac" }}
         nix run nix-darwin -- switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
-        case " {{ .HOME_ONLY_HOSTS }} " in
-          *" {{ .HOST_ID }} "*)
-            echo "Host {{ .HOST_ID }} is home-tool only (no nixos-rebuild)."
-            ;;
-          *)
-            sudo nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
-            ;;
-        esac
+        sudo nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
@@ -109,14 +100,7 @@ tasks:
         {{- if eq .MACHINE "Mac" }}
         sudo darwin-rebuild switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
-        case " {{ .HOME_ONLY_HOSTS }} " in
-          *" {{ .HOST_ID }} "*)
-            echo "Host {{ .HOST_ID }} is home-tool only; skipping nixos-rebuild."
-            ;;
-          *)
-            sudo nixos-rebuild switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
-            ;;
-        esac
+        sudo nixos-rebuild switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
