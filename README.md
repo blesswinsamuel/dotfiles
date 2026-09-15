@@ -83,7 +83,7 @@ This repo uses [nix-darwin](https://github.com/nix-darwin/nix-darwin) / NixOS fo
 | GUI / macOS apps | per-host `Brewfile` | Casks, taps, mas; `homebrew.enable = false` in [commons/darwin.nix](commons/darwin.nix) |
 | Runtimes | [home/mise/config.toml](home/mise/config.toml) | Node, Go, Python, Terraform, AI CLIs, etc. |
 
-`task switch` runs `darwin-rebuild`/`nixos-rebuild` (skipped for home-only hosts), then `task run-home`.
+`task switch` runs `darwin-rebuild`/`nixos-rebuild`, then `task run-home`. On `work-management-droplet`, use `task run-home` only (`task switch` has no flake attr and will fail).
 
 ### Profile / module layers
 
