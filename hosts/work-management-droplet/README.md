@@ -16,7 +16,6 @@ Ubuntu work management droplet. **Not NixOS** — NixOS cannot be installed on t
 3. From a clone of this repo:
 
    ```bash
-   export OP_SSH_KEY_REF='op://Private/Work SSH Key/private key'  # if not already set
    task secrets:unlock   # once; caches decrypt under ~/.config/dotfiles/secrets.yaml
    task run-home
    ```

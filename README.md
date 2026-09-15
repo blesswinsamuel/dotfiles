@@ -77,7 +77,7 @@ NixOS hosts set `networking.hostName` to the same logical id. nix-darwin always 
 
 ## Secrets (age)
 
-Source of truth is [`config.yaml.age`](config.yaml.age) in the repo (git email, signing keys, Wakatime). Decrypt uses your machine’s SSH private key from 1Password (`OP_SSH_KEY_REF`; work laptop overrides this via nix-darwin).
+Source of truth is [`config.yaml.age`](config.yaml.age) in the repo (git email, signing keys, Wakatime). Decrypt uses this machine’s SSH private key from 1Password; the Taskfile picks the item from host **realm** (`personal` → Personal SSH Key, `work` → Work SSH Key). Sign in to the matching 1Password account on that machine.
 
 To avoid unlocking 1Password on every apply, decrypt once into a local cache:
 
@@ -86,7 +86,7 @@ task secrets:unlock   # writes ~/.config/dotfiles/secrets.yaml (mode 600)
 task run-home         # uses the cache; auto-unlocks if missing
 ```
 
-After `task edit-config`, the cache is refreshed automatically when the age file changes. Force refresh anytime with `task secrets:unlock`.
+After `task edit-config`, the cache is refreshed via `secrets:unlock`. Force refresh anytime with `task secrets:unlock`.
 
 ## Architecture
 

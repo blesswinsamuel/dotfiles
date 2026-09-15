@@ -5,7 +5,6 @@ includes:
     taskfile: Taskfile.do.yaml
 
 vars:
-  OP_SSH_KEY_REF: '{{ env "OP_SSH_KEY_REF" | default "op://Private/Personal SSH Key/private key" }}'
   MACHINE:
     sh: |
       unameOut="$(uname -s)"
@@ -25,6 +24,26 @@ vars:
       else
         echo ""
       fi
+  REALM:
+    sh: |
+      if [ -z "{{ .HOST_ID }}" ]; then
+        echo ""
+        exit 0
+      fi
+      realm=$(yq -r '.hosts["{{ .HOST_ID }}"].realm // .hosts["{{ .HOST_ID }}"].secretProfile // ""' home.yaml)
+      if [ -z "$realm" ] || [ "$realm" = "null" ]; then
+        echo "unknown host id or missing realm: {{ .HOST_ID }}" >&2
+        exit 1
+      fi
+      echo "$realm"
+  OP_SSH_KEY_REF:
+    sh: |
+      case "{{ .REALM }}" in
+        work) echo 'op://Private/Work SSH Key/private key' ;;
+        personal) echo 'op://Private/Personal SSH Key/private key' ;;
+        "") echo "" ;;
+        *) echo "unknown realm: {{ .REALM }}" >&2; exit 1 ;;
+      esac
 
 tasks:
   _require-host-id:
@@ -37,13 +56,15 @@ tasks:
           echo "See README § Host identity." >&2
           exit 1
         fi
-        echo "Using host id: {{ .HOST_ID }}"
+        echo "Using host id: {{ .HOST_ID }} (realm={{ .REALM }})"
 
   print-config:
+    deps: [_require-host-id]
     cmds:
       - age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age
 
   edit-config:
+    deps: [_require-host-id]
     cmds:
       - age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age > /tmp/config.yaml.orig
       - defer: rm /tmp/config.yaml.orig
@@ -54,20 +75,18 @@ tasks:
         if ! cmp -s /tmp/config.yaml.orig /tmp/config.yaml; then
           echo "Updating config.yaml.age"
           curl -s https://github.com/blesswinsamuel.keys | age -R - /tmp/config.yaml > ./config.yaml.age
-          echo "Refreshing secrets cache…"
-          mkdir -p "${HOME}/.config/dotfiles"
-          age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age > "${HOME}/.config/dotfiles/secrets.yaml"
-          chmod 600 "${HOME}/.config/dotfiles/secrets.yaml"
         fi
+      - task: secrets:unlock
 
   secrets:unlock:
     desc: Decrypt config.yaml.age into ~/.config/dotfiles/secrets.yaml (skips op on later run-home)
+    deps: [_require-host-id]
     cmds:
       - |
         mkdir -p "${HOME}/.config/dotfiles"
         age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age > "${HOME}/.config/dotfiles/secrets.yaml"
         chmod 600 "${HOME}/.config/dotfiles/secrets.yaml"
-        echo "Wrote ${HOME}/.config/dotfiles/secrets.yaml"
+        echo "Wrote ${HOME}/.config/dotfiles/secrets.yaml (realm={{ .REALM }})"
 
   set-host-id:
     desc: Write ~/.config/dotfiles/host-id (e.g. task set-host-id -- mac-studio)
@@ -141,7 +160,7 @@ tasks:
       - |
         echo "=== Host id ==="
         if [ -n "{{ .HOST_ID }}" ]; then
-          echo "{{ .HOST_ID }}"
+          echo "{{ .HOST_ID }} (realm={{ .REALM }})"
         else
           echo "(not set — run: task set-host-id -- <logical-id>)"
         fi
