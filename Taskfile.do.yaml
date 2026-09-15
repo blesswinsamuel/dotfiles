@@ -5,6 +5,7 @@ vars:
   BUILD_HOST_STATE: "{{ .STATE_DIR }}/build-host.json"
   DEV_HOST_STATE: "{{ .STATE_DIR }}/dev-host.json"
   IMAGE_STATE: "{{ .STATE_DIR }}/image.json"
+  FIREWALL_STATE: "{{ .STATE_DIR }}/firewall.json"
   # DO_REGION: '{{ env "DO_REGION" | default "nyc3" }}'
   DO_REGION: '{{ env "DO_REGION" | default "blr1" }}'
   DO_BUILD_SIZE: '{{ env "DO_BUILD_SIZE" | default "s-4vcpu-8gb" }}'
@@ -15,8 +16,17 @@ vars:
   DO_BUILD_NAME: '{{ env "DO_BUILD_NAME" | default "nixos-build" }}'
   DO_DEV_NAME: '{{ env "DO_DEV_NAME" | default "nixos-dev" }}'
   DO_IMAGE_NAME: '{{ env "DO_IMAGE_NAME" | default "nixos-do-dev" }}'
+  DO_FIREWALL_NAME: '{{ env "DO_FIREWALL_NAME" | default "nixos-dev-tailscale-only" }}'
   IMAGE_HTTP_PORT: '{{ env "IMAGE_HTTP_PORT" | default "8765" }}'
   DESTROY_BUILD_HOST: '{{ env "DESTROY_BUILD_HOST" | default "0" }}'
+  # Deny-all inbound; allow all outbound (Tailscale uses outbound + DERP).
+  DO_FIREWALL_OUTBOUND: >-
+    protocol:tcp,ports:all,address:0.0.0.0/0
+    protocol:tcp,ports:all,address:::/0
+    protocol:udp,ports:all,address:0.0.0.0/0
+    protocol:udp,ports:all,address:::/0
+    protocol:icmp,address:0.0.0.0/0
+    protocol:icmp,address:::/0
   FLAKE_DIR:
     sh: pwd
   SSH_OPTS: -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile={{ .STATE_DIR }}/known_hosts -o ConnectTimeout=10
@@ -358,6 +368,82 @@ tasks:
         echo "SSH: task do:dev:ssh"
         echo "Or:  ssh root@$ip"
 
+  dev:block-ports:
+    desc: Attach a DO cloud firewall that denies all inbound (Tailscale-only access)
+    deps: [_require-doctl, _ensure-state-dir]
+    cmds:
+      - |
+        set -euo pipefail
+        if [ ! -f "{{ .DEV_HOST_STATE }}" ]; then
+          echo "No dev host state. Run: task do:dev:up" >&2
+          exit 1
+        fi
+        if ! command -v jq >/dev/null 2>&1; then
+          echo "jq is required" >&2
+          exit 1
+        fi
+
+        droplet_id=$(jq -r .id "{{ .DEV_HOST_STATE }}")
+        ip=$(jq -r .ip "{{ .DEV_HOST_STATE }}")
+        name=$(jq -r .name "{{ .DEV_HOST_STATE }}")
+
+        echo "Checking Tailscale on $name ($ip) before locking public ports..."
+        if ! ssh {{ .SSH_OPTS }} -o BatchMode=yes "root@$ip" \
+          'command -v tailscale >/dev/null 2>&1 && tailscale status >/dev/null 2>&1'; then
+          echo "Tailscale is not up on the droplet." >&2
+          echo "SSH in first and run: sudo tailscale up" >&2
+          echo "  task do:dev:ssh" >&2
+          exit 1
+        fi
+        echo "Tailscale looks healthy."
+
+        outbound='{{ .DO_FIREWALL_OUTBOUND }}'
+        firewall_id=""
+        firewall_name="{{ .DO_FIREWALL_NAME }}"
+
+        if [ -f "{{ .FIREWALL_STATE }}" ]; then
+          firewall_id=$(jq -r .id "{{ .FIREWALL_STATE }}")
+          if ! doctl compute firewall get "$firewall_id" --format ID --no-header >/dev/null 2>&1; then
+            echo "Stale firewall state ($firewall_id); creating a new firewall..."
+            rm -f "{{ .FIREWALL_STATE }}"
+            firewall_id=""
+          else
+            echo "Updating existing firewall $firewall_id..."
+            doctl compute firewall update "$firewall_id" \
+              --name "$firewall_name" \
+              --outbound-rules "$outbound" \
+              --droplet-ids "$droplet_id" \
+              --format ID,Name,Status \
+              --no-header >/dev/null
+          fi
+        fi
+
+        if [ -z "$firewall_id" ]; then
+          echo "Creating cloud firewall $firewall_name (deny-all inbound) for droplet $droplet_id..."
+          doctl compute firewall create \
+            --name "$firewall_name" \
+            --outbound-rules "$outbound" \
+            --droplet-ids "$droplet_id" \
+            --format ID,Name,Status \
+            --no-header > "{{ .STATE_DIR }}/firewall.create.tmp"
+          firewall_id=$(awk '{print $1}' "{{ .STATE_DIR }}/firewall.create.tmp")
+          firewall_name=$(awk '{print $2}' "{{ .STATE_DIR }}/firewall.create.tmp")
+          rm -f "{{ .STATE_DIR }}/firewall.create.tmp"
+        fi
+
+        jq -n \
+          --arg id "$firewall_id" \
+          --arg name "$firewall_name" \
+          --arg droplet_id "$droplet_id" \
+          '{id:$id,name:$name,droplet_id:$droplet_id}' \
+          > "{{ .FIREWALL_STATE }}"
+
+        echo "Firewall attached: $firewall_name ($firewall_id) → droplet $droplet_id"
+        echo "State written to {{ .FIREWALL_STATE }}"
+        echo ""
+        echo "Public inbound is blocked. task do:dev:ssh (public IP) will no longer work."
+        echo "Access the VM over Tailscale only (hostname or Tailscale IP)."
+
   dev:down:
     desc: Destroy the dev droplet and remove local state
     deps: [_require-doctl]
@@ -374,6 +460,17 @@ tasks:
         doctl compute droplet delete "$id" --force
         rm -f "{{ .DEV_HOST_STATE }}"
         echo "Dev host destroyed."
+      - |
+        set -euo pipefail
+        if [ ! -f "{{ .FIREWALL_STATE }}" ]; then
+          exit 0
+        fi
+        fw_id=$(jq -r .id "{{ .FIREWALL_STATE }}")
+        fw_name=$(jq -r .name "{{ .FIREWALL_STATE }}")
+        echo "Deleting cloud firewall $fw_name ($fw_id)..."
+        doctl compute firewall delete "$fw_id" --force || true
+        rm -f "{{ .FIREWALL_STATE }}"
+        echo "Firewall removed."
 
   dev:ssh:
     desc: SSH into the dev droplet
