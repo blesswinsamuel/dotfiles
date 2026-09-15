@@ -62,11 +62,7 @@ Repo configs use **logical host ids**, not OS hostnames/serials:
 | `do-cloud-dev` | Personal DO cloud NixOS |
 | `work-management-droplet` | Work Ubuntu droplet (home tool only) |
 
-Resolution order for `go run .` and Taskfile:
-
-1. `DOTFILES_HOST` env override
-2. `~/.config/dotfiles/host-id` (one line, e.g. `mac-studio`)
-3. Fail with a clear error
+Identity comes from `~/.config/dotfiles/host-id` (one line, e.g. `mac-studio`). Missing or empty → fail with a clear error.
 
 ```bash
 task set-host-id -- mac-studio

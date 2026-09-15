@@ -20,9 +20,7 @@ vars:
       echo ${machine}
   HOST_ID:
     sh: |
-      if [ -n "${DOTFILES_HOST:-}" ]; then
-        echo "$DOTFILES_HOST"
-      elif [ -f "${HOME}/.config/dotfiles/host-id" ]; then
+      if [ -f "${HOME}/.config/dotfiles/host-id" ]; then
         tr -d '[:space:]' < "${HOME}/.config/dotfiles/host-id"
       else
         echo ""
@@ -37,8 +35,8 @@ tasks:
       - |
         if [ -z "{{ .HOST_ID }}" ]; then
           echo "Host id not set." >&2
-          echo "Create ~/.config/dotfiles/host-id with a logical id (e.g. mac-studio)," >&2
-          echo "or set DOTFILES_HOST. See README § Host identity." >&2
+          echo "Run: task set-host-id -- mac-studio" >&2
+          echo "See README § Host identity." >&2
           exit 1
         fi
         echo "Using host id: {{ .HOST_ID }}"
@@ -61,18 +59,13 @@ tasks:
         fi
 
   set-host-id:
-    desc: Write ~/.config/dotfiles/host-id (pass HOST_ID=mac-studio)
+    desc: Write ~/.config/dotfiles/host-id (e.g. task set-host-id -- mac-studio)
     cmds:
       - |
-        if [ -z "{{ .HOST_ID }}" ] && [ -z "{{ .CLI_ARGS }}" ]; then
-          echo "Usage: task set-host-id -- mac-studio" >&2
-          echo "  or:  DOTFILES_HOST=mac-studio task set-host-id" >&2
-          exit 1
-        fi
-        id="{{ .CLI_ARGS }}"
-        id="$(echo "$id" | tr -d '[:space:]')"
+        id="$(echo "{{ .CLI_ARGS }}" | tr -d '[:space:]')"
         if [ -z "$id" ]; then
-          id="{{ .HOST_ID }}"
+          echo "Usage: task set-host-id -- mac-studio" >&2
+          exit 1
         fi
         mkdir -p "${HOME}/.config/dotfiles"
         echo "$id" > "${HOME}/.config/dotfiles/host-id"

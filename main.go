@@ -114,13 +114,10 @@ func hostIDPath() string {
 }
 
 func resolveHostID() (string, error) {
-	if v := strings.TrimSpace(os.Getenv("DOTFILES_HOST")); v != "" {
-		return v, nil
-	}
 	data, err := os.ReadFile(hostIDPath())
 	if err != nil {
 		if os.IsNotExist(err) {
-			return "", fmt.Errorf("host id not set: create %s with a logical host id (e.g. mac-studio), or set DOTFILES_HOST", hostIDPath())
+			return "", fmt.Errorf("host id not set: create %s with a logical host id (e.g. mac-studio)", hostIDPath())
 		}
 		return "", err
 	}
