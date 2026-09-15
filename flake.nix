@@ -109,6 +109,17 @@
           extraModules = [ ./hosts/bsamuel-dev/bsamuel-dev.nix ];
           systemConfig = { username = "bsamuel"; };
         };
+        do-dev = nixosSystem {
+          system = "x86_64-linux";
+          extraModules = [ ./hosts/do-dev/do-dev.nix ];
+          systemConfig = {
+            username = "blesswinsamuel";
+            authorizedKeys = [
+              # cat ~/.ssh/id_ed25519.pub | pbcopy
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
+            ];
+          };
+        };
       };
       darwinConfigurations = processConfigurations {
         Blesswins-Mac-Studio = darwinSystem {

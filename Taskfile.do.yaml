@@ -1,0 +1,388 @@
+version: 3
+
+vars:
+  STATE_DIR: .local/do
+  BUILD_HOST_STATE: "{{ .STATE_DIR }}/build-host.json"
+  DEV_HOST_STATE: "{{ .STATE_DIR }}/dev-host.json"
+  IMAGE_STATE: "{{ .STATE_DIR }}/image.json"
+  DO_REGION: '{{ env "DO_REGION" | default "nyc3" }}'
+  DO_BUILD_SIZE: '{{ env "DO_BUILD_SIZE" | default "s-4vcpu-8gb" }}'
+  DO_DEV_SIZE: '{{ env "DO_DEV_SIZE" | default "s-2vcpu-4gb" }}'
+  DO_SSH_KEY: '{{ env "DO_SSH_KEY" | default "" }}'
+  DO_BUILD_IMAGE: '{{ env "DO_BUILD_IMAGE" | default "ubuntu-24-04-x64" }}'
+  DO_BUILD_NAME: '{{ env "DO_BUILD_NAME" | default "nixos-build" }}'
+  DO_DEV_NAME: '{{ env "DO_DEV_NAME" | default "nixos-dev" }}'
+  DO_IMAGE_NAME: '{{ env "DO_IMAGE_NAME" | default "nixos-do-dev" }}'
+  IMAGE_HTTP_PORT: '{{ env "IMAGE_HTTP_PORT" | default "8765" }}'
+  DESTROY_BUILD_HOST: '{{ env "DESTROY_BUILD_HOST" | default "0" }}'
+  FLAKE_DIR:
+    sh: pwd
+  SSH_OPTS: -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile={{ .STATE_DIR }}/known_hosts -o ConnectTimeout=10
+
+tasks:
+  _require-doctl:
+    internal: true
+    cmds:
+      - |
+        if ! command -v doctl >/dev/null 2>&1; then
+          echo "doctl is required. Install it and run: doctl auth init" >&2
+          exit 1
+        fi
+
+  _require-ssh-key:
+    internal: true
+    cmds:
+      - |
+        if [ -z "{{ .DO_SSH_KEY }}" ]; then
+          echo "Set DO_SSH_KEY to a DigitalOcean SSH key fingerprint or ID." >&2
+          echo "List keys with: doctl compute ssh-key list" >&2
+          exit 1
+        fi
+
+  _ensure-state-dir:
+    internal: true
+    cmds:
+      - mkdir -p "{{ .STATE_DIR }}"
+
+  build-host:up:
+    desc: Create an Ubuntu droplet used as a remote NixOS image builder
+    deps: [_require-doctl, _require-ssh-key, _ensure-state-dir]
+    cmds:
+      - |
+        if [ -f "{{ .BUILD_HOST_STATE }}" ]; then
+          echo "Build host state already exists at {{ .BUILD_HOST_STATE }}" >&2
+          echo "Run: task do:build-host:down first, or delete the state file." >&2
+          exit 1
+        fi
+      - |
+        set -euo pipefail
+        echo "Creating build droplet {{ .DO_BUILD_NAME }} in {{ .DO_REGION }} ({{ .DO_BUILD_SIZE }})..."
+        doctl compute droplet create "{{ .DO_BUILD_NAME }}" \
+          --image "{{ .DO_BUILD_IMAGE }}" \
+          --size "{{ .DO_BUILD_SIZE }}" \
+          --region "{{ .DO_REGION }}" \
+          --ssh-keys "{{ .DO_SSH_KEY }}" \
+          --tag-name nixos-build \
+          --wait \
+          --format ID,Name,PublicIPv4,Region,Status \
+          --no-header > "{{ .STATE_DIR }}/build-host.create.tmp"
+        # doctl --no-header still uses aligned columns; parse with awk
+        id=$(awk '{print $1}' "{{ .STATE_DIR }}/build-host.create.tmp")
+        name=$(awk '{print $2}' "{{ .STATE_DIR }}/build-host.create.tmp")
+        ip=$(awk '{print $3}' "{{ .STATE_DIR }}/build-host.create.tmp")
+        region=$(awk '{print $4}' "{{ .STATE_DIR }}/build-host.create.tmp")
+        status=$(awk '{print $5}' "{{ .STATE_DIR }}/build-host.create.tmp")
+        jq -n \
+          --arg id "$id" \
+          --arg name "$name" \
+          --arg ip "$ip" \
+          --arg region "$region" \
+          --arg status "$status" \
+          --arg size "{{ .DO_BUILD_SIZE }}" \
+          '{id:$id,name:$name,ip:$ip,region:$region,status:$status,size:$size}' \
+          > "{{ .BUILD_HOST_STATE }}"
+        rm -f "{{ .STATE_DIR }}/build-host.create.tmp"
+        echo "Build host ready: $ip (id=$id)"
+        echo "State written to {{ .BUILD_HOST_STATE }}"
+
+  build-host:down:
+    desc: Destroy the build droplet and remove local state
+    deps: [_require-doctl]
+    cmds:
+      - |
+        set -euo pipefail
+        if [ ! -f "{{ .BUILD_HOST_STATE }}" ]; then
+          echo "No build host state at {{ .BUILD_HOST_STATE }}"
+          exit 0
+        fi
+        id=$(jq -r .id "{{ .BUILD_HOST_STATE }}")
+        name=$(jq -r .name "{{ .BUILD_HOST_STATE }}")
+        echo "Destroying build droplet $name ($id)..."
+        doctl compute droplet delete "$id" --force
+        rm -f "{{ .BUILD_HOST_STATE }}"
+        echo "Build host destroyed."
+
+  build-host:ssh:
+    desc: SSH into the build droplet
+    deps: [_ensure-state-dir]
+    interactive: true
+    cmds:
+      - |
+        set -euo pipefail
+        if [ ! -f "{{ .BUILD_HOST_STATE }}" ]; then
+          echo "No build host state. Run: task do:build-host:up" >&2
+          exit 1
+        fi
+        ip=$(jq -r .ip "{{ .BUILD_HOST_STATE }}")
+        exec ssh {{ .SSH_OPTS }} "root@$ip" {{ .CLI_ARGS }}
+
+  _wait-ssh:
+    internal: true
+    cmds:
+      - |
+        set -euo pipefail
+        ip=$(jq -r .ip "{{ .BUILD_HOST_STATE }}")
+        echo "Waiting for SSH on $ip..."
+        for i in $(seq 1 60); do
+          if ssh {{ .SSH_OPTS }} -o BatchMode=yes "root@$ip" true 2>/dev/null; then
+            echo "SSH is up."
+            exit 0
+          fi
+          sleep 5
+        done
+        echo "Timed out waiting for SSH on $ip" >&2
+        exit 1
+
+  image:build:
+    desc: Build DigitalOcean NixOS image on the build host and upload via doctl
+    deps: [_require-doctl, _ensure-state-dir]
+    cmds:
+      - |
+        set -euo pipefail
+        if [ ! -f "{{ .BUILD_HOST_STATE }}" ]; then
+          echo "No build host state. Run: task do:build-host:up" >&2
+          exit 1
+        fi
+        if ! command -v jq >/dev/null 2>&1; then
+          echo "jq is required" >&2
+          exit 1
+        fi
+        if ! command -v rsync >/dev/null 2>&1; then
+          echo "rsync is required" >&2
+          exit 1
+        fi
+      - task: _wait-ssh
+      - |
+        set -euo pipefail
+        ip=$(jq -r .ip "{{ .BUILD_HOST_STATE }}")
+        region=$(jq -r .region "{{ .BUILD_HOST_STATE }}")
+        port="{{ .IMAGE_HTTP_PORT }}"
+        remote_dir=/root/dotfiles
+
+        echo "Installing Nix on build host (if needed)..."
+        ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<'REMOTE'
+        set -euo pipefail
+        if ! command -v nix >/dev/null 2>&1; then
+          curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+        fi
+        # Ensure nix is on PATH for non-login shells
+        if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+          # shellcheck disable=SC1091
+          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        fi
+        nix --version
+        REMOTE
+
+        echo "Syncing flake to build host..."
+        rsync -az --delete \
+          --exclude .git \
+          --exclude .local \
+          --exclude result \
+          -e "ssh {{ .SSH_OPTS }}" \
+          "{{ .FLAKE_DIR }}/" "root@$ip:$remote_dir/"
+
+        echo "Building DigitalOcean image (this can take a long time without KVM)..."
+        ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<REMOTE
+        set -euo pipefail
+        if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+          # shellcheck disable=SC1091
+          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        fi
+        cd $remote_dir
+        rm -rf /root/nixos-do-image
+        mkdir -p /root/nixos-do-image
+        nix run nixpkgs#nixos-rebuild -- build-image \
+          --flake .#do-dev \
+          --image-variant digital-ocean
+        # nixos-rebuild build-image writes under ./result by default
+        img=\$(find -L result -type f \\( -name '*.qcow2.gz' -o -name '*.qcow2.bz2' \\) | head -n1)
+        if [ -z "\$img" ]; then
+          echo "Could not find built DigitalOcean image under result/" >&2
+          ls -laR result >&2 || true
+          exit 1
+        fi
+        cp -L "\$img" /root/nixos-do-image/nixos-do-dev.qcow2.gz
+        basename "\$img" > /root/nixos-do-image/source-name.txt
+        ls -lh /root/nixos-do-image/nixos-do-dev.qcow2.gz
+        REMOTE
+
+        echo "Serving image over HTTP on build host :$port ..."
+        ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<REMOTE
+        set -euo pipefail
+        # Stop any previous server
+        if [ -f /tmp/nixos-image-http.pid ]; then
+          kill "\$(cat /tmp/nixos-image-http.pid)" 2>/dev/null || true
+          rm -f /tmp/nixos-image-http.pid
+        fi
+        cd /root/nixos-do-image
+        nohup python3 -m http.server "$port" --bind 0.0.0.0 >/tmp/nixos-image-http.log 2>&1 &
+        echo \$! > /tmp/nixos-image-http.pid
+        sleep 1
+        REMOTE
+
+        image_url="http://$ip:$port/nixos-do-dev.qcow2.gz"
+        echo "Uploading custom image from $image_url ..."
+        # Delete existing image with same name if present (best-effort)
+        existing=$(doctl compute image list-user --format ID,Name --no-header 2>/dev/null | awk -v n="{{ .DO_IMAGE_NAME }}" '$2==n {print $1}' | head -n1 || true)
+        if [ -n "$existing" ]; then
+          echo "Deleting existing custom image {{ .DO_IMAGE_NAME }} ($existing)..."
+          doctl compute image delete "$existing" --force || true
+        fi
+
+        doctl compute image create "{{ .DO_IMAGE_NAME }}" \
+          --image-url "$image_url" \
+          --region "$region" \
+          --image-distribution Unknown \
+          --tag-names nixos \
+          --format ID,Name,Status \
+          --no-header > "{{ .STATE_DIR }}/image.create.tmp"
+
+        image_id=$(awk '{print $1}' "{{ .STATE_DIR }}/image.create.tmp")
+        image_name=$(awk '{print $2}' "{{ .STATE_DIR }}/image.create.tmp")
+        image_status=$(awk '{print $3}' "{{ .STATE_DIR }}/image.create.tmp")
+
+        echo "Waiting for custom image $image_id to become available..."
+        for i in $(seq 1 120); do
+          status=$(doctl compute image get "$image_id" --format Status --no-header 2>/dev/null || echo "missing")
+          echo "  image status: $status"
+          if [ "$status" = "available" ]; then
+            break
+          fi
+          if [ "$status" = "missing" ] || [ "$status" = "deleted" ]; then
+            echo "Image upload failed (status=$status)" >&2
+            exit 1
+          fi
+          sleep 10
+        done
+
+        final_status=$(doctl compute image get "$image_id" --format Status --no-header)
+        if [ "$final_status" != "available" ]; then
+          echo "Timed out waiting for image $image_id (status=$final_status)" >&2
+          exit 1
+        fi
+
+        jq -n \
+          --arg id "$image_id" \
+          --arg name "$image_name" \
+          --arg region "$region" \
+          --arg status "$final_status" \
+          '{id:$id,name:$name,region:$region,status:$status}' \
+          > "{{ .IMAGE_STATE }}"
+        rm -f "{{ .STATE_DIR }}/image.create.tmp"
+
+        echo "Stopping HTTP server on build host..."
+        ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<'REMOTE'
+        set -euo pipefail
+        if [ -f /tmp/nixos-image-http.pid ]; then
+          kill "$(cat /tmp/nixos-image-http.pid)" 2>/dev/null || true
+          rm -f /tmp/nixos-image-http.pid
+        fi
+        REMOTE
+
+        echo "Custom image ready: $image_name ($image_id)"
+        echo "State written to {{ .IMAGE_STATE }}"
+      - |
+        set -euo pipefail
+        if [ "{{ .DESTROY_BUILD_HOST }}" = "1" ]; then
+          echo "DESTROY_BUILD_HOST=1 — tearing down build host..."
+          task do:build-host:down
+        else
+          echo "Build host left running. Destroy with: task do:build-host:down"
+          echo "Or rebuild with teardown: DESTROY_BUILD_HOST=1 task do:image:build"
+        fi
+
+  image:build-and-teardown:
+    desc: Build/upload the NixOS image then destroy the build droplet
+    cmds:
+      - task: image:build
+        vars:
+          DESTROY_BUILD_HOST: "1"
+
+  dev:up:
+    desc: Create a dev droplet from the uploaded NixOS custom image
+    deps: [_require-doctl, _require-ssh-key, _ensure-state-dir]
+    cmds:
+      - |
+        set -euo pipefail
+        if [ -f "{{ .DEV_HOST_STATE }}" ]; then
+          echo "Dev host state already exists at {{ .DEV_HOST_STATE }}" >&2
+          echo "Run: task do:dev:down first, or delete the state file." >&2
+          exit 1
+        fi
+        if [ ! -f "{{ .IMAGE_STATE }}" ]; then
+          echo "No image state at {{ .IMAGE_STATE }}. Run: task do:image:build" >&2
+          exit 1
+        fi
+        if ! command -v jq >/dev/null 2>&1; then
+          echo "jq is required" >&2
+          exit 1
+        fi
+
+        image_id=$(jq -r .id "{{ .IMAGE_STATE }}")
+        region=$(jq -r .region "{{ .IMAGE_STATE }}")
+        # Allow overriding region for the droplet, but custom images are region-bound
+        region="${DO_REGION:-$region}"
+
+        echo "Creating dev droplet {{ .DO_DEV_NAME }} from image $image_id in $region..."
+        doctl compute droplet create "{{ .DO_DEV_NAME }}" \
+          --image "$image_id" \
+          --size "{{ .DO_DEV_SIZE }}" \
+          --region "$region" \
+          --ssh-keys "{{ .DO_SSH_KEY }}" \
+          --tag-name nixos-dev \
+          --wait \
+          --format ID,Name,PublicIPv4,Region,Status \
+          --no-header > "{{ .STATE_DIR }}/dev-host.create.tmp"
+
+        id=$(awk '{print $1}' "{{ .STATE_DIR }}/dev-host.create.tmp")
+        name=$(awk '{print $2}' "{{ .STATE_DIR }}/dev-host.create.tmp")
+        ip=$(awk '{print $3}' "{{ .STATE_DIR }}/dev-host.create.tmp")
+        region=$(awk '{print $4}' "{{ .STATE_DIR }}/dev-host.create.tmp")
+        status=$(awk '{print $5}' "{{ .STATE_DIR }}/dev-host.create.tmp")
+        jq -n \
+          --arg id "$id" \
+          --arg name "$name" \
+          --arg ip "$ip" \
+          --arg region "$region" \
+          --arg status "$status" \
+          --arg size "{{ .DO_DEV_SIZE }}" \
+          --arg image_id "$image_id" \
+          '{id:$id,name:$name,ip:$ip,region:$region,status:$status,size:$size,image_id:$image_id}' \
+          > "{{ .DEV_HOST_STATE }}"
+        rm -f "{{ .STATE_DIR }}/dev-host.create.tmp"
+
+        echo "Dev host ready: $ip (id=$id)"
+        echo "State written to {{ .DEV_HOST_STATE }}"
+        echo "SSH: task do:dev:ssh"
+        echo "Or:  ssh root@$ip"
+
+  dev:down:
+    desc: Destroy the dev droplet and remove local state
+    deps: [_require-doctl]
+    cmds:
+      - |
+        set -euo pipefail
+        if [ ! -f "{{ .DEV_HOST_STATE }}" ]; then
+          echo "No dev host state at {{ .DEV_HOST_STATE }}"
+          exit 0
+        fi
+        id=$(jq -r .id "{{ .DEV_HOST_STATE }}")
+        name=$(jq -r .name "{{ .DEV_HOST_STATE }}")
+        echo "Destroying dev droplet $name ($id)..."
+        doctl compute droplet delete "$id" --force
+        rm -f "{{ .DEV_HOST_STATE }}"
+        echo "Dev host destroyed."
+
+  dev:ssh:
+    desc: SSH into the dev droplet
+    deps: [_ensure-state-dir]
+    interactive: true
+    cmds:
+      - |
+        set -euo pipefail
+        if [ ! -f "{{ .DEV_HOST_STATE }}" ]; then
+          echo "No dev host state. Run: task do:dev:up" >&2
+          exit 1
+        fi
+        ip=$(jq -r .ip "{{ .DEV_HOST_STATE }}")
+        exec ssh {{ .SSH_OPTS }} "root@$ip" {{ .CLI_ARGS }}

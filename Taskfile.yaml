@@ -1,5 +1,9 @@
 version: 3
 
+includes:
+  do:
+    taskfile: Taskfile.do.yaml
+
 vars:
   OP_SSH_KEY_REF: '{{ env "OP_SSH_KEY_REF" | default "op://Private/Personal SSH Key/private key" }}'
   MACHINE:

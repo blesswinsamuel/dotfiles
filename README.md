@@ -77,6 +77,39 @@ Other reasons that contributed:
 - System changes still require a Nix rebuild; only dotfile edits are fast
 - Two apply steps for a full sync (`darwin-rebuild` + `go run .`), but dotfile-only changes skip the rebuild entirely
 
+## DigitalOcean NixOS (dev)
+
+Minimal headless NixOS image for DigitalOcean, plus Taskfile helpers that use `doctl`.
+
+**Prereqs:** `doctl` (`doctl auth init`), `jq`, `rsync`, and a DO SSH key fingerprint/ID:
+
+```bash
+doctl compute ssh-key list
+export DO_SSH_KEY='<fingerprint-or-id>'
+```
+
+Optional env vars: `DO_REGION` (default `nyc3`), `DO_BUILD_SIZE` (default `s-4vcpu-8gb`), `DO_DEV_SIZE` (default `s-2vcpu-4gb`), `DO_IMAGE_NAME` (default `nixos-do-dev`).
+
+```bash
+# 1) Ephemeral Ubuntu builder (IP/id written to .local/do/build-host.json)
+task do:build-host:up
+
+# 2) Build digital-ocean image on the builder, upload as a custom image
+task do:image:build
+# or build + destroy the builder when done:
+task do:image:build-and-teardown
+
+# 3) Provision a lasting dev droplet from the custom image
+task do:dev:up
+task do:dev:ssh
+
+# Tear down
+task do:dev:down
+task do:build-host:down   # if still running
+```
+
+State under `.local/do/` is gitignored. Image builds on DO droplets are slow (no nested KVM / QEMU TCG).
+
 ## Brew commands
 
 ```bash
