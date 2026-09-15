@@ -62,7 +62,8 @@ Repo configs use **logical host ids**, not OS hostnames/serials:
 | `work-laptop` | Work Mac (nix-darwin) |
 | `hp-laptop` | Personal Linux laptop (NixOS) |
 | `hp-chromebox` | Personal Linux desktop (NixOS) |
-| `do-cloud-dev` | Personal DO cloud NixOS |
+| `do-cloud-dev` | Personal DO cloud NixOS (full config after switch) |
+| `do-cloud-bootstrap` | Slim DO custom-image bootstrap (then switch to `do-cloud-dev`) |
 | `work-management-droplet` | Work Ubuntu droplet (home tool only) |
 
 Identity comes from `~/.config/dotfiles/host-id` (one line, e.g. `mac-studio`). Missing or empty → fail with a clear error.
@@ -158,13 +159,24 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-Minimal headless NixOS image for DigitalOcean, plus Taskfile helpers that use `doctl`. Flake attr: `do-cloud-dev`.
+Bootstrap custom image via DigitalOcean Spaces, then converge with the full flake on the droplet. Taskfile helpers use `doctl`.
 
-**Prereqs:** `doctl` (`doctl auth init`), `jq`, `rsync`, and a DO SSH key fingerprint/ID:
+| Flake attr | Role |
+| --- | --- |
+| `do-cloud-bootstrap` | Slim image baked into the DO custom image (SSH, flakes, Tailscale; no heavy commons packages) |
+| `do-cloud-dev` | Full system — run `task switch` after the droplet is up |
+
+**Prereqs:** `doctl` (`doctl auth init`), `jq`, `rsync`, a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket with API keys:
 
 ```bash
 doctl compute ssh-key list
 export DO_SSH_KEY='<fingerprint-or-id>'
+
+# Spaces (S3-compatible). Spaces regions ≠ droplet regions (no blr1 Spaces).
+export SPACES_BUCKET='your-bucket'
+export SPACES_KEY='...'
+export SPACES_SECRET='...'
+# optional: SPACES_REGION (default sgp1), SPACES_ENDPOINT
 ```
 
 Optional env vars: `DO_REGION` (default `blr1`), `DO_BUILD_SIZE` (default `s-4vcpu-8gb`), `DO_DEV_SIZE` (default `s-4vcpu-8gb`), `DO_IMAGE_NAME` (default `nixos-do-dev`).
@@ -173,7 +185,7 @@ Optional env vars: `DO_REGION` (default `blr1`), `DO_BUILD_SIZE` (default `s-4vc
 # 1) Ephemeral Ubuntu builder (IP/id written to .local/do/build-host.json)
 task do:build-host:up
 
-# 2) Build digital-ocean image on the builder, upload as a custom image
+# 2) Build bootstrap image on the builder, upload to Spaces, register as custom image
 task do:image:build
 # or build + destroy the builder when done:
 task do:image:build-and-teardown
@@ -182,7 +194,11 @@ task do:image:build-and-teardown
 task do:dev:up
 task do:dev:ssh   # then: sudo tailscale up
 
-# 4) Block public inbound except UDP 41641 (Tailscale direct); access via Tailscale only
+# 4) Converge to the full config (commons packages, home, etc.)
+task set-host-id -- do-cloud-dev
+task switch
+
+# 5) Block public inbound except UDP 41641 (Tailscale direct); access via Tailscale only
 task do:dev:block-ports
 
 # Tear down
@@ -190,7 +206,7 @@ task do:dev:down
 task do:build-host:down   # if still running
 ```
 
-State under `.local/do/` is gitignored. Image builds on DO droplets are slow (no nested KVM / QEMU TCG).
+State under `.local/do/` is gitignored. Image builds on DO droplets are slow (no nested KVM / QEMU TCG). The bootstrap image keeps the custom-image payload small; Spaces avoids flaky HTTP from the builder droplet.
 
 ## Brew commands
 

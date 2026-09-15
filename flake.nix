@@ -55,6 +55,29 @@
           ] ++ realmModules systemConfig.realm "linux"
           ++ extraModules;
         };
+      # Bootstrap images skip heavy commons packages; converge with do-cloud-dev after boot.
+      nixosBootstrapSystem = { system, extraModules ? [ ], systemConfig }: hostName:
+        let
+          pkgsUnstable = genPkgs system nixpkgs-unstable;
+          pkgsMaster = genPkgs system nixpkgs-master;
+          pkgsStable = genPkgs system nixpkgs-stable;
+        in
+        nixpkgs-stable.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
+          modules = [
+            ./commons/commons-bootstrap.nix
+          ] ++ realmModules systemConfig.realm "linux"
+          ++ extraModules;
+        };
+      doCloudSystemConfig = {
+        username = "blesswinsamuel";
+        realm = "personal";
+        authorizedKeys = [
+          # cat ~/.ssh/id_ed25519.pub | pbcopy
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
+        ];
+      };
       darwinSystem = { system, extraModules ? [ ], systemConfig }: hostName:
         let
           pkgsUnstable = genPkgs system nixpkgs-unstable;
@@ -116,17 +139,15 @@
             userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
           };
         };
+        do-cloud-bootstrap = nixosBootstrapSystem {
+          system = "x86_64-linux";
+          extraModules = [ ./hosts/do-cloud-dev/do-cloud-dev.nix ];
+          systemConfig = doCloudSystemConfig;
+        };
         do-cloud-dev = nixosSystem {
           system = "x86_64-linux";
           extraModules = [ ./hosts/do-cloud-dev/do-cloud-dev.nix ];
-          systemConfig = {
-            username = "blesswinsamuel";
-            realm = "personal";
-            authorizedKeys = [
-              # cat ~/.ssh/id_ed25519.pub | pbcopy
-              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
-            ];
-          };
+          systemConfig = doCloudSystemConfig;
         };
       };
       darwinConfigurations = processConfigurations {

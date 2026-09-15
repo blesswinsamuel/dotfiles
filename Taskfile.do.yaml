@@ -17,7 +17,12 @@ vars:
   DO_DEV_NAME: '{{ env "DO_DEV_NAME" | default "nixos-dev" }}'
   DO_IMAGE_NAME: '{{ env "DO_IMAGE_NAME" | default "nixos-do-dev" }}'
   DO_FIREWALL_NAME: '{{ env "DO_FIREWALL_NAME" | default "nixos-dev-tailscale-only" }}'
-  IMAGE_HTTP_PORT: '{{ env "IMAGE_HTTP_PORT" | default "8765" }}'
+  # Spaces regions differ from droplet regions (no blr1 Spaces); sgp1 is nearest to blr1.
+  SPACES_BUCKET: '{{ env "SPACES_BUCKET" | default "" }}'
+  SPACES_REGION: '{{ env "SPACES_REGION" | default "sgp1" }}'
+  SPACES_KEY: '{{ env "SPACES_KEY" | default "" }}'
+  SPACES_SECRET: '{{ env "SPACES_SECRET" | default "" }}'
+  SPACES_ENDPOINT: '{{ env "SPACES_ENDPOINT" | default "" }}'
   DESTROY_BUILD_HOST: '{{ env "DESTROY_BUILD_HOST" | default "0" }}'
   # Inbound: only Tailscale direct (UDP 41641). Outbound: all (control plane + DERP).
   DO_FIREWALL_INBOUND: >-
@@ -149,7 +154,7 @@ tasks:
         exit 1
 
   image:build:
-    desc: Build DigitalOcean NixOS image on the build host and upload via doctl
+    desc: Build bootstrap NixOS image on the build host, upload to Spaces, register as DO custom image
     deps: [_require-doctl, _ensure-state-dir]
     cmds:
       - |
@@ -166,13 +171,24 @@ tasks:
           echo "rsync is required" >&2
           exit 1
         fi
+        if [ -z "{{ .SPACES_BUCKET }}" ] || [ -z "{{ .SPACES_KEY }}" ] || [ -z "{{ .SPACES_SECRET }}" ]; then
+          echo "SPACES_BUCKET, SPACES_KEY, and SPACES_SECRET are required for image upload" >&2
+          exit 1
+        fi
       - task: _wait-ssh
       - |
         set -euo pipefail
         ip=$(jq -r .ip "{{ .BUILD_HOST_STATE }}")
         region=$(jq -r .region "{{ .BUILD_HOST_STATE }}")
-        port="{{ .IMAGE_HTTP_PORT }}"
+        spaces_region="{{ .SPACES_REGION }}"
+        spaces_bucket="{{ .SPACES_BUCKET }}"
+        spaces_endpoint="{{ .SPACES_ENDPOINT }}"
+        if [ -z "$spaces_endpoint" ]; then
+          spaces_endpoint="https://${spaces_region}.digitaloceanspaces.com"
+        fi
         remote_dir=/root/dotfiles
+        object_key="nixos-do-images/{{ .DO_IMAGE_NAME }}-$(date -u +%Y%m%dT%H%M%SZ).qcow2.gz"
+        image_url="https://${spaces_bucket}.${spaces_region}.digitaloceanspaces.com/${object_key}"
 
         echo "Installing Nix on build host (if needed)..."
         ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<'REMOTE'
@@ -196,7 +212,7 @@ tasks:
           -e "ssh {{ .SSH_OPTS }}" \
           "{{ .FLAKE_DIR }}/" "root@$ip:$remote_dir/"
 
-        echo "Building DigitalOcean image (this can take a long time without KVM)..."
+        echo "Building DigitalOcean bootstrap image (this can take a long time without KVM)..."
         ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<REMOTE
         set -euo pipefail
         if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
@@ -207,7 +223,7 @@ tasks:
         rm -rf /root/nixos-do-image
         mkdir -p /root/nixos-do-image
         nix run nixpkgs#nixos-rebuild -- build-image \
-          --flake .#do-cloud-dev \
+          --flake .#do-cloud-bootstrap \
           --image-variant digital-ocean
         # nixos-rebuild build-image writes under ./result by default
         img=\$(find -L result -type f \\( -name '*.qcow2.gz' -o -name '*.qcow2.bz2' \\) | head -n1)
@@ -221,22 +237,29 @@ tasks:
         ls -lh /root/nixos-do-image/nixos-do-dev.qcow2.gz
         REMOTE
 
-        echo "Serving image over HTTP on build host :$port ..."
-        ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<REMOTE
+        echo "Uploading image to Spaces ($spaces_bucket / $object_key)..."
+        ssh {{ .SSH_OPTS }} "root@$ip" \
+          env \
+            AWS_ACCESS_KEY_ID="{{ .SPACES_KEY }}" \
+            AWS_SECRET_ACCESS_KEY="{{ .SPACES_SECRET }}" \
+            AWS_DEFAULT_REGION="$spaces_region" \
+            SPACES_ENDPOINT="$spaces_endpoint" \
+            SPACES_BUCKET="$spaces_bucket" \
+            OBJECT_KEY="$object_key" \
+            bash -s <<'REMOTE'
         set -euo pipefail
-        # Stop any previous server
-        if [ -f /tmp/nixos-image-http.pid ]; then
-          kill "\$(cat /tmp/nixos-image-http.pid)" 2>/dev/null || true
-          rm -f /tmp/nixos-image-http.pid
+        if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+          # shellcheck disable=SC1091
+          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         fi
-        cd /root/nixos-do-image
-        nohup python3 -m http.server "$port" --bind 0.0.0.0 >/tmp/nixos-image-http.log 2>&1 &
-        echo \$! > /tmp/nixos-image-http.pid
-        sleep 1
+        nix shell nixpkgs#awscli2 -c aws s3 cp \
+          /root/nixos-do-image/nixos-do-dev.qcow2.gz \
+          "s3://${SPACES_BUCKET}/${OBJECT_KEY}" \
+          --endpoint-url "$SPACES_ENDPOINT" \
+          --acl public-read
         REMOTE
 
-        image_url="http://$ip:$port/nixos-do-dev.qcow2.gz"
-        echo "Uploading custom image from $image_url ..."
+        echo "Registering custom image from $image_url ..."
         # Delete existing image with same name if present (best-effort)
         existing=$(doctl compute image list-user --format ID,Name --no-header 2>/dev/null | awk -v n="{{ .DO_IMAGE_NAME }}" '$2==n {print $1}' | head -n1 || true)
         if [ -n "$existing" ]; then
@@ -254,10 +277,8 @@ tasks:
 
         image_id=$(jq -r '.[0].id // .id' "{{ .STATE_DIR }}/image.create.tmp")
         image_name=$(jq -r '.[0].name // .name' "{{ .STATE_DIR }}/image.create.tmp")
-        image_status=$(jq -r '.[0].status // .status' "{{ .STATE_DIR }}/image.create.tmp")
 
         # doctl image get --format has no Status column (prints <nil>); use JSON.
-        # ~2G custom images often need >20m for DO to fetch + import.
         echo "Waiting for custom image $image_id to become available..."
         for i in $(seq 1 360); do
           status=$(doctl compute image get "$image_id" -o json 2>/dev/null | jq -r '.[0].status // empty' || true)
@@ -286,21 +307,34 @@ tasks:
           --arg name "$image_name" \
           --arg region "$region" \
           --arg status "$final_status" \
-          '{id:$id,name:$name,region:$region,status:$status}' \
+          --arg spaces_url "$image_url" \
+          '{id:$id,name:$name,region:$region,status:$status,spaces_url:$spaces_url}' \
           > "{{ .IMAGE_STATE }}"
         rm -f "{{ .STATE_DIR }}/image.create.tmp"
 
-        echo "Stopping HTTP server on build host..."
-        ssh {{ .SSH_OPTS }} "root@$ip" bash -s <<'REMOTE'
+        echo "Removing Spaces object (custom image already imported)..."
+        ssh {{ .SSH_OPTS }} "root@$ip" \
+          env \
+            AWS_ACCESS_KEY_ID="{{ .SPACES_KEY }}" \
+            AWS_SECRET_ACCESS_KEY="{{ .SPACES_SECRET }}" \
+            AWS_DEFAULT_REGION="$spaces_region" \
+            SPACES_ENDPOINT="$spaces_endpoint" \
+            SPACES_BUCKET="$spaces_bucket" \
+            OBJECT_KEY="$object_key" \
+            bash -s <<'REMOTE'
         set -euo pipefail
-        if [ -f /tmp/nixos-image-http.pid ]; then
-          kill "$(cat /tmp/nixos-image-http.pid)" 2>/dev/null || true
-          rm -f /tmp/nixos-image-http.pid
+        if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+          # shellcheck disable=SC1091
+          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         fi
+        nix shell nixpkgs#awscli2 -c aws s3 rm \
+          "s3://${SPACES_BUCKET}/${OBJECT_KEY}" \
+          --endpoint-url "$SPACES_ENDPOINT" || true
         REMOTE
 
         echo "Custom image ready: $image_name ($image_id)"
         echo "State written to {{ .IMAGE_STATE }}"
+        echo "Next: task do:dev:up, then on the droplet: task switch (flake attr do-cloud-dev)"
       - |
         set -euo pipefail
         if [ "{{ .DESTROY_BUILD_HOST }}" = "1" ]; then
