@@ -167,7 +167,7 @@ doctl compute ssh-key list
 export DO_SSH_KEY='<fingerprint-or-id>'
 ```
 
-Optional env vars: `DO_REGION` (default `nyc3`), `DO_BUILD_SIZE` (default `s-4vcpu-8gb`), `DO_DEV_SIZE` (default `s-4vcpu-8gb`), `DO_IMAGE_NAME` (default `nixos-do-dev`).
+Optional env vars: `DO_REGION` (default `blr1`), `DO_BUILD_SIZE` (default `s-4vcpu-8gb`), `DO_DEV_SIZE` (default `s-4vcpu-8gb`), `DO_IMAGE_NAME` (default `nixos-do-dev`).
 
 ```bash
 # 1) Ephemeral Ubuntu builder (IP/id written to .local/do/build-host.json)
