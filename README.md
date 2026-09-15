@@ -182,7 +182,7 @@ task do:image:build-and-teardown
 task do:dev:up
 task do:dev:ssh   # then: sudo tailscale up
 
-# 4) Block all public inbound ports (DO cloud firewall); access via Tailscale only
+# 4) Block public inbound except UDP 41641 (Tailscale direct); access via Tailscale only
 task do:dev:block-ports
 
 # Tear down

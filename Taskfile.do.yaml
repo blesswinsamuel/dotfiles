@@ -19,7 +19,10 @@ vars:
   DO_FIREWALL_NAME: '{{ env "DO_FIREWALL_NAME" | default "nixos-dev-tailscale-only" }}'
   IMAGE_HTTP_PORT: '{{ env "IMAGE_HTTP_PORT" | default "8765" }}'
   DESTROY_BUILD_HOST: '{{ env "DESTROY_BUILD_HOST" | default "0" }}'
-  # Deny-all inbound; allow all outbound (Tailscale uses outbound + DERP).
+  # Inbound: only Tailscale direct (UDP 41641). Outbound: all (control plane + DERP).
+  DO_FIREWALL_INBOUND: >-
+    protocol:udp,ports:41641,address:0.0.0.0/0
+    protocol:udp,ports:41641,address:::/0
   DO_FIREWALL_OUTBOUND: >-
     protocol:tcp,ports:all,address:0.0.0.0/0
     protocol:tcp,ports:all,address:::/0
@@ -369,7 +372,7 @@ tasks:
         echo "Or:  ssh root@$ip"
 
   dev:block-ports:
-    desc: Attach a DO cloud firewall that denies all inbound (Tailscale-only access)
+    desc: DO cloud firewall — only UDP 41641 inbound (Tailscale direct); block everything else
     deps: [_require-doctl, _ensure-state-dir]
     cmds:
       - |
@@ -397,6 +400,7 @@ tasks:
         fi
         echo "Tailscale looks healthy."
 
+        inbound='{{ .DO_FIREWALL_INBOUND }}'
         outbound='{{ .DO_FIREWALL_OUTBOUND }}'
         firewall_id=""
         firewall_name="{{ .DO_FIREWALL_NAME }}"
@@ -411,6 +415,7 @@ tasks:
             echo "Updating existing firewall $firewall_id..."
             doctl compute firewall update "$firewall_id" \
               --name "$firewall_name" \
+              --inbound-rules "$inbound" \
               --outbound-rules "$outbound" \
               --droplet-ids "$droplet_id" \
               --format ID,Name,Status \
@@ -419,9 +424,10 @@ tasks:
         fi
 
         if [ -z "$firewall_id" ]; then
-          echo "Creating cloud firewall $firewall_name (deny-all inbound) for droplet $droplet_id..."
+          echo "Creating cloud firewall $firewall_name (UDP 41641 only inbound) for droplet $droplet_id..."
           doctl compute firewall create \
             --name "$firewall_name" \
+            --inbound-rules "$inbound" \
             --outbound-rules "$outbound" \
             --droplet-ids "$droplet_id" \
             --format ID,Name,Status \
@@ -441,8 +447,8 @@ tasks:
         echo "Firewall attached: $firewall_name ($firewall_id) → droplet $droplet_id"
         echo "State written to {{ .FIREWALL_STATE }}"
         echo ""
-        echo "Public inbound is blocked. task do:dev:ssh (public IP) will no longer work."
-        echo "Access the VM over Tailscale only (hostname or Tailscale IP)."
+        echo "Public inbound blocked except UDP 41641 (Tailscale direct)."
+        echo "task do:dev:ssh (public IP) will no longer work — use Tailscale hostname/IP."
 
   dev:down:
     desc: Destroy the dev droplet and remove local state
