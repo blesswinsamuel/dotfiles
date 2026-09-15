@@ -16,6 +16,7 @@ cd dotfiles
 # Set logical host id (required; never commit this file)
 task set-host-id -- mac-studio   # or work-laptop, hp-laptop, …
 
+task secrets:unlock              # once per machine (decrypts age → local cache)
 nix run nixpkgs#go-task -- darwin-init # first run (Mac)
 # or: nix run nixpkgs#go-task -- init
 nix run nixpkgs#go-task -- switch -- --verbose
@@ -31,6 +32,7 @@ sudo nixos-rebuild switch
 nix run nixpkgs#git clone https://github.com/blesswinsamuel/dotfiles
 cd dotfiles
 task set-host-id -- hp-laptop   # or hp-chromebox, do-cloud-dev, …
+task secrets:unlock
 
 nix run nixpkgs#go-task -- init # first run
 ```
@@ -43,7 +45,8 @@ NixOS cannot be installed on this host. Use the home tool (+ mise) only:
 git clone https://github.com/blesswinsamuel/dotfiles
 cd dotfiles
 task set-host-id -- work-management-droplet
-# Install mise: https://mise.jdx.dev/getting-started.html
+# Install mise + 1Password CLI; sign in to work account
+task secrets:unlock
 task run-home
 ```
 
@@ -71,6 +74,19 @@ mkdir -p ~/.config/dotfiles && echo mac-studio > ~/.config/dotfiles/host-id
 ```
 
 NixOS hosts set `networking.hostName` to the same logical id. nix-darwin always uses `--flake .#$(host-id)` so work Mac serial names never need to live in git.
+
+## Secrets (age)
+
+Source of truth is [`config.yaml.age`](config.yaml.age) in the repo (git email, signing keys, Wakatime). Decrypt uses your machine’s SSH private key from 1Password (`OP_SSH_KEY_REF`; work laptop overrides this via nix-darwin).
+
+To avoid unlocking 1Password on every apply, decrypt once into a local cache:
+
+```bash
+task secrets:unlock   # writes ~/.config/dotfiles/secrets.yaml (mode 600)
+task run-home         # uses the cache; auto-unlocks if missing
+```
+
+After `task edit-config`, the cache is refreshed automatically when the age file changes. Force refresh anytime with `task secrets:unlock`.
 
 ## Architecture
 

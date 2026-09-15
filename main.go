@@ -136,17 +136,32 @@ func mergeProfileLayer(profile *Profile, profiles map[string]Profile, name strin
 
 type SecretConfig map[string]any
 
-func getSecretConfig() (map[string]SecretConfig, error) {
+func secretsCachePath() string {
+	return path.Join(os.Getenv("HOME"), ".config", "dotfiles", "secrets.yaml")
+}
+
+func loadSecretConfigFromCache() (map[string]SecretConfig, error) {
+	data, err := os.ReadFile(secretsCachePath())
+	if err != nil {
+		return nil, err
+	}
+	secretConfig := map[string]SecretConfig{}
+	if err := yaml.Unmarshal(data, &secretConfig); err != nil {
+		return nil, err
+	}
+	return secretConfig, nil
+}
+
+func loadSecretConfigFromAge() (map[string]SecretConfig, error) {
 	privateKey, err := os.ReadFile(privateKeyFile)
 	if err != nil {
-		log.Fatal().Err(err).Msgf("failed to read private key")
+		return nil, fmt.Errorf("failed to read private key: %w", err)
 	}
 	identity, err := agessh.ParseIdentity(privateKey)
 	if err != nil {
-		log.Fatal().Err(err).Msgf("failed to parse private key")
+		return nil, fmt.Errorf("failed to parse private key: %w", err)
 	}
 
-	secretConfig := map[string]SecretConfig{}
 	secretConfigFile, err := filepath.Abs("./config.yaml.age")
 	if err != nil {
 		return nil, err
@@ -155,6 +170,7 @@ func getSecretConfig() (map[string]SecretConfig, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 	r, err := age.Decrypt(f, identity)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decrypt: %w", err)
@@ -163,10 +179,29 @@ func getSecretConfig() (map[string]SecretConfig, error) {
 	if _, err := io.Copy(out, r); err != nil {
 		return nil, err
 	}
+	secretConfig := map[string]SecretConfig{}
 	if err := yaml.Unmarshal(out.Bytes(), &secretConfig); err != nil {
 		return nil, err
 	}
 	return secretConfig, nil
+}
+
+func getSecretConfig() (map[string]SecretConfig, string, error) {
+	if _, err := os.Stat(secretsCachePath()); err == nil {
+		cfg, err := loadSecretConfigFromCache()
+		if err != nil {
+			return nil, "", fmt.Errorf("failed to read secrets cache %s: %w", secretsCachePath(), err)
+		}
+		return cfg, "cache", nil
+	} else if !os.IsNotExist(err) {
+		return nil, "", err
+	}
+
+	cfg, err := loadSecretConfigFromAge()
+	if err != nil {
+		return nil, "", fmt.Errorf("%w (or run: task secrets:unlock)", err)
+	}
+	return cfg, "age", nil
 }
 
 var privateKeyFile string
@@ -228,15 +263,14 @@ func main() {
 	mergeProfileLayer(&profile, config.Profiles, realm+"-"+runtimeOS)
 	profile.Merge(hostProfile)
 
-	secretConfigAll, err := getSecretConfig()
+	secretConfigAll, source, err := getSecretConfig()
 	if err != nil {
 		log.Fatal().Err(err).Msgf("failed to get secret config")
 	}
 	secrets := SecretConfig{}
 	maps.Copy(secrets, secretConfigAll["common"])
 	maps.Copy(secrets, secretConfigAll[profile.SecretProfile])
-	// log.Info().Interface("profile", profile).Interface("secrets", secrets).Msgf("got config")
-	log.Info().Str("profile", profile.SecretProfile).Interface("secrets", secrets).Msgf("got secret config")
+	log.Info().Str("profile", profile.SecretProfile).Str("secretsSource", source).Msgf("got secret config")
 
 	for destination, file := range profile.Files {
 		if file.Operation == "" {

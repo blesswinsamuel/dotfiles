@@ -54,7 +54,20 @@ tasks:
         if ! cmp -s /tmp/config.yaml.orig /tmp/config.yaml; then
           echo "Updating config.yaml.age"
           curl -s https://github.com/blesswinsamuel.keys | age -R - /tmp/config.yaml > ./config.yaml.age
+          echo "Refreshing secrets cache…"
+          mkdir -p "${HOME}/.config/dotfiles"
+          age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age > "${HOME}/.config/dotfiles/secrets.yaml"
+          chmod 600 "${HOME}/.config/dotfiles/secrets.yaml"
         fi
+
+  secrets:unlock:
+    desc: Decrypt config.yaml.age into ~/.config/dotfiles/secrets.yaml (skips op on later run-home)
+    cmds:
+      - |
+        mkdir -p "${HOME}/.config/dotfiles"
+        age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age > "${HOME}/.config/dotfiles/secrets.yaml"
+        chmod 600 "${HOME}/.config/dotfiles/secrets.yaml"
+        echo "Wrote ${HOME}/.config/dotfiles/secrets.yaml"
 
   set-host-id:
     desc: Write ~/.config/dotfiles/host-id (e.g. task set-host-id -- mac-studio)
@@ -91,7 +104,12 @@ tasks:
   run-home:
     deps: [_require-host-id]
     cmds:
-      - go run . -private-key-file <(op read "{{ .OP_SSH_KEY_REF }}")
+      - |
+        if [ ! -f "${HOME}/.config/dotfiles/secrets.yaml" ]; then
+          echo "Secrets cache missing; unlocking…"
+          task secrets:unlock
+        fi
+      - go run .
 
   switch:
     deps: [_require-host-id]

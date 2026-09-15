@@ -11,15 +11,17 @@ Ubuntu work management droplet. **Not NixOS** — NixOS cannot be installed on t
    echo work-management-droplet > ~/.config/dotfiles/host-id
    ```
 
-2. Install mise (and optionally the Determinate Nix installer for ad-hoc `nix run` only — no flake rebuild on this host).
+2. Install mise and the 1Password CLI (`op`). Sign in to the **work** 1Password account.
 
 3. From a clone of this repo:
 
    ```bash
+   export OP_SSH_KEY_REF='op://Private/Work SSH Key/private key'  # if not already set
+   task secrets:unlock   # once; caches decrypt under ~/.config/dotfiles/secrets.yaml
    task run-home
    ```
 
-   Do **not** run `task switch` / `nixos-rebuild` here.
+   Do **not** run `task switch` / `nixos-rebuild` here. Later `task run-home` uses the cache and does not need `op` until you refresh with `task secrets:unlock`.
 
 ## Layers applied by the home tool
 
