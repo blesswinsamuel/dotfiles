@@ -256,21 +256,26 @@ tasks:
         image_name=$(jq -r '.[0].name // .name' "{{ .STATE_DIR }}/image.create.tmp")
         image_status=$(jq -r '.[0].status // .status' "{{ .STATE_DIR }}/image.create.tmp")
 
+        # doctl image get --format has no Status column (prints <nil>); use JSON.
+        # ~2G custom images often need >20m for DO to fetch + import.
         echo "Waiting for custom image $image_id to become available..."
-        for i in $(seq 1 120); do
-          status=$(doctl compute image get "$image_id" --format Status --no-header 2>/dev/null || echo "missing")
+        for i in $(seq 1 360); do
+          status=$(doctl compute image get "$image_id" -o json 2>/dev/null | jq -r '.[0].status // empty' || true)
+          if [ -z "$status" ]; then
+            status="missing"
+          fi
           echo "  image status: $status"
           if [ "$status" = "available" ]; then
             break
           fi
-          if [ "$status" = "missing" ] || [ "$status" = "deleted" ]; then
+          if [ "$status" = "missing" ] || [ "$status" = "deleted" ] || [ "$status" = "error" ]; then
             echo "Image upload failed (status=$status)" >&2
             exit 1
           fi
           sleep 10
         done
 
-        final_status=$(doctl compute image get "$image_id" --format Status --no-header)
+        final_status=$(doctl compute image get "$image_id" -o json | jq -r '.[0].status // empty')
         if [ "$final_status" != "available" ]; then
           echo "Timed out waiting for image $image_id (status=$final_status)" >&2
           exit 1
