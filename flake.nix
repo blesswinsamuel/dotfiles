@@ -34,7 +34,14 @@
         ];
       };
 
-      nixosSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
+      realmModules = realm: os:
+        if realm == "personal" && os == "darwin" then [ ./commons/personal-darwin.nix ]
+        else if realm == "personal" && os == "linux" then [ ./commons/personal-linux.nix ]
+        else if realm == "work" && os == "darwin" then [ ./commons/work-darwin.nix ]
+        else if realm == "work" && os == "linux" then [ ./commons/work-linux.nix ]
+        else throw "unknown realm/os: ${realm}/${os}";
+
+      nixosSystem = { system, extraModules ? [ ], systemConfig }: hostName:
         let
           pkgsUnstable = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -44,12 +51,11 @@
           inherit system;
           specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
-            # disko.nixosModules.disko
             ./commons/commons.nix
-            # ./commons/nixos-commons.nix
-          ] ++ extraModules;
+          ] ++ realmModules systemConfig.realm "linux"
+          ++ extraModules;
         };
-      darwinSystem = { system, extraModules ? [ ], systemConfig, extraHomeModules ? [ ] }: hostName:
+      darwinSystem = { system, extraModules ? [ ], systemConfig }: hostName:
         let
           pkgsUnstable = genPkgs system nixpkgs-unstable;
           pkgsMaster = genPkgs system nixpkgs-master;
@@ -60,8 +66,9 @@
           specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
           modules = [
             ./commons/commons.nix
-            ./commons/darwin-commons.nix
-          ] ++ extraModules;
+            ./commons/darwin.nix
+          ] ++ realmModules systemConfig.realm "darwin"
+          ++ extraModules;
         };
 
       processConfigurations = nixpkgs-unstable.lib.mapAttrs (n: v: v n);
@@ -72,13 +79,16 @@
         hp-laptop = nixosSystem {
           system = "x86_64-linux";
           extraModules = [
+            disko.nixosModules.disko
+            ./commons/linux.nix
+            ./commons/personal-linux-desktop.nix
             ./hosts/hp-laptop/hp-laptop-hardware-configuration.nix
             ./hosts/hp-laptop/hp-laptop-disk-config.nix
             ./hosts/hp-laptop/hp-laptop.nix
           ];
-          # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
           systemConfig = {
             username = "blesswinsamuel";
+            realm = "personal";
             authorizedKeys = [
               # cat ~/.ssh/id_ed25519.pub | pbcopy
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
@@ -90,12 +100,14 @@
         hp-chromebox = nixosSystem {
           system = "x86_64-linux";
           extraModules = [
+            ./commons/linux.nix
+            ./commons/personal-linux-desktop.nix
             ./hosts/hp-chromebox/hp-chromebox-hardware-configuration.nix
             ./hosts/hp-chromebox/hp-chromebox.nix
           ];
-          # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
           systemConfig = {
             username = "blesswinsamuel";
+            realm = "personal";
             authorizedKeys = [
               # cat ~/.ssh/id_ed25519.pub | pbcopy
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
@@ -104,16 +116,12 @@
             userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
           };
         };
-        bsamuel-dev = nixosSystem {
+        do-cloud-dev = nixosSystem {
           system = "x86_64-linux";
-          extraModules = [ ./hosts/bsamuel-dev/bsamuel-dev.nix ];
-          systemConfig = { username = "bsamuel"; };
-        };
-        do-dev = nixosSystem {
-          system = "x86_64-linux";
-          extraModules = [ ./hosts/do-dev/do-dev.nix ];
+          extraModules = [ ./hosts/do-cloud-dev/do-cloud-dev.nix ];
           systemConfig = {
             username = "blesswinsamuel";
+            realm = "personal";
             authorizedKeys = [
               # cat ~/.ssh/id_ed25519.pub | pbcopy
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
@@ -122,22 +130,26 @@
         };
       };
       darwinConfigurations = processConfigurations {
-        Blesswins-Mac-Studio = darwinSystem {
+        mac-studio = darwinSystem {
           system = "aarch64-darwin";
           extraModules = [ ./hosts/mac-studio/mac-studio.nix ];
-          # extraHomeModules = [ ./hosts/mac-studio/mac-studio-home.nix ];
-          systemConfig = { username = "blesswinsamuel"; };
+          systemConfig = {
+            username = "blesswinsamuel";
+            realm = "personal";
+          };
         };
-        RQHFR2KPF2 = darwinSystem {
+        work-laptop = darwinSystem {
           system = "aarch64-darwin";
-          extraModules = [ ./hosts/mbp-work/mbp-work.nix ];
-          # extraHomeModules = [ ./hosts/mbp-work/mbp-work-home.nix ];
-          systemConfig = { username = "bsamuel"; };
+          extraModules = [ ./hosts/work-laptop/work-laptop.nix ];
+          systemConfig = {
+            username = "bsamuel";
+            realm = "work";
+          };
         };
       };
 
       # # Expose the package set, including overlays, for convenience.
-      # darwinPackages = self.darwinConfigurations."Blesswins-Mac-Studio".pkgs;
+      # darwinPackages = self.darwinConfigurations."mac-studio".pkgs;
     };
 }
 

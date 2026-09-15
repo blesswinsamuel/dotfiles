@@ -11,19 +11,14 @@ curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix 
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 nix run nixpkgs#git clone https://github.com/blesswinsamuel/dotfiles
+cd dotfiles
 
-# printf 'run\tprivate/var/run\n' | sudo tee -a /etc/synthetic.conf
-# /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t
+# Set logical host id (required; never commit this file)
+task set-host-id -- mac-studio   # or work-laptop, hp-laptop, …
 
-# nix flake init -t nix-darwin
-# mv /etc/zshenv /etc/zshenv.before-nix-darwin
-# mv /etc/shells /etc/shells.before-nix-darwin
-
-nix run nixpkgs#go-task -- darwin-init # first run
+nix run nixpkgs#go-task -- darwin-init # first run (Mac)
+# or: nix run nixpkgs#go-task -- init
 nix run nixpkgs#go-task -- switch -- --verbose
-
-nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
-nix-channel --update nixpkgs
 ```
 
 ## Install - NixOS
@@ -34,21 +29,91 @@ sudo nano /etc/nixos/configuration.nix
 sudo nixos-rebuild switch
 
 nix run nixpkgs#git clone https://github.com/blesswinsamuel/dotfiles
+cd dotfiles
+task set-host-id -- hp-laptop   # or hp-chromebox, do-cloud-dev, …
 
 nix run nixpkgs#go-task -- init # first run
 ```
 
+## Install - Ubuntu (work-management-droplet)
+
+NixOS cannot be installed on this host. Use the home tool (+ mise) only:
+
+```bash
+git clone https://github.com/blesswinsamuel/dotfiles
+cd dotfiles
+task set-host-id -- work-management-droplet
+# Install mise: https://mise.jdx.dev/getting-started.html
+task run-home
+```
+
+See [hosts/work-management-droplet/README.md](hosts/work-management-droplet/README.md).
+
+## Host identity
+
+Repo configs use **logical host ids**, not OS hostnames/serials:
+
+| Logical ID | Role |
+| ---------- | ---- |
+| `mac-studio` | Personal Mac (nix-darwin) |
+| `work-laptop` | Work Mac (nix-darwin) |
+| `hp-laptop` | Personal Linux laptop (NixOS) |
+| `hp-chromebox` | Personal Linux desktop (NixOS) |
+| `do-cloud-dev` | Personal DO cloud NixOS |
+| `work-management-droplet` | Work Ubuntu droplet (home tool only) |
+
+Resolution order for `go run .` and Taskfile:
+
+1. `DOTFILES_HOST` env override
+2. `~/.config/dotfiles/host-id` (one line, e.g. `mac-studio`)
+3. Fail with a clear error
+
+```bash
+task set-host-id -- mac-studio
+# or
+mkdir -p ~/.config/dotfiles && echo mac-studio > ~/.config/dotfiles/host-id
+```
+
+NixOS hosts set `networking.hostName` to the same logical id. nix-darwin always uses `--flake .#$(host-id)` so work Mac serial names never need to live in git.
+
 ## Architecture
 
-This repo uses [nix-darwin](https://github.com/nix-darwin/nix-darwin) / NixOS for system packages, a custom Go tool for dotfiles, and Homebrew Brewfiles for macOS GUI apps. Home Manager was tried briefly (Jan–Aug 2024) and removed.
+This repo uses [nix-darwin](https://github.com/nix-darwin/nix-darwin) / NixOS for system packages, a custom Go tool for dotfiles, Homebrew Brewfiles for macOS GUI apps, and [mise](https://mise.jdx.dev/) for language/AI CLI runtimes. Home Manager was tried briefly (Jan–Aug 2024) and removed.
 
 | Layer | Tool | Responsibility |
 | ----- | ---- | ---------------- |
-| System packages | [flake.nix](flake.nix) + [commons/commons.nix](commons/commons.nix) | CLI tools, shells, fonts via `users.users.<name>.packages` and `environment.systemPackages` |
-| Dotfiles | [home.yaml](home.yaml) + [main.go](main.go) | Symlink/copy configs into `$HOME`; age-templated secrets; macOS dock and default apps |
-| GUI / macOS apps | per-host `Brewfile` (symlinked by `home.yaml`) | Casks, taps, mas; `homebrew.enable = false` in [commons/darwin-commons.nix](commons/darwin-commons.nix) |
+| System packages | [flake.nix](flake.nix) + commons modules | CLI tools, shells, fonts, OS services |
+| Dotfiles | [home.yaml](home.yaml) + [main.go](main.go) | Symlink/copy configs; age secrets; dock / default apps |
+| GUI / macOS apps | per-host `Brewfile` | Casks, taps, mas; `homebrew.enable = false` in [commons/darwin.nix](commons/darwin.nix) |
+| Runtimes | [home/mise/config.toml](home/mise/config.toml) | Node, Go, Python, Terraform, AI CLIs, etc. |
 
-`task switch` runs `darwin-rebuild`/`nixos-rebuild`, then `task run-home` (see [Taskfile.yaml](Taskfile.yaml)).
+`task switch` runs `darwin-rebuild`/`nixos-rebuild` (skipped for home-only hosts), then `task run-home`.
+
+### Profile / module layers
+
+Merge order (home tool and Nix imports share this mental model):
+
+1. `commons` — everything
+2. `commons-darwin` / `commons-linux` — OS-only
+3. `personal` / `work` — realm (secrets / identity)
+4. `personal-darwin` / `personal-linux` / `work-darwin` / `work-linux`
+5. `hosts.<logical-id>` — dock, Brewfile, host-only packages
+
+Nix layout:
+
+```text
+commons/commons.nix
+commons/darwin.nix
+commons/linux.nix                 # NixOS desktop base (Plasma, users, …)
+commons/personal-darwin.nix
+commons/personal-linux.nix        # Tailscale on personal NixOS
+commons/personal-linux-desktop.nix
+commons/work-darwin.nix
+commons/work-linux.nix
+hosts/<logical-id>/
+```
+
+Personal NixOS hosts (`hp-laptop`, `hp-chromebox`, `do-cloud-dev`) enable Tailscale via `personal-linux`. One-time: `sudo tailscale up`.
 
 ### Why not Home Manager?
 
@@ -79,7 +144,7 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-Minimal headless NixOS image for DigitalOcean, plus Taskfile helpers that use `doctl`.
+Minimal headless NixOS image for DigitalOcean, plus Taskfile helpers that use `doctl`. Flake attr: `do-cloud-dev`.
 
 **Prereqs:** `doctl` (`doctl auth init`), `jq`, `rsync`, and a DO SSH key fingerprint/ID:
 

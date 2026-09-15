@@ -1,5 +1,5 @@
 profiles:
-  common:
+  commons:
     files:
       .config/fish/config.fish: { source: ./home/fish/config.fish }
       .config/fish/aliases.fish: { source: ./home/fish/aliases.fish }
@@ -40,7 +40,7 @@ profiles:
       .cursor/skills: { source: ./home/agents/skills }
       # Agent Skills standard — shared across all harnesses
       .agents/skills: { source: ./home/agents/skills }
-  darwin:
+  commons-darwin:
     files:
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }
       .hushlogin: { source: ./home/hushlogin/hushlogin }
@@ -98,12 +98,24 @@ profiles:
         #   # Hide spotlight icon
         #   NSStatusItem Visible Item-0: 0
         # com.apple.custommenu.apps: [NSGlobalDomain]
-  linux:
+  commons-linux:
+  personal:
+    secretProfile: personal
+  work:
+    secretProfile: work
+  personal-darwin:
+  personal-linux:
+  work-darwin:
+  work-linux:
 hosts:
   hp-chromebox:
-    secretProfile: personal
-  Blesswins-Mac-Studio:
-    secretProfile: personal
+    realm: personal
+  hp-laptop:
+    realm: personal
+  do-cloud-dev:
+    realm: personal
+  mac-studio:
+    realm: personal
     files:
       .Brewfile: { source: ./hosts/mac-studio/Brewfile }
     macos:
@@ -184,12 +196,12 @@ hosts:
           - { path: "/Applications/", section: "others", options: { sort: datemodified, view: grid, display: folder } }
           - { path: "$HOME/Downloads/", section: "others", options: { sort: dateadded, view: fan, display: stack } }
           - { path: "/Volumes/BleSSD/Screenshots/", section: "others", options: { sort: datemodified, view: grid, display: stack } }
-  bsamuel-dev:
-    secretProfile: work
-  RQHFR2KPF2:
-    secretProfile: work
+  work-management-droplet:
+    realm: work
+  work-laptop:
+    realm: work
     files:
-      .Brewfile: { source: ./hosts/mbp-work/Brewfile }
+      .Brewfile: { source: ./hosts/work-laptop/Brewfile }
     macos:
       dock:
         entries:

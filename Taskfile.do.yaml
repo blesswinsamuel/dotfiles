@@ -192,7 +192,7 @@ tasks:
         rm -rf /root/nixos-do-image
         mkdir -p /root/nixos-do-image
         nix run nixpkgs#nixos-rebuild -- build-image \
-          --flake .#do-dev \
+          --flake .#do-cloud-dev \
           --image-variant digital-ocean
         # nixos-rebuild build-image writes under ./result by default
         img=\$(find -L result -type f \\( -name '*.qcow2.gz' -o -name '*.qcow2.bz2' \\) | head -n1)

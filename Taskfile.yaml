@@ -18,9 +18,31 @@ vars:
           *)          machine="UNKNOWN:${unameOut}"
       esac
       echo ${machine}
-  HOSTNAME: { sh: "echo ${HOSTNAME:-$(hostname)}" }
+  HOST_ID:
+    sh: |
+      if [ -n "${DOTFILES_HOST:-}" ]; then
+        echo "$DOTFILES_HOST"
+      elif [ -f "${HOME}/.config/dotfiles/host-id" ]; then
+        tr -d '[:space:]' < "${HOME}/.config/dotfiles/host-id"
+      else
+        echo ""
+      fi
+  # Hosts that are not NixOS / nix-darwin (home tool only)
+  HOME_ONLY_HOSTS: work-management-droplet
 
 tasks:
+  _require-host-id:
+    internal: true
+    cmds:
+      - |
+        if [ -z "{{ .HOST_ID }}" ]; then
+          echo "Host id not set." >&2
+          echo "Create ~/.config/dotfiles/host-id with a logical id (e.g. mac-studio)," >&2
+          echo "or set DOTFILES_HOST. See README § Host identity." >&2
+          exit 1
+        fi
+        echo "Using host id: {{ .HOST_ID }}"
+
   print-config:
     cmds:
       - age -d -i <(op read "{{ .OP_SSH_KEY_REF }}") ./config.yaml.age
@@ -38,34 +60,70 @@ tasks:
           curl -s https://github.com/blesswinsamuel.keys | age -R - /tmp/config.yaml > ./config.yaml.age
         fi
 
-  darwin-init:
+  set-host-id:
+    desc: Write ~/.config/dotfiles/host-id (pass HOST_ID=mac-studio)
     cmds:
-      - nix run nix-darwin -- switch --flake ~/dotfiles {{ .CLI_ARGS }}
+      - |
+        if [ -z "{{ .HOST_ID }}" ] && [ -z "{{ .CLI_ARGS }}" ]; then
+          echo "Usage: task set-host-id -- mac-studio" >&2
+          echo "  or:  DOTFILES_HOST=mac-studio task set-host-id" >&2
+          exit 1
+        fi
+        id="{{ .CLI_ARGS }}"
+        id="$(echo "$id" | tr -d '[:space:]')"
+        if [ -z "$id" ]; then
+          id="{{ .HOST_ID }}"
+        fi
+        mkdir -p "${HOME}/.config/dotfiles"
+        echo "$id" > "${HOME}/.config/dotfiles/host-id"
+        echo "Wrote ${HOME}/.config/dotfiles/host-id → $id"
+
+  darwin-init:
+    deps: [_require-host-id]
+    cmds:
+      - nix run nix-darwin -- switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
       # - chsh -s /run/current-system/sw/bin/fish
 
   init:
+    deps: [_require-host-id]
     cmds:
       - |
         {{- if eq .MACHINE "Mac" }}
-        nix run nix-darwin -- switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
+        nix run nix-darwin -- switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
-        sudo nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
+        case " {{ .HOME_ONLY_HOSTS }} " in
+          *" {{ .HOST_ID }} "*)
+            echo "Host {{ .HOST_ID }} is home-tool only (no nixos-rebuild)."
+            ;;
+          *)
+            sudo nix run nixpkgs#nixos-rebuild -- switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
+            ;;
+        esac
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
       # - chsh -s /run/current-system/sw/bin/fish
 
   run-home:
+    deps: [_require-host-id]
     cmds:
       - go run . -private-key-file <(op read "{{ .OP_SSH_KEY_REF }}")
 
   switch:
+    deps: [_require-host-id]
     cmds:
       - |-
         {{- if eq .MACHINE "Mac" }}
-        sudo darwin-rebuild switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
+        sudo darwin-rebuild switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
         {{- else if eq .MACHINE "Linux" }}
-        sudo nixos-rebuild switch --flake ~/dotfiles#{{.HOSTNAME}} {{ .CLI_ARGS }}
+        case " {{ .HOME_ONLY_HOSTS }} " in
+          *" {{ .HOST_ID }} "*)
+            echo "Host {{ .HOST_ID }} is home-tool only; skipping nixos-rebuild."
+            ;;
+          *)
+            sudo nixos-rebuild switch --flake ~/dotfiles#{{.HOST_ID}} {{ .CLI_ARGS }}
+            ;;
+        esac
         {{- else }}
         echo "Unsupported OS"
         {{- end }}
@@ -86,6 +144,14 @@ tasks:
     desc: Check system health (brew drift, nix flake staleness, mise, git status)
     cmds:
       - |
+        echo "=== Host id ==="
+        if [ -n "{{ .HOST_ID }}" ]; then
+          echo "{{ .HOST_ID }}"
+        else
+          echo "(not set — run: task set-host-id -- <logical-id>)"
+        fi
+      - |
+        echo ""
         echo "=== Brew bundle - missing (would be installed) ==="
         brew bundle check --verbose 2>&1 | grep -v "^The Brewfile" || true
         echo ""

@@ -33,6 +33,7 @@ type Profile struct {
 	Files         map[string]File `yaml:"files"`
 	MacOS         MacOS           `yaml:"macos"`
 	SecretProfile string          `yaml:"secretProfile"`
+	Realm         string          `yaml:"realm"`
 }
 
 func (p *Profile) Merge(p2 Profile) {
@@ -41,10 +42,13 @@ func (p *Profile) Merge(p2 Profile) {
 	} else {
 		maps.Copy(p.Files, p2.Files)
 	}
-	if p.SecretProfile == "" {
+	if p2.SecretProfile != "" {
 		p.SecretProfile = p2.SecretProfile
 	}
-	if p.MacOS.Dock.Entries == nil {
+	if p2.Realm != "" {
+		p.Realm = p2.Realm
+	}
+	if p2.MacOS.Dock.Entries != nil {
 		p.MacOS.Dock.Entries = p2.MacOS.Dock.Entries
 	}
 	if p.MacOS.DefaultApplications == nil {
@@ -102,6 +106,34 @@ func getComputerName() (string, error) {
 		return "", nil
 	default:
 		return "", nil
+	}
+}
+
+func hostIDPath() string {
+	return path.Join(os.Getenv("HOME"), ".config", "dotfiles", "host-id")
+}
+
+func resolveHostID() (string, error) {
+	if v := strings.TrimSpace(os.Getenv("DOTFILES_HOST")); v != "" {
+		return v, nil
+	}
+	data, err := os.ReadFile(hostIDPath())
+	if err != nil {
+		if os.IsNotExist(err) {
+			return "", fmt.Errorf("host id not set: create %s with a logical host id (e.g. mac-studio), or set DOTFILES_HOST", hostIDPath())
+		}
+		return "", err
+	}
+	id := strings.TrimSpace(string(data))
+	if id == "" {
+		return "", fmt.Errorf("host id file %s is empty", hostIDPath())
+	}
+	return id, nil
+}
+
+func mergeProfileLayer(profile *Profile, profiles map[string]Profile, name string) {
+	if p, ok := profiles[name]; ok {
+		profile.Merge(p)
 	}
 }
 
@@ -168,24 +200,36 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msgf("failed to get computer name")
 	}
-	log.Info().Str("os", runtimeOS).Str("hostname", hostname).Str("computerName", computerName).Msgf("starting")
-	// profiles := []Profile{}
-	// profiles = append(profiles, config.Profiles["common"])
-	// profiles = append(profiles, config.Profiles[runtimeOS])
-	// if profile, ok := config.Hosts[hostname]; ok {
-	// 	profiles = append(profiles, profile)
-	// } else {
-	// 	profiles = append(profiles, config.Hosts[computerName])
-	// }
-	profile := config.Profiles["common"]
-	if p, ok := config.Profiles[runtimeOS]; ok {
-		profile.Merge(p)
+	hostID, err := resolveHostID()
+	if err != nil {
+		log.Fatal().Err(err).Msgf("failed to resolve host id")
 	}
-	if p, ok := config.Hosts[hostname]; ok {
-		profile.Merge(p)
-	} else if p, ok := config.Hosts[computerName]; ok {
-		profile.Merge(p)
+	hostProfile, ok := config.Hosts[hostID]
+	if !ok {
+		log.Fatal().Str("hostID", hostID).Msgf("unknown host id: add it under hosts: in home.yaml")
 	}
+	realm := hostProfile.Realm
+	if realm == "" {
+		realm = hostProfile.SecretProfile
+	}
+	if realm == "" {
+		log.Fatal().Str("hostID", hostID).Msgf("host is missing realm (personal|work)")
+	}
+	log.Info().
+		Str("os", runtimeOS).
+		Str("hostID", hostID).
+		Str("realm", realm).
+		Str("hostname", hostname).
+		Str("computerName", computerName).
+		Msgf("starting")
+
+	// commons → commons-{os} → {realm} → {realm}-{os} → hosts.<id>
+	profile := Profile{}
+	mergeProfileLayer(&profile, config.Profiles, "commons")
+	mergeProfileLayer(&profile, config.Profiles, "commons-"+runtimeOS)
+	mergeProfileLayer(&profile, config.Profiles, realm)
+	mergeProfileLayer(&profile, config.Profiles, realm+"-"+runtimeOS)
+	profile.Merge(hostProfile)
 
 	secretConfigAll, err := getSecretConfig()
 	if err != nil {
@@ -275,6 +319,7 @@ func main() {
 				if err := t.Execute(buf, map[string]any{
 					"Secrets":      secrets,
 					"OS":           runtime.GOOS,
+					"HostID":       hostID,
 					"Hostname":     hostname,
 					"ComputerName": computerName,
 				}); err != nil {

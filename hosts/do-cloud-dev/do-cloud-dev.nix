@@ -4,7 +4,7 @@
     (modulesPath + "/virtualisation/digital-ocean-config.nix")
   ];
 
-  networking.hostName = "do-dev";
+  networking.hostName = "do-cloud-dev";
 
   users.mutableUsers = false;
 
