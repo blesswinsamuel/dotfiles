@@ -7,7 +7,8 @@ vars:
   IMAGE_STATE: "{{ .STATE_DIR }}/image.json"
   DO_REGION: '{{ env "DO_REGION" | default "nyc3" }}'
   DO_BUILD_SIZE: '{{ env "DO_BUILD_SIZE" | default "s-4vcpu-8gb" }}'
-  DO_DEV_SIZE: '{{ env "DO_DEV_SIZE" | default "s-2vcpu-4gb" }}'
+  # DO_DEV_SIZE: '{{ env "DO_DEV_SIZE" | default "s-2vcpu-4gb" }}'
+  DO_DEV_SIZE: '{{ env "DO_DEV_SIZE" | default "s-4vcpu-8gb" }}'
   DO_SSH_KEY: '{{ env "DO_SSH_KEY" | default "" }}'
   DO_BUILD_IMAGE: '{{ env "DO_BUILD_IMAGE" | default "ubuntu-24-04-x64" }}'
   DO_BUILD_NAME: '{{ env "DO_BUILD_NAME" | default "nixos-build" }}'
