@@ -79,6 +79,8 @@ NixOS hosts set `networking.hostName` to the same logical id. nix-darwin always 
 
 Source of truth is [`config.yaml.age`](config.yaml.age) in the repo (git email, signing keys, Wakatime). Decrypt uses this machine’s SSH private key from 1Password; the Taskfile picks the item from host **realm** (`personal` → Personal SSH Key, `work` → Work SSH Key). Sign in to the matching 1Password account on that machine.
 
+For the Taskfile only, realm is inferred from host-id without extra tools: `work-laptop` and `work-management-droplet` are work; any other host-id is personal. (`home.yaml` `hosts.*.realm` remains what the Go home tool uses.)
+
 To avoid unlocking 1Password on every apply, decrypt once into a local cache:
 
 ```bash

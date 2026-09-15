@@ -25,17 +25,14 @@ vars:
         echo ""
       fi
   REALM:
+    # Taskfile-only: for age SSH key selection. Keep work hosts in sync when adding one.
+    # home.yaml hosts.*.realm remains source of truth for the Go home tool.
     sh: |
-      if [ -z "{{ .HOST_ID }}" ]; then
-        echo ""
-        exit 0
-      fi
-      realm=$(yq -r '.hosts["{{ .HOST_ID }}"].realm // .hosts["{{ .HOST_ID }}"].secretProfile // ""' home.yaml)
-      if [ -z "$realm" ] || [ "$realm" = "null" ]; then
-        echo "unknown host id or missing realm: {{ .HOST_ID }}" >&2
-        exit 1
-      fi
-      echo "$realm"
+      case "{{ .HOST_ID }}" in
+        "") echo "" ;;
+        work-laptop|work-management-droplet) echo work ;;
+        *) echo personal ;;
+      esac
   OP_SSH_KEY_REF:
     sh: |
       case "{{ .REALM }}" in
