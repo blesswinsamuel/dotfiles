@@ -13,8 +13,11 @@ in
     x = 1920;
     y = 1080;
   };
+  # Default 96 DPI makes 1080p look tiny over VNC on Retina Macs.
+  services.xserver.dpi = 144;
   services.xserver.displayManager.sessionCommands = ''
     ${lib.getExe pkgs.xrandr} --output Virtual-1 --mode 1920x1080 || true
+    ${pkgs.xfconf}/bin/xfconf-query -c xsettings -p /Xft/DPI -s 144 --create -t int || true
   '';
   services.displayManager.autoLogin = {
     enable = true;
