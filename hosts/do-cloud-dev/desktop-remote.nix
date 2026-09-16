@@ -19,6 +19,9 @@ assert lib.assertMsg (desktop == "xfce" || desktop == "hyprland")
   programs._1password-gui.enable = true;
   programs._1password-gui.package = pkgsUnstable._1password-gui;
 
+  programs.firefox.enable = true;
+  programs.firefox.package = pkgsUnstable.firefox;
+
   hardware.graphics.enable = true;
 
   # Remoting only over Tailscale (DO cloud firewall already blocks public inbound).
@@ -48,6 +51,7 @@ assert lib.assertMsg (desktop == "xfce" || desktop == "hyprland")
     rustdesk
     jq
     openssl
+    pkgsUnstable.google-chrome
   ];
 
   environment.etc."do-cloud-dev/rustdesk/RustDesk2.toml".source =
