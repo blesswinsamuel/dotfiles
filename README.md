@@ -158,7 +158,7 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-Bootstrap custom image via a small Go CLI (`go run ./do`), then converge with the full flake on the droplet.
+Bootstrap custom image via a small Go CLI (`go -C do run .`) + DigitalOcean, then converge with the full flake on the droplet.
 
 | Piece | Role |
 | --- | --- |

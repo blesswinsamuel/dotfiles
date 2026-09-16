@@ -11,46 +11,46 @@ tasks:
   build-host:up:
     desc: Create Ubuntu droplet used as remote NixOS image builder
     cmds:
-      - go run ./do build-host up
+      - go -C do run . build-host up
 
   build-host:down:
     desc: Destroy the build droplet and remove local state
     cmds:
-      - go run ./do build-host down
+      - go -C do run . build-host down
 
   build-host:ssh:
     desc: SSH into the build droplet
     interactive: true
     cmds:
-      - go run ./do build-host ssh {{.CLI_ARGS}}
+      - go -C do run . build-host ssh {{.CLI_ARGS}}
 
   image:build:
     desc: Rsync do/nix, build bootstrap image, serve via miniserve, register DO custom image
     cmds:
-      - go run ./do image build
+      - go -C do run . image build
 
   image:build-and-teardown:
     desc: image:build then destroy the build droplet
     cmds:
-      - go run ./do image build --teardown
+      - go -C do run . image build --teardown
 
   dev:up:
     desc: Create a dev droplet from the custom image
     cmds:
-      - go run ./do dev up
+      - go -C do run . dev up
 
   dev:down:
     desc: Destroy the dev droplet (and firewall if present)
     cmds:
-      - go run ./do dev down
+      - go -C do run . dev down
 
   dev:ssh:
     desc: SSH into the dev droplet
     interactive: true
     cmds:
-      - go run ./do dev ssh {{.CLI_ARGS}}
+      - go -C do run . dev ssh {{.CLI_ARGS}}
 
   dev:block-ports:
     desc: Cloud firewall — only UDP 41641 inbound (Tailscale direct)
     cmds:
-      - go run ./do dev block-ports
+      - go -C do run . dev block-ports
