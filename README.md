@@ -174,7 +174,7 @@ Bootstrap custom image via a small Go CLI (`go run ./do`) + DigitalOcean Spaces,
 export SPACES_BUCKET='your-bucket'
 export SPACES_KEY='...'
 export SPACES_SECRET='...'
-# optional: SPACES_REGION (default sgp1), DO_REGION (default blr1)
+# Taskfile sets DO_REGION=blr1 and SPACES_REGION=sgp1
 ```
 
 ```bash
