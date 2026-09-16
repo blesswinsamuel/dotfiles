@@ -7,6 +7,15 @@ in
   services.xserver.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
+  # Headless virtio default is 1024x768; prefer 1080p for remoting.
+  services.xserver.resolutions = [{ x = 1920; y = 1080; }];
+  services.xserver.virtualScreen = {
+    x = 1920;
+    y = 1080;
+  };
+  services.xserver.displayManager.sessionCommands = ''
+    ${lib.getExe pkgs.xrandr} --output Virtual-1 --mode 1920x1080 || true
+  '';
   services.displayManager.autoLogin = {
     enable = true;
     user = username;
