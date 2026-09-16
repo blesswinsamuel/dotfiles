@@ -168,11 +168,9 @@ Bootstrap custom image via a small Go CLI (`go run ./do`) + DigitalOcean Spaces,
 
 **Prereqs:** Go, `rsync`, `ssh`, 1Password CLI (`op`), a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket.
 
-`task do:*` sets `DIGITALOCEAN_ACCESS_TOKEN` from 1Password (`op://Dev/DigitalOcean Personal Access Token/credential` on `my.1password.com`).
+`task do:*` sets `DIGITALOCEAN_ACCESS_TOKEN` from 1Password and `DO_SSH_KEY` to the personal SSH key fingerprint.
 
 ```bash
-export DO_SSH_KEY='<fingerprint-or-id>'   # doctl compute ssh-key list
-
 export SPACES_BUCKET='your-bucket'
 export SPACES_KEY='...'
 export SPACES_SECRET='...'

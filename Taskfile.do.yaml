@@ -4,6 +4,7 @@ version: 3
 env:
   DIGITALOCEAN_ACCESS_TOKEN:
     sh: op read --account my.1password.com "op://Dev/DigitalOcean Personal Access Token/credential"
+  DO_SSH_KEY: "c0:77:6d:9a:c5:24:4e:d6:7e:b8:97:9f:08:4f:03:51"
 
 tasks:
   build-host:up:
