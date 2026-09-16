@@ -130,7 +130,7 @@ tasks:
           go run .
         else
           echo "go not on PATH; using nixpkgs go…"
-          nix shell nixpkgs#go -c go run .
+          CGO_ENABLED=0 nix shell nixpkgs#go -c go run .
         fi
 
   switch:
