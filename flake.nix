@@ -55,21 +55,6 @@
           ] ++ realmModules systemConfig.realm "linux"
           ++ extraModules;
         };
-      # Bootstrap images skip heavy commons packages; converge with do-cloud-dev after boot.
-      nixosBootstrapSystem = { system, extraModules ? [ ], systemConfig }: hostName:
-        let
-          pkgsUnstable = genPkgs system nixpkgs-unstable;
-          pkgsMaster = genPkgs system nixpkgs-master;
-          pkgsStable = genPkgs system nixpkgs-stable;
-        in
-        nixpkgs-stable.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit self pkgsUnstable pkgsMaster pkgsStable inputs systemConfig; };
-          modules = [
-            ./commons/commons-bootstrap.nix
-          ] ++ realmModules systemConfig.realm "linux"
-          ++ extraModules;
-        };
       doCloudSystemConfig = {
         username = "blesswinsamuel";
         realm = "personal";
@@ -138,11 +123,6 @@
             rootHashedPassword = "$y$j9T$Qnv1FPJ76Q2.nY6U2d/m..$JzPVeJwn9X/q9K2OjcZMVXqke/AJ7DuLmAzgKX6oQR4"; # nix run nixpkgs#mkpasswd --command 'mkpasswd xxx'
             userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
           };
-        };
-        do-cloud-bootstrap = nixosBootstrapSystem {
-          system = "x86_64-linux";
-          extraModules = [ ./hosts/do-cloud-dev/do-cloud-dev.nix ];
-          systemConfig = doCloudSystemConfig;
         };
         do-cloud-dev = nixosSystem {
           system = "x86_64-linux";

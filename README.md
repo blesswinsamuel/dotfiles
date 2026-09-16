@@ -63,7 +63,6 @@ Repo configs use **logical host ids**, not OS hostnames/serials:
 | `hp-laptop` | Personal Linux laptop (NixOS) |
 | `hp-chromebox` | Personal Linux desktop (NixOS) |
 | `do-cloud-dev` | Personal DO cloud NixOS (full config after switch) |
-| `do-cloud-bootstrap` | Slim DO custom-image bootstrap (then switch to `do-cloud-dev`) |
 | `work-management-droplet` | Work Ubuntu droplet (home tool only) |
 
 Identity comes from `~/.config/dotfiles/host-id` (one line, e.g. `mac-studio`). Missing or empty → fail with a clear error.
@@ -159,46 +158,44 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-Bootstrap custom image via DigitalOcean Spaces, then converge with the full flake on the droplet. Taskfile helpers use `doctl`.
+Bootstrap custom image via a small Go CLI (`go run ./do`) + DigitalOcean Spaces, then converge with the full flake on the droplet.
 
-| Flake attr | Role |
+| Piece | Role |
 | --- | --- |
-| `do-cloud-bootstrap` | Slim image baked into the DO custom image (SSH, flakes, Tailscale; no heavy commons packages) |
-| `do-cloud-dev` | Full system — run `task switch` after the droplet is up |
+| [`do/nix`](do/nix) | Minimal bootstrap flake (SSH, flakes, Tailscale) — rsynced to the builder |
+| `do-cloud-dev` | Full system in the root flake — run `task switch` after the droplet is up |
+| [`do/`](do) Go module | Orchestrates droplets, Spaces upload, image import (godo + AWS SDK) |
 
-**Prereqs:** `doctl` (`doctl auth init`), `jq`, `rsync`, a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket with API keys:
+**Prereqs:** Go, `rsync`, `ssh`/`scp`, a DO API token, a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket:
 
 ```bash
-doctl compute ssh-key list
-export DO_SSH_KEY='<fingerprint-or-id>'
+export DIGITALOCEAN_ACCESS_TOKEN='...'
+export DO_SSH_KEY='<fingerprint-or-id>'   # doctl compute ssh-key list
 
-# Spaces (S3-compatible). Spaces regions ≠ droplet regions (no blr1 Spaces).
 export SPACES_BUCKET='your-bucket'
 export SPACES_KEY='...'
 export SPACES_SECRET='...'
-# optional: SPACES_REGION (default sgp1), SPACES_ENDPOINT
+# optional: SPACES_REGION (default sgp1), DO_REGION (default blr1)
 ```
 
-Optional env vars: `DO_REGION` (default `blr1`), `DO_BUILD_SIZE` (default `s-4vcpu-8gb`), `DO_DEV_SIZE` (default `s-4vcpu-8gb`), `DO_IMAGE_NAME` (default `nixos-do-dev`).
-
 ```bash
-# 1) Ephemeral Ubuntu builder (IP/id written to .local/do/build-host.json)
+# 1) Ephemeral Ubuntu builder
 task do:build-host:up
 
-# 2) Build bootstrap image on the builder, upload to Spaces, register as custom image
+# 2) Rsync do/nix → build → Spaces → DO custom image
 task do:image:build
-# or build + destroy the builder when done:
+# or also destroy the builder when done:
 task do:image:build-and-teardown
 
-# 3) Provision a lasting dev droplet from the custom image
+# 3) Dev droplet from the custom image
 task do:dev:up
 task do:dev:ssh   # then: sudo tailscale up
 
-# 4) Converge to the full config (commons packages, home, etc.)
+# 4) Converge to the full config
 task set-host-id -- do-cloud-dev
 task switch
 
-# 5) Block public inbound except UDP 41641 (Tailscale direct); access via Tailscale only
+# 5) Block public inbound except UDP 41641 (Tailscale)
 task do:dev:block-ports
 
 # Tear down
@@ -206,7 +203,7 @@ task do:dev:down
 task do:build-host:down   # if still running
 ```
 
-State under `.local/do/` is gitignored. Image builds on DO droplets are slow (no nested KVM / QEMU TCG). The bootstrap image keeps the custom-image payload small; Spaces avoids flaky HTTP from the builder droplet.
+State under `.local/do/` is gitignored. Only `do/nix` is copied to the builder (not the whole repo). Image builds on DO droplets are slow (no nested KVM).
 
 ## Brew commands
 
