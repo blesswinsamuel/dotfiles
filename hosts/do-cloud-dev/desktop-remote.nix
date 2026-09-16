@@ -33,6 +33,8 @@ assert lib.assertMsg (desktop == "xfce" || desktop == "hyprland")
     # Wayland needs this; harmless on X11 XFCE.
     capSysAdmin = true;
     openFirewall = false;
+    # Web UI over Tailscale is not localhost; CSRF blocks PIN submit otherwise.
+    settings.csrf_allowed_origins = "https://do-cloud-dev,https://do-cloud-dev:47990";
   };
 
   security.rtkit.enable = true;
