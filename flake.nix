@@ -118,7 +118,10 @@
         };
         do-cloud-dev = nixosSystem {
           system = "x86_64-linux";
-          extraModules = [ ./hosts/do-cloud-dev/do-cloud-dev.nix ];
+          extraModules = [
+            ./hosts/do-cloud-dev/do-cloud-dev.nix
+            ./hosts/do-cloud-dev/desktop-remote.nix
+          ];
           systemConfig = {
             username = "blesswinsamuel";
             realm = "personal";

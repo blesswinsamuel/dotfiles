@@ -107,3 +107,35 @@ Optional overrides: `DO_BUILD_SIZE`, `DO_DEV_SIZE`, `DO_IMAGE_NAME`, `IMAGE_HTTP
 **Resume:** re-running `image build` reuses a remote qcow2 if present and continues waiting on a `pending`/`new` custom image. Use `--force` to rebuild and recreate.
 
 State lives under `.local/do/` (gitignored). Builds on DO droplets are slow (no nested KVM).
+
+## Remote desktop (Hyprland + Quickshell)
+
+After a full `task switch` / `nixos-rebuild switch --flake .#do-cloud-dev`, the droplet auto-logs into an Omarchy-inspired **Hyprland** session with a **Quickshell** bar on a headless virtual monitor. Remoting is **Tailscale-only** (keep `task do:dev:block-ports`); do not open these ports on the DO cloud firewall.
+
+| Protocol | Client (Mac) | Connect |
+| --- | --- | --- |
+| Sunshine (best latency) | [Moonlight](https://moonlight-stream.org/) | Tailscale IP / hostname; open `https://<tailscale-ip>:47990` once to set credentials, then pair with PIN |
+| RustDesk | RustDesk (Brewfile on mac-studio) | **Direct IP** → Tailscale IP (port **21118**). No ID/relay. |
+| VNC (fallback) | TigerVNC / any VNC viewer | `tailscale-ip:5900` (wayvnc) |
+
+Latency preference: Sunshine → RustDesk (direct) → wayvnc. Prefer a Tailscale **direct** path (`tailscale status`); DERP relay adds lag. DO has no GPU, so Sunshine uses CPU encode.
+
+### RustDesk (no relay)
+
+Host config seeds direct-IP mode and points rendezvous/relay at `127.0.0.1` (see `hosts/do-cloud-dev/config/rustdesk/`). After first graphical login, set a permanent password on the droplet:
+
+```bash
+rustdesk --password 'your-secret'
+```
+
+From Mac RustDesk, put the droplet Tailscale IP in the connect field (not the public ID). Traffic stays inside Tailscale; no `hbbs`/`hbbr`.
+
+### Checks on the droplet
+
+```bash
+systemctl status greetd
+systemctl --user status sunshine wayvnc rustdesk
+hyprctl monitors   # expect HEADLESS-REMOTE
+```
+
+RustDesk on Wayland/Hyprland can be flaky; use Sunshine if capture fails.

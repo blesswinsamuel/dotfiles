@@ -1,0 +1,12 @@
+# Direct IP over Tailscale only — no public rendezvous/relay.
+# Set a permanent password after first graphical login (Sunshine/wayvnc), e.g.:
+#   rustdesk --password 'your-secret'
+# Then connect from Mac RustDesk to the droplet Tailscale IP (port 21118).
+
+[options]
+direct-server = 'Y'
+direct-access-port = '21118'
+verification-method = 'use-permanent-password'
+custom-rendezvous-server = '127.0.0.1'
+relay-server = '127.0.0.1'
+allow-remote-config-modification = 'N'
