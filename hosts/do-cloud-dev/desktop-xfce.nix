@@ -22,7 +22,7 @@ in
   environment.systemPackages = with pkgs; [
     x11vnc
     tigervnc
-    xfce.xfce4-terminal
+    xfce4-terminal
   ];
 
   environment.etc."xdg/autostart/x11vnc-do-cloud.desktop".text = ''
