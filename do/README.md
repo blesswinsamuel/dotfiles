@@ -112,7 +112,7 @@ State lives under `.local/do/` (gitignored). Builds on DO droplets are slow (no 
 
 After a full `task switch` / `nixos-rebuild switch --flake .#do-cloud-dev`, the droplet auto-logs into **XFCE** (includes **1Password** CLI + GUI). Remoting is **Tailscale-only** (keep `task do:dev:block-ports`); do not open these ports on the DO cloud firewall.
 
-To switch back to Hyprland + Quickshell + wayvnc later, set `desktop = "hyprland";` in [`hosts/do-cloud-dev/desktop-remote.nix`](../hosts/do-cloud-dev/desktop-remote.nix) and rebuild.
+To switch back to Hyprland + Quickshell + wayvnc later, set `desktop = "hyprland";` in [`hosts/do-cloud-dev/desktop-remote.nix`](../hosts/do-cloud-dev/desktop-remote.nix) and rebuild. Desktop-specific config lives in `desktop-xfce.nix` / `desktop-hyprland.nix`.
 
 | Protocol | Client (Mac) | Connect |
 | --- | --- | --- |
