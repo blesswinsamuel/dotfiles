@@ -129,6 +129,8 @@
               # cat ~/.ssh/id_ed25519.pub | pbcopy
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
             ];
+            # nix run nixpkgs#mkpasswd -- '<password>'
+            userHashedPassword = "$y$j9T$SAL/OxQEqDf5GxUBCqBuV1$9MEvZ0rD.UQ2DxNIW.NG/F3tosXARNLE.DNyebW6oH7";
           };
         };
       };

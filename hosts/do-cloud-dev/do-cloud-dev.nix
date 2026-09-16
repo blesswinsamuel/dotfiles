@@ -11,13 +11,14 @@
   users.users.${systemConfig.username} = {
     isNormalUser = true;
     description = "Blesswin Samuel";
+    hashedPassword = systemConfig.userHashedPassword;
     openssh.authorizedKeys.keys = systemConfig.authorizedKeys;
     extraGroups = [ "wheel" ];
   };
 
   users.users.root.openssh.authorizedKeys.keys = systemConfig.authorizedKeys;
 
-  # SSH-only access; no local password set.
+  # Password auth still disabled for SSH; password is for local/desktop login.
   security.sudo.wheelNeedsPassword = false;
 
   services.openssh.enable = true;
