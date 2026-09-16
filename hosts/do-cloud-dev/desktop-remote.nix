@@ -91,6 +91,7 @@ in
   ];
 
   # wayvnc shares the Hyprland headless output (VNC fallback).
+  # macOS Screen Sharing needs legacy DES auth (8-char password) — see wayvnc README.
   systemd.user.services.wayvnc = {
     description = "wayvnc (Hyprland / wlroots VNC)";
     after = [ "graphical-session.target" ];
@@ -101,6 +102,22 @@ in
         set -eu
         hyprctl=${pkgs.hyprland}/bin/hyprctl
         jq=${lib.getExe pkgs.jq}
+        openssl=${lib.getExe pkgs.openssl}
+        cfg="$HOME/.config/wayvnc/config"
+        mkdir -p "$HOME/.config/wayvnc"
+        if [ ! -f "$cfg" ]; then
+          # First 8 chars only matter for DES/macOS Screen Sharing.
+          pass="$("$openssl" rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 8)"
+          umask 077
+          cat > "$cfg" <<EOF
+address=0.0.0.0
+port=5900
+enable_auth=true
+password=$pass
+relax_encryption=true
+allow_broken_crypto=true
+EOF
+        fi
         # Wait briefly for HEADLESS-REMOTE from hyprland.conf exec-once.
         for _ in $(seq 1 30); do
           if "$hyprctl" -j monitors 2>/dev/null \
@@ -112,9 +129,9 @@ in
         out="$("$hyprctl" -j monitors \
           | "$jq" -r '[.[] | select(.name | test("HEADLESS"))][0].name // empty')"
         if [ -n "$out" ]; then
-          exec ${lib.getExe pkgs.wayvnc} -o "$out" 0.0.0.0 5900
+          exec ${lib.getExe pkgs.wayvnc} --config "$cfg" -o "$out"
         fi
-        exec ${lib.getExe pkgs.wayvnc} 0.0.0.0 5900
+        exec ${lib.getExe pkgs.wayvnc} --config "$cfg"
       '';
       Restart = "on-failure";
       RestartSec = 2;

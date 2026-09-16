@@ -116,9 +116,15 @@ After a full `task switch` / `nixos-rebuild switch --flake .#do-cloud-dev`, the 
 | --- | --- | --- |
 | Sunshine (best latency) | [Moonlight](https://moonlight-stream.org/) | Tailscale IP / hostname; open `https://<tailscale-ip>:47990` once to set credentials, then pair with PIN |
 | RustDesk | RustDesk (Brewfile on mac-studio) | **Direct IP** → Tailscale IP (port **21118**). No ID/relay. |
-| VNC (fallback) | TigerVNC / any VNC viewer | `tailscale-ip:5900` (wayvnc) |
+| VNC (fallback) | Screen Sharing / TigerVNC | `vnc://<tailscale-ip>` — password in `~/.config/wayvnc/config` on the droplet (8 chars; macOS DES auth) |
 
 Latency preference: Sunshine → RustDesk (direct) → wayvnc. Prefer a Tailscale **direct** path (`tailscale status`); DERP relay adds lag. DO has no GPU, so Sunshine uses CPU encode.
+
+wayvnc uses macOS-compatible legacy auth (`relax_encryption` / `allow_broken_crypto`). Password is generated once into `~/.config/wayvnc/config` (not in git). Show it with:
+
+```bash
+rg '^password=' ~/.config/wayvnc/config
+```
 
 ### RustDesk (no relay)
 
