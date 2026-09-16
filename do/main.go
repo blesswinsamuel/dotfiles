@@ -40,7 +40,7 @@ func main() {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, `Usage: go run ./do <command>
+	fmt.Fprintf(os.Stderr, `Usage: go -C do run . <command>
 
 Commands:
   build-host up|down|ssh
