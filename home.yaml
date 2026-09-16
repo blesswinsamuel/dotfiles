@@ -219,12 +219,14 @@ hosts:
           # - { path: "$HOME/Applications/Gmail.app/" }
           - { path: "/Applications/1Password.app/" }
           # - { path: "/Applications/Arc.app/" }
+          - { path: "/Applications/Zen.app/" }
           - { path: "/Applications/Firefox.app/" }
           - { path: "/Applications/Google Chrome.app/" }
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
           - { path: "/Applications/Spotify.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Obsidian.app/" }
+          - { path: "/Applications/Cursor.app/" }
           - { path: "/Applications/Visual Studio Code.app/" }
           - { path: "/Applications/Visual Studio Code - Insiders.app/" }
           - { path: "/Applications/Sublime Text.app/" }
@@ -237,6 +239,7 @@ hosts:
           - { path: "/Applications/TablePlus.app/" }
           - { path: "/Applications/Postman.app/" }
           - { path: "/Applications/OrbStack.app/" }
+          - { path: "/Applications/cmux.app/" }
           - { path: "/Applications/iTerm.app/" }
           - { path: "/Applications/Ghostty.app/" }
           - { options: { type: spacer } }
