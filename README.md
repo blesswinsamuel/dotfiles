@@ -158,15 +158,14 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-See **[`do/README.md`](do/README.md)** for getting started (builder → custom image → dev droplet → remote `nixos-rebuild`).
+See **[`do/README.md`](do/README.md)** for getting started (builder → custom image → dev droplet → clone + `nixos-rebuild switch`).
 
 Short path from the repo root:
 
 ```bash
 task do:build-host:up
 task do:image:build          # resumable; --force to rebuild
-task do:dev:up && task do:dev:ssh   # then: sudo tailscale up
-# then remote switch — see do/README.md (not `task switch` on your Mac)
+task do:dev:up && task do:dev:ssh   # then on the droplet: clone + nixos-rebuild switch
 task do:dev:block-ports
 ```
 

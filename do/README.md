@@ -11,8 +11,9 @@ Ubuntu droplet, then boot a lasting dev droplet and converge with the full flake
 | `*.go` / `go.mod` | Separate Go module (`go -C do run . …`) using [godo](https://github.com/digitalocean/godo) |
 | [`../Taskfile.do.yaml`](../Taskfile.do.yaml) | Thin `task do:*` wrappers |
 
-After boot, converge the droplet to root flake attr `do-cloud-dev` with a
-**remote** `nixos-rebuild` (local `task switch` only affects this machine).
+After boot, SSH in, `git clone` the full repo, and
+`sudo nixos-rebuild switch --flake .#do-cloud-dev` (local `task switch` on your
+Mac only rebuilds the Mac). First full switch on the droplet is slow (no KVM).
 
 ## Prerequisites
 
@@ -36,14 +37,15 @@ task do:image:build
 
 # 3) Lasting dev droplet from the custom image
 task do:dev:up
-task do:dev:ssh   # then: sudo tailscale up
+task do:dev:ssh
 
-# 4) Converge to full flake attr do-cloud-dev (from your laptop — not `task switch`)
-ip=$(jq -r .ip .local/do/dev-host.json)
-export NIX_SSHOPTS="-o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=$PWD/.local/do/known_hosts"
-nixos-rebuild switch --flake .#do-cloud-dev \
-  --target-host "root@$ip" --build-host "root@$ip"
-# Optional: SSH in, set host-id, unlock secrets, and `task run-home` for dotfiles.
+# 4) On the droplet: Tailscale, then clone the full repo and switch
+#    (bootstrap only has a slim image; this pulls in do-cloud-dev / commons)
+sudo tailscale up
+git clone <your-dotfiles-url> ~/dotfiles && cd ~/dotfiles
+mkdir -p ~/.config/dotfiles && echo do-cloud-dev > ~/.config/dotfiles/host-id
+sudo nixos-rebuild switch --flake .#do-cloud-dev
+# Dotfiles (`task run-home`) need secrets/`op` on the box if you want that too.
 
 # 5) Public inbound: UDP 41641 only (Tailscale direct)
 task do:dev:block-ports
