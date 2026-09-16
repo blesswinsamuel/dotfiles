@@ -72,7 +72,6 @@ in
           -rfbport 5900 \
           -forever \
           -shared \
-          -localhost no \
           -listen 0.0.0.0 \
           -xkb \
           -noxdamage
