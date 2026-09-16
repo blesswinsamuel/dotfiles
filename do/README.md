@@ -42,7 +42,7 @@ task do:dev:ssh
 # 4) On the droplet: Tailscale, then clone the full repo and switch
 #    (bootstrap only has a slim image; this pulls in do-cloud-dev / commons)
 sudo tailscale up
-git clone <your-dotfiles-url> ~/dotfiles && cd ~/dotfiles
+git clone https://github.com/blesswinsamuel/dotfiles && cd dotfiles
 mkdir -p ~/.config/dotfiles && echo do-cloud-dev > ~/.config/dotfiles/host-id
 sudo nixos-rebuild switch --flake .#do-cloud-dev
 # Dotfiles (`task run-home`) need secrets/`op` on the box if you want that too.
