@@ -85,9 +85,7 @@ in
           -forever \
           -shared \
           -listen 0.0.0.0 \
-          -xkb \
-          -ncache 10 \
-          -ncache_cr
+          -xkb
       '';
       Restart = "on-failure";
       RestartSec = 2;
