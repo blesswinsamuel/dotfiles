@@ -1,5 +1,10 @@
 version: 3
 
+# Personal DO token (work 1Password account is often the CLI default and has no Dev vault).
+env:
+  DIGITALOCEAN_ACCESS_TOKEN:
+    sh: op read --account my.1password.com "op://Dev/DigitalOcean Personal Access Token/credential"
+
 tasks:
   build-host:up:
     desc: Create Ubuntu droplet used as remote NixOS image builder

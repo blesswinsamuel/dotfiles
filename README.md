@@ -166,10 +166,11 @@ Bootstrap custom image via a small Go CLI (`go run ./do`) + DigitalOcean Spaces,
 | `do-cloud-dev` | Full system in the root flake — run `task switch` after the droplet is up |
 | [`do/`](do) Go module | Orchestrates droplets, Spaces upload, image import (godo + AWS SDK) |
 
-**Prereqs:** Go, `rsync`, `ssh`, a DO API token, a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket:
+**Prereqs:** Go, `rsync`, `ssh`, 1Password CLI (`op`), a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket.
+
+`task do:*` sets `DIGITALOCEAN_ACCESS_TOKEN` from 1Password (`op://Dev/DigitalOcean Personal Access Token/credential` on `my.1password.com`).
 
 ```bash
-export DIGITALOCEAN_ACCESS_TOKEN='...'
 export DO_SSH_KEY='<fingerprint-or-id>'   # doctl compute ssh-key list
 
 export SPACES_BUCKET='your-bucket'
