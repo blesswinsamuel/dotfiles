@@ -83,7 +83,8 @@ in
           -shared \
           -listen 0.0.0.0 \
           -xkb \
-          -noxdamage
+          -ncache 10 \
+          -ncache_cr
       '';
       Restart = "on-failure";
       RestartSec = 2;
