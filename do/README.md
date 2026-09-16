@@ -43,9 +43,9 @@ task do:dev:ssh
 #    (bootstrap only has a slim image; this pulls in do-cloud-dev / commons)
 sudo tailscale up
 git clone https://github.com/blesswinsamuel/dotfiles && cd dotfiles
-mkdir -p ~/.config/dotfiles && echo do-cloud-dev > ~/.config/dotfiles/host-id
-sudo nixos-rebuild switch --flake .#do-cloud-dev
-# Dotfiles (`task run-home`) need secrets/`op` on the box if you want that too.
+nix run nixpkgs#go-task -- set-host-id -- do-cloud-dev
+# optional: install 1Password CLI, then task secrets:unlock
+nix run nixpkgs#go-task -- switch
 
 # 5) Public inbound: UDP 41641 only (Tailscale direct)
 task do:dev:block-ports
