@@ -58,6 +58,23 @@ task do:dev:down
 task do:build-host:down
 ```
 
+### Tailscale SSH: `Connection refused`
+
+If `ssh` to the Tailscale IP fails with `Connection refused` but `tailscale ping` works and public SSH still works, check for a **route steal** by Twingate (or another VPN using CGNAT `100.x`).
+
+Twingate often installs `100.96/12` on its `utun`, which is more specific than Tailscale’s `100.64/10`. Any Tailscale node in `100.96.0.0–100.111.255.255` (e.g. `100.108.x.x`) is then sent to Twingate and RSTs.
+
+```bash
+route get <tailscale-ip>   # bad: utun for Twingate / 100.96/12
+                           # good: Tailscale utun / 100.64/10 host route
+```
+
+Fix: disconnect Twingate, or pin the host back to Tailscale’s interface:
+
+```bash
+sudo route add -host <tailscale-ip> -interface <tailscale-utun>   # e.g. utun5
+```
+
 Or call the CLI directly:
 
 ```bash
