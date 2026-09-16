@@ -151,6 +151,8 @@ if [ -f %s ]; then
   kill "$(cat %s)" 2>/dev/null || true
   rm -f %s
 fi
+# Prefetch so the backgrounded server starts quickly.
+nix build --no-link nixpkgs#miniserve
 cd %s
 nohup nix run nixpkgs#miniserve -- \
   --interfaces 0.0.0.0 \
@@ -158,9 +160,16 @@ nohup nix run nixpkgs#miniserve -- \
   --hide-version-footer \
   . >/tmp/nixos-image-http.log 2>&1 &
 echo $! > %s
-sleep 2
-# Confirm the file is reachable locally
-curl -fsS -o /dev/null -I "http://127.0.0.1:%s/%s"
+for i in $(seq 1 60); do
+  if curl -fsS -o /dev/null -I "http://127.0.0.1:%s/%s"; then
+    echo "miniserve is up."
+    exit 0
+  fi
+  sleep 2
+done
+echo "miniserve failed to become ready; log:" >&2
+cat /tmp/nixos-image-http.log >&2 || true
+exit 1
 `, miniservePID, miniservePID, miniservePID, remoteImageDir, cfg.ImageHTTPPort, miniservePID, cfg.ImageHTTPPort, remoteImageFile)
 	return cfg.runSSH(ip, script)
 }
