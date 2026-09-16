@@ -100,3 +100,25 @@ func blockPorts(ctx context.Context, cfg *Config) error {
 	fmt.Println("task do:dev:ssh (public IP) will no longer work — use Tailscale hostname/IP.")
 	return nil
 }
+
+func unblockPorts(ctx context.Context, cfg *Config) error {
+	if err := cfg.requireToken(); err != nil {
+		return err
+	}
+
+	existing, err := readJSON[FirewallState](cfg.firewallPath())
+	if err != nil {
+		fmt.Println("No local firewall state — public ports are already unblocked (or never blocked).")
+		return nil
+	}
+
+	client := cfg.doClient(ctx)
+	fmt.Printf("Deleting cloud firewall %s (%s)...\n", existing.Name, existing.ID)
+	if _, err := client.Firewalls.Delete(ctx, existing.ID); err != nil {
+		return fmt.Errorf("delete firewall: %w", err)
+	}
+	_ = os.Remove(cfg.firewallPath())
+	fmt.Println("Firewall removed — public SSH (TCP 22) and other inbound ports are open again.")
+	fmt.Println("Re-lock later with: task do:dev:block-ports")
+	return nil
+}

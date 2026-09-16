@@ -49,6 +49,8 @@ nix run nixpkgs#go-task -- switch
 
 # 5) Public inbound: UDP 41641 only (Tailscale direct)
 task do:dev:block-ports
+# reopen public SSH if needed:
+# task do:dev:unblock-ports
 
 # Tear down
 task do:dev:down

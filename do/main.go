@@ -45,7 +45,7 @@ func usage() {
 Commands:
   build-host up|down|ssh
   image build [--teardown] [--force]
-  dev up|down|ssh|block-ports
+  dev up|down|ssh|block-ports|unblock-ports
 
 Auth / config via env:
   DIGITALOCEAN_ACCESS_TOKEN (or DO_TOKEN)

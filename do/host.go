@@ -28,7 +28,7 @@ func cmdBuildHost(ctx context.Context, cfg *Config, args []string) error {
 
 func cmdDev(ctx context.Context, cfg *Config, args []string) error {
 	if len(args) < 1 {
-		return fmt.Errorf("usage: dev up|down|ssh|block-ports")
+		return fmt.Errorf("usage: dev up|down|ssh|block-ports|unblock-ports")
 	}
 	switch args[0] {
 	case "up":
@@ -39,6 +39,8 @@ func cmdDev(ctx context.Context, cfg *Config, args []string) error {
 		return hostSSH(cfg, cfg.devHostPath(), args[1:])
 	case "block-ports":
 		return blockPorts(ctx, cfg)
+	case "unblock-ports":
+		return unblockPorts(ctx, cfg)
 	default:
 		return fmt.Errorf("unknown dev command: %s", args[0])
 	}

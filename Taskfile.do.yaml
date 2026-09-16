@@ -54,3 +54,8 @@ tasks:
     desc: Cloud firewall — only UDP 41641 inbound (Tailscale direct)
     cmds:
       - go -C do run . dev block-ports
+
+  dev:unblock-ports:
+    desc: Remove cloud firewall so public SSH (TCP 22) works again
+    cmds:
+      - go -C do run . dev unblock-ports
