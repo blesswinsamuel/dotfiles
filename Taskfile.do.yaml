@@ -25,9 +25,9 @@ tasks:
       - go -C do run . build-host ssh {{.CLI_ARGS}}
 
   image:build:
-    desc: Rsync do/nix, build bootstrap image, serve via miniserve, register DO custom image
+    desc: Rsync do/nix, build bootstrap image, serve via miniserve, register DO custom image (resumable)
     cmds:
-      - go -C do run . image build
+      - go -C do run . image build {{.CLI_ARGS}}
 
   image:build-and-teardown:
     desc: image:build then destroy the build droplet

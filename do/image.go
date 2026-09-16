@@ -18,15 +18,19 @@ const (
 
 func cmdImage(ctx context.Context, cfg *Config, args []string) error {
 	if len(args) < 1 || args[0] != "build" {
-		return fmt.Errorf("usage: image build [--teardown]")
+		return fmt.Errorf("usage: image build [--teardown] [--force]")
 	}
 	teardown := false
+	force := false
 	for _, a := range args[1:] {
-		if a == "--teardown" {
+		switch a {
+		case "--teardown":
 			teardown = true
+		case "--force":
+			force = true
 		}
 	}
-	if err := imageBuild(ctx, cfg); err != nil {
+	if err := imageBuild(ctx, cfg, force); err != nil {
 		return err
 	}
 	if teardown {
@@ -37,7 +41,7 @@ func cmdImage(ctx context.Context, cfg *Config, args []string) error {
 	return nil
 }
 
-func imageBuild(ctx context.Context, cfg *Config) error {
+func imageBuild(ctx context.Context, cfg *Config, force bool) error {
 	if err := cfg.requireToken(); err != nil {
 		return err
 	}
@@ -50,29 +54,91 @@ func imageBuild(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("no build host state; run: build-host up")
 	}
 
+	client := cfg.doClient(ctx)
+	imageURL := fmt.Sprintf("http://%s:%s/%s", host.IP, cfg.ImageHTTPPort, remoteImageFile)
+
+	if !force {
+		if existing, err := findNamedImage(ctx, client, cfg.ImageName); err == nil && existing != nil {
+			status := strings.ToLower(existing.Status)
+			switch status {
+			case "available":
+				fmt.Printf("Custom image %s (%d) already available — nothing to do.\n", existing.Name, existing.ID)
+				return writeImageState(cfg, existing, host.Region, status, imageURL)
+			case "pending", "new":
+				fmt.Printf("Resuming wait for in-progress image %s (%d, status=%s)...\n", existing.Name, existing.ID, status)
+				if err := cfg.waitSSH(host.IP); err != nil {
+					return err
+				}
+				if err := cfg.ensureNix(host.IP); err != nil {
+					return err
+				}
+				if ok, _ := remoteImageExists(cfg, host.IP); ok {
+					if err := ensureMiniserve(cfg, host.IP); err != nil {
+						return err
+					}
+					defer stopMiniserveQuiet(cfg, host.IP)
+				} else {
+					fmt.Println("warning: remote qcow2 missing; DO import may fail if it still needs to fetch")
+				}
+				final, err := waitImageAvailable(ctx, client, existing.ID)
+				if err != nil {
+					return err
+				}
+				return writeImageState(cfg, existing, host.Region, final, imageURL)
+			}
+		}
+	}
+
 	if err := cfg.waitSSH(host.IP); err != nil {
 		return err
 	}
 	if err := cfg.ensureNix(host.IP); err != nil {
 		return err
 	}
-	if err := buildBootstrapImage(cfg, host.IP); err != nil {
-		return err
+
+	if !force {
+		if ok, _ := remoteImageExists(cfg, host.IP); ok {
+			fmt.Printf("Reusing existing %s/%s on build host (pass --force to rebuild).\n", remoteImageDir, remoteImageFile)
+		} else {
+			if err := buildBootstrapImage(cfg, host.IP); err != nil {
+				return err
+			}
+		}
+	} else {
+		fmt.Println("--force: rebuilding bootstrap image...")
+		if err := buildBootstrapImage(cfg, host.IP); err != nil {
+			return err
+		}
 	}
 
-	imageURL := fmt.Sprintf("http://%s:%s/%s", host.IP, cfg.ImageHTTPPort, remoteImageFile)
 	fmt.Printf("Serving image with miniserve on build host :%s ...\n", cfg.ImageHTTPPort)
-	if err := startMiniserve(cfg, host.IP); err != nil {
+	if err := ensureMiniserve(cfg, host.IP); err != nil {
 		return err
 	}
-	defer func() {
-		fmt.Println("Stopping miniserve on build host...")
-		_ = stopMiniserve(cfg, host.IP)
-	}()
+	defer stopMiniserveQuiet(cfg, host.IP)
 
-	client := cfg.doClient(ctx)
-	if err := deleteNamedImages(ctx, client, cfg.ImageName); err != nil {
-		fmt.Printf("warning: deleting existing images: %v\n", err)
+	if force {
+		if err := deleteNamedImages(ctx, client, cfg.ImageName); err != nil {
+			fmt.Printf("warning: deleting existing images: %v\n", err)
+		}
+	} else if existing, err := findNamedImage(ctx, client, cfg.ImageName); err == nil && existing != nil {
+		status := strings.ToLower(existing.Status)
+		switch status {
+		case "available":
+			return writeImageState(cfg, existing, host.Region, status, imageURL)
+		case "pending", "new":
+			fmt.Printf("Waiting for existing image %d (status=%s)...\n", existing.ID, status)
+			final, err := waitImageAvailable(ctx, client, existing.ID)
+			if err != nil {
+				return err
+			}
+			return writeImageState(cfg, existing, host.Region, final, imageURL)
+		default:
+			fmt.Printf("Deleting unusable existing image %s (%d, status=%s)...\n", existing.Name, existing.ID, status)
+			if _, err := client.Images.Delete(ctx, existing.ID); err != nil {
+				fmt.Printf("warning: delete image %d: %v\n", existing.ID, err)
+			}
+		}
 	}
 
 	fmt.Printf("Registering custom image from %s ...\n", imageURL)
@@ -87,22 +153,29 @@ func imageBuild(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("create custom image: %w", err)
 	}
 
+	// Checkpoint so a crash mid-wait can resume.
+	_ = writeImageState(cfg, created, host.Region, strings.ToLower(created.Status), imageURL)
+
 	fmt.Printf("Waiting for custom image %d to become available...\n", created.ID)
 	status, err := waitImageAvailable(ctx, client, created.ID)
 	if err != nil {
 		return err
 	}
+	return writeImageState(cfg, created, host.Region, status, imageURL)
+}
 
+func writeImageState(cfg *Config, img *godo.Image, region, status, url string) error {
 	st := ImageState{
-		ID:     strconv.Itoa(created.ID),
-		Name:   created.Name,
-		Region: host.Region,
+		ID:     strconv.Itoa(img.ID),
+		Name:   img.Name,
+		Region: region,
 		Status: status,
+		URL:    url,
 	}
 	if err := writeJSON(cfg.imagePath(), st); err != nil {
 		return err
 	}
-	fmt.Printf("Custom image ready: %s (%d)\n", created.Name, created.ID)
+	fmt.Printf("Custom image ready: %s (%d)\n", img.Name, img.ID)
 	fmt.Printf("State written to %s\n", cfg.imagePath())
 	fmt.Println("Next: task do:dev:up, then on the droplet: task switch (flake attr do-cloud-dev)")
 	return nil
@@ -139,6 +212,20 @@ ls -lh %s/%s
 		return fmt.Errorf("remote image build: %w", err)
 	}
 	return nil
+}
+
+func remoteImageExists(cfg *Config, ip string) (bool, error) {
+	err := cfg.runSSHCheck(ip, fmt.Sprintf("test -f %s/%s", remoteImageDir, remoteImageFile))
+	return err == nil, err
+}
+
+func ensureMiniserve(cfg *Config, ip string) error {
+	check := fmt.Sprintf(`curl -fsS -o /dev/null -I "http://127.0.0.1:%s/%s"`, cfg.ImageHTTPPort, remoteImageFile)
+	if err := cfg.runSSHCheck(ip, check); err == nil {
+		fmt.Println("miniserve already serving.")
+		return nil
+	}
+	return startMiniserve(cfg, ip)
 }
 
 func startMiniserve(cfg *Config, ip string) error {
@@ -185,6 +272,35 @@ fi
 	return cfg.runSSH(ip, script)
 }
 
+func stopMiniserveQuiet(cfg *Config, ip string) {
+	fmt.Println("Stopping miniserve on build host...")
+	_ = stopMiniserve(cfg, ip)
+}
+
+func findNamedImage(ctx context.Context, client *godo.Client, name string) (*godo.Image, error) {
+	opt := &godo.ListOptions{PerPage: 200}
+	for {
+		images, resp, err := client.Images.ListUser(ctx, opt)
+		if err != nil {
+			return nil, err
+		}
+		for i := range images {
+			if images[i].Name == name {
+				return &images[i], nil
+			}
+		}
+		if resp.Links == nil || resp.Links.IsLastPage() {
+			break
+		}
+		page, err := resp.Links.CurrentPage()
+		if err != nil {
+			break
+		}
+		opt.Page = page + 1
+	}
+	return nil, nil
+}
+
 func deleteNamedImages(ctx context.Context, client *godo.Client, name string) error {
 	opt := &godo.ListOptions{PerPage: 200}
 	for {
@@ -213,11 +329,13 @@ func deleteNamedImages(ctx context.Context, client *godo.Client, name string) er
 }
 
 func waitImageAvailable(ctx context.Context, client *godo.Client, id int) (string, error) {
-	deadline := time.Now().Add(60 * time.Minute)
+	start := time.Now()
+	deadline := start.Add(60 * time.Minute)
 	for time.Now().Before(deadline) {
+		elapsed := time.Since(start).Truncate(time.Second)
 		img, _, err := client.Images.GetByID(ctx, id)
 		if err != nil {
-			fmt.Printf("  image status: missing (%v)\n", err)
+			fmt.Printf("  [%s] image status: missing (%v)\n", elapsed, err)
 			select {
 			case <-ctx.Done():
 				return "", ctx.Err()
@@ -226,7 +344,7 @@ func waitImageAvailable(ctx context.Context, client *godo.Client, id int) (strin
 			continue
 		}
 		status := strings.ToLower(img.Status)
-		fmt.Printf("  image status: %s\n", status)
+		fmt.Printf("  [%s] image status: %s\n", elapsed, status)
 		switch status {
 		case "available":
 			return status, nil
@@ -239,5 +357,5 @@ func waitImageAvailable(ctx context.Context, client *godo.Client, id int) (strin
 		case <-time.After(10 * time.Second):
 		}
 	}
-	return "", fmt.Errorf("timed out waiting for image %d", id)
+	return "", fmt.Errorf("timed out waiting for image %d after %s", id, time.Since(start).Truncate(time.Second))
 }

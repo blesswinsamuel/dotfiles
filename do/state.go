@@ -22,6 +22,7 @@ type ImageState struct {
 	Name   string `json:"name"`
 	Region string `json:"region"`
 	Status string `json:"status"`
+	URL    string `json:"url,omitempty"`
 }
 
 type FirewallState struct {

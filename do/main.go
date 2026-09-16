@@ -44,7 +44,7 @@ func usage() {
 
 Commands:
   build-host up|down|ssh
-  image build [--teardown]
+  image build [--teardown] [--force]
   dev up|down|ssh|block-ports
 
 Auth / config via env:
@@ -52,6 +52,9 @@ Auth / config via env:
   DO_SSH_KEY
   DO_REGION (optional)
   IMAGE_HTTP_PORT (optional, default 8765)
+
+Resume: re-run image build to skip an existing qcow2 / pending DO import.
+Use --force to rebuild and recreate from scratch.
 `)
 }
 
