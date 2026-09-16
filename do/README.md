@@ -108,23 +108,24 @@ Optional overrides: `DO_BUILD_SIZE`, `DO_DEV_SIZE`, `DO_IMAGE_NAME`, `IMAGE_HTTP
 
 State lives under `.local/do/` (gitignored). Builds on DO droplets are slow (no nested KVM).
 
-## Remote desktop (Hyprland + Quickshell)
+## Remote desktop (XFCE default; Hyprland optional)
 
-After a full `task switch` / `nixos-rebuild switch --flake .#do-cloud-dev`, the droplet auto-logs into an Omarchy-inspired **Hyprland** session with a **Quickshell** bar on a headless virtual monitor (includes **1Password** CLI + GUI). Remoting is **Tailscale-only** (keep `task do:dev:block-ports`); do not open these ports on the DO cloud firewall.
+After a full `task switch` / `nixos-rebuild switch --flake .#do-cloud-dev`, the droplet auto-logs into **XFCE** (includes **1Password** CLI + GUI). Remoting is **Tailscale-only** (keep `task do:dev:block-ports`); do not open these ports on the DO cloud firewall.
+
+To switch back to Hyprland + Quickshell + wayvnc later, set `desktop = "hyprland";` in [`hosts/do-cloud-dev/desktop-remote.nix`](../hosts/do-cloud-dev/desktop-remote.nix) and rebuild.
 
 | Protocol | Client (Mac) | Connect |
 | --- | --- | --- |
 | Sunshine (best latency) | [Moonlight](https://moonlight-stream.org/) | Tailscale IP / hostname; open `https://<tailscale-ip>:47990` once to set credentials, then pair with PIN |
 | RustDesk | RustDesk (Brewfile on mac-studio) | **Direct IP** → Tailscale IP (port **21118**). No ID/relay. |
-| VNC (fallback) | Screen Sharing / TigerVNC | `vnc://<tailscale-ip>` — password in `~/.config/wayvnc/config` on the droplet (8 chars; macOS DES auth) |
+| VNC (fallback) | Screen Sharing / TigerVNC | `vnc://<tailscale-ip>` — XFCE uses x11vnc; password in `~/.vnc/password.txt` |
 
-Latency preference: Sunshine → RustDesk (direct) → wayvnc. Prefer a Tailscale **direct** path (`tailscale status`); DERP relay adds lag. DO has no GPU, so Sunshine uses CPU encode.
+Latency preference: Sunshine → RustDesk (direct) → VNC. Prefer a Tailscale **direct** path (`tailscale status`); DERP relay adds lag. DO has no GPU, so Sunshine uses CPU encode.
 
-wayvnc uses macOS-compatible legacy auth (`relax_encryption` / `allow_broken_crypto`). Password is generated once into `~/.config/wayvnc/config` (not in git). Show it with:
+### VNC password
 
-```bash
-rg '^password=' ~/.config/wayvnc/config
-```
+- **XFCE (default):** generated once into `~/.vnc/password.txt` (and `~/.vnc/passwd`). Show with `cat ~/.vnc/password.txt`.
+- **Hyprland:** wayvnc macOS DES auth in `~/.config/wayvnc/config` (`rg '^password=' ~/.config/wayvnc/config`).
 
 ### RustDesk (no relay)
 
@@ -139,9 +140,9 @@ From Mac RustDesk, put the droplet Tailscale IP in the connect field (not the pu
 ### Checks on the droplet
 
 ```bash
-systemctl status greetd
-systemctl --user status sunshine wayvnc rustdesk
-hyprctl monitors   # expect HEADLESS-REMOTE
+systemctl status display-manager   # LightDM when XFCE
+systemctl --user status sunshine x11vnc rustdesk
+# or, if desktop = "hyprland":
+# systemctl status greetd
+# systemctl --user status sunshine wayvnc rustdesk
 ```
-
-RustDesk on Wayland/Hyprland can be flaky; use Sunshine if capture fails.

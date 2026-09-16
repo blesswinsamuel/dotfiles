@@ -3,15 +3,16 @@ let
   username = systemConfig.username;
   homeDir = "/home/${username}";
   configDir = ./config;
-in
-{
-  # Hyprland + UWSM so graphical-session.target (and Sunshine) start reliably.
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true;
-    xwayland.enable = true;
-  };
 
+  # Flip to "hyprland" for Hyprland + Quickshell + wayvnc (requires rebuild/switch).
+  desktop = "xfce";
+
+  useXfce = desktop == "xfce";
+  useHyprland = desktop == "hyprland";
+in
+assert lib.assertMsg (useXfce || useHyprland)
+  "hosts/do-cloud-dev: desktop must be \"xfce\" or \"hyprland\" (got ${desktop})";
+{
   # Same 1Password stack as personal Linux desktops (CLI + GUI over remoting).
   programs._1password.enable = true;
   programs._1password.package = pkgsUnstable._1password-cli;
@@ -20,8 +21,148 @@ in
 
   hardware.graphics.enable = true;
 
-  # Auto-login into Hyprland (headless droplet — no local console needed).
-  services.greetd = {
+  # Remoting only over Tailscale (DO cloud firewall already blocks public inbound).
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    # Wayland needs this; harmless on X11 XFCE.
+    capSysAdmin = true;
+    openFirewall = false;
+  };
+
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+
+  security.polkit.enable = true;
+  programs.dconf.enable = true;
+
+  users.users.${username}.extraGroups = [ "video" "input" "render" ];
+
+  # Shared remoting agent + session configs kept for both desktops.
+  environment.systemPackages = with pkgs; [
+    rustdesk
+    jq
+    openssl
+  ] ++ lib.optionals useXfce [
+    x11vnc
+    tigervnc
+    xfce.xfce4-terminal
+  ] ++ lib.optionals useHyprland [
+    quickshell
+    foot
+    wayvnc
+    hyprland
+    wl-clipboard
+  ];
+
+  environment.etc = {
+    "do-cloud-dev/rustdesk/RustDesk2.toml".source = configDir + "/rustdesk/RustDesk2.toml";
+    # Kept even when XFCE is active so flipping `desktop` is one-line + switch.
+    "do-cloud-dev/hyprland.conf".source = configDir + "/hyprland.conf";
+    "do-cloud-dev/quickshell".source = configDir + "/quickshell";
+  } // lib.optionalAttrs useXfce {
+    "xdg/autostart/x11vnc-do-cloud.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=x11vnc
+      Exec=systemctl --user start x11vnc.service
+      X-GNOME-Autostart-enabled=true
+      NoDisplay=true
+    '';
+  };
+
+  systemd.tmpfiles.rules = [
+    "d ${homeDir}/.config 0755 ${username} users -"
+    "d ${homeDir}/.config/rustdesk 0700 ${username} users -"
+    "C ${homeDir}/.config/rustdesk/RustDesk2.toml 0600 ${username} users - /etc/do-cloud-dev/rustdesk/RustDesk2.toml"
+  ] ++ lib.optionals useHyprland [
+    "d ${homeDir}/.config/hypr 0755 ${username} users -"
+    "L+ ${homeDir}/.config/hypr/hyprland.conf - - - - /etc/do-cloud-dev/hyprland.conf"
+  ] ++ lib.optionals useXfce [
+    "d ${homeDir}/.vnc 0700 ${username} users -"
+  ];
+
+  # RustDesk host agent — direct Tailscale IP only (no hbbs/hbbr).
+  systemd.user.services.rustdesk = {
+    description = "RustDesk (direct IP over Tailscale)";
+    after = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${lib.getExe pkgs.rustdesk}";
+      Restart = "on-failure";
+      RestartSec = 3;
+    };
+  };
+
+  # --- XFCE (default) -------------------------------------------------------
+  services.xserver.enable = useXfce;
+  services.xserver.desktopManager.xfce.enable = useXfce;
+  services.xserver.displayManager.lightdm.enable = useXfce;
+  services.displayManager.autoLogin = lib.mkIf useXfce {
+    enable = true;
+    user = username;
+  };
+  services.displayManager.defaultSession = lib.mkIf useXfce "xfce";
+
+  # x11vnc shares the XFCE :0 session (standard VNC password; works with macOS Screen Sharing).
+  systemd.user.services.x11vnc = lib.mkIf useXfce {
+    description = "x11vnc (XFCE display :0)";
+    after = [ "graphical-session.target" ];
+    partOf = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = pkgs.writeShellScript "x11vnc-xfce" ''
+        set -eu
+        export DISPLAY="''${DISPLAY:-:0}"
+        openssl=${lib.getExe pkgs.openssl}
+        passfile="$HOME/.vnc/passwd"
+        passplain="$HOME/.vnc/password.txt"
+        mkdir -p "$HOME/.vnc"
+        if [ ! -f "$passfile" ]; then
+          pass="$("$openssl" rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 8)"
+          umask 077
+          printf '%s\n' "$pass" > "$passplain"
+          printf '%s\n%s\n' "$pass" "$pass" | ${pkgs.tigervnc}/bin/vncpasswd -f > "$passfile"
+          chmod 600 "$passfile" "$passplain"
+        fi
+        # Wait for the X display from LightDM/XFCE.
+        for _ in $(seq 1 60); do
+          if [ -S "/tmp/.X11-unix/X''${DISPLAY#:}" ] || [ -S "/tmp/.X11-unix/X0" ]; then
+            break
+          fi
+          sleep 0.5
+        done
+        exec ${lib.getExe pkgs.x11vnc} \
+          -display "$DISPLAY" \
+          -rfbauth "$passfile" \
+          -rfbport 5900 \
+          -forever \
+          -shared \
+          -localhost no \
+          -listen 0.0.0.0 \
+          -xkb \
+          -noxdamage
+      '';
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+  };
+
+  # --- Hyprland (optional; set desktop = "hyprland") ------------------------
+  programs.hyprland = lib.mkIf useHyprland {
+    enable = true;
+    withUWSM = true;
+    xwayland.enable = true;
+  };
+
+  services.greetd = lib.mkIf useHyprland {
     enable = true;
     settings = {
       default_session = {
@@ -35,64 +176,21 @@ in
     };
   };
 
-  # Remoting only over Tailscale (DO cloud firewall already blocks public inbound).
-  networking.firewall.trustedInterfaces = [ "tailscale0" ];
-
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true; # Wayland / KMS capture
-    openFirewall = false;
-  };
-
-  # Lean audio stack for Sunshine (no full desktop suite).
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-  };
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
-    config.common.default = [ "hyprland" ];
-  };
-
-  security.polkit.enable = true;
-  programs.dconf.enable = true;
-
-  users.users.${username}.extraGroups = [ "video" "input" "render" ];
-
-  environment.systemPackages = with pkgs; [
-    quickshell
-    foot
-    wayvnc
-    rustdesk
-    jq
-    wl-clipboard
-    hyprland
+  # Hyprland portal only when that desktop is selected (XFCE sets gtk portal above).
+  xdg.portal = lib.mkMerge [
+    (lib.mkIf useXfce {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      config.common.default = [ "gtk" ];
+    })
+    (lib.mkIf useHyprland {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+      config.common.default = [ "hyprland" ];
+    })
   ];
 
-  # System-managed session configs (symlinked into the user home).
-  environment.etc = {
-    "do-cloud-dev/hyprland.conf".source = configDir + "/hyprland.conf";
-    "do-cloud-dev/quickshell".source = configDir + "/quickshell";
-    "do-cloud-dev/rustdesk/RustDesk2.toml".source = configDir + "/rustdesk/RustDesk2.toml";
-  };
-
-  # Point Hyprland at our config; seed RustDesk direct-IP settings once.
-  systemd.tmpfiles.rules = [
-    "d ${homeDir}/.config 0755 ${username} users -"
-    "d ${homeDir}/.config/hypr 0755 ${username} users -"
-    "d ${homeDir}/.config/rustdesk 0700 ${username} users -"
-    "L+ ${homeDir}/.config/hypr/hyprland.conf - - - - /etc/do-cloud-dev/hyprland.conf"
-    "C ${homeDir}/.config/rustdesk/RustDesk2.toml 0600 ${username} users - /etc/do-cloud-dev/rustdesk/RustDesk2.toml"
-  ];
-
-  # wayvnc shares the Hyprland headless output (VNC fallback).
-  # macOS Screen Sharing needs legacy DES auth (8-char password) — see wayvnc README.
-  systemd.user.services.wayvnc = {
+  systemd.user.services.wayvnc = lib.mkIf useHyprland {
     description = "wayvnc (Hyprland / wlroots VNC)";
     after = [ "graphical-session.target" ];
     partOf = [ "graphical-session.target" ];
@@ -106,7 +204,6 @@ in
         cfg="$HOME/.config/wayvnc/config"
         mkdir -p "$HOME/.config/wayvnc"
         if [ ! -f "$cfg" ]; then
-          # First 8 chars only matter for DES/macOS Screen Sharing.
           pass="$("$openssl" rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 8)"
           umask 077
           cat > "$cfg" <<EOF
@@ -118,7 +215,6 @@ relax_encryption=true
 allow_broken_crypto=true
 EOF
         fi
-        # Wait briefly for HEADLESS-REMOTE from hyprland.conf exec-once.
         for _ in $(seq 1 30); do
           if "$hyprctl" -j monitors 2>/dev/null \
             | "$jq" -e 'map(select(.name | test("HEADLESS"))) | length > 0' >/dev/null; then
@@ -135,19 +231,6 @@ EOF
       '';
       Restart = "on-failure";
       RestartSec = 2;
-    };
-  };
-
-  # RustDesk host agent — direct Tailscale IP only (no hbbs/hbbr).
-  systemd.user.services.rustdesk = {
-    description = "RustDesk (direct IP over Tailscale)";
-    after = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    wantedBy = [ "graphical-session.target" ];
-    serviceConfig = {
-      ExecStart = "${lib.getExe pkgs.rustdesk}";
-      Restart = "on-failure";
-      RestartSec = 3;
     };
   };
 }
