@@ -41,6 +41,7 @@ task do:dev:ssh
 
 # 4) On the droplet: Tailscale, then clone the full repo and switch
 #    (bootstrap only has a slim image; this pulls in do-cloud-dev / commons)
+#    set-host-id / switch do not need op; only Mac-side task do:* does
 sudo tailscale up
 git clone https://github.com/blesswinsamuel/dotfiles && cd dotfiles
 nix run nixpkgs#go-task -- set-host-id -- do-cloud-dev
@@ -68,7 +69,7 @@ go -C do run . dev up
 
 ## Env (Taskfile defaults)
 
-[`Taskfile.do.yaml`](../Taskfile.do.yaml) sets:
+[`Taskfile.do.yaml`](../Taskfile.do.yaml) sets these on each `do:*` task only (not globally):
 
 | Variable | Source |
 | --- | --- |

@@ -1,7 +1,8 @@
 version: 3
 
 # Personal DO token (work 1Password account is often the CLI default and has no Dev vault).
-env:
+# Kept on do:* tasks only — include-level env is evaluated for every task (including set-host-id).
+x-do-env: &do-env
   DIGITALOCEAN_ACCESS_TOKEN:
     sh: op read --account my.1password.com "op://Dev/DigitalOcean Personal Access Token/credential"
   DO_SSH_KEY: "c0:77:6d:9a:c5:24:4e:d6:7e:b8:97:9f:08:4f:03:51"
@@ -10,52 +11,62 @@ env:
 tasks:
   build-host:up:
     desc: Create Ubuntu droplet used as remote NixOS image builder
+    env: *do-env
     cmds:
       - go -C do run . build-host up
 
   build-host:down:
     desc: Destroy the build droplet and remove local state
+    env: *do-env
     cmds:
       - go -C do run . build-host down
 
   build-host:ssh:
     desc: SSH into the build droplet
     interactive: true
+    env: *do-env
     cmds:
       - go -C do run . build-host ssh {{.CLI_ARGS}}
 
   image:build:
     desc: Rsync do/nix, build bootstrap image, serve via miniserve, register DO custom image (resumable)
+    env: *do-env
     cmds:
       - go -C do run . image build {{.CLI_ARGS}}
 
   image:build-and-teardown:
     desc: image:build then destroy the build droplet
+    env: *do-env
     cmds:
       - go -C do run . image build --teardown
 
   dev:up:
     desc: Create a dev droplet from the custom image
+    env: *do-env
     cmds:
       - go -C do run . dev up
 
   dev:down:
     desc: Destroy the dev droplet (and firewall if present)
+    env: *do-env
     cmds:
       - go -C do run . dev down
 
   dev:ssh:
     desc: SSH into the dev droplet
     interactive: true
+    env: *do-env
     cmds:
       - go -C do run . dev ssh {{.CLI_ARGS}}
 
   dev:block-ports:
     desc: Cloud firewall — only UDP 41641 inbound (Tailscale direct)
+    env: *do-env
     cmds:
       - go -C do run . dev block-ports
 
   dev:unblock-ports:
     desc: Remove cloud firewall so public SSH (TCP 22) works again
+    env: *do-env
     cmds:
       - go -C do run . dev unblock-ports
