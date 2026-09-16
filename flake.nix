@@ -55,14 +55,6 @@
           ] ++ realmModules systemConfig.realm "linux"
           ++ extraModules;
         };
-      doCloudSystemConfig = {
-        username = "blesswinsamuel";
-        realm = "personal";
-        authorizedKeys = [
-          # cat ~/.ssh/id_ed25519.pub | pbcopy
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
-        ];
-      };
       darwinSystem = { system, extraModules ? [ ], systemConfig }: hostName:
         let
           pkgsUnstable = genPkgs system nixpkgs-unstable;
@@ -127,7 +119,14 @@
         do-cloud-dev = nixosSystem {
           system = "x86_64-linux";
           extraModules = [ ./hosts/do-cloud-dev/do-cloud-dev.nix ];
-          systemConfig = doCloudSystemConfig;
+          systemConfig = {
+            username = "blesswinsamuel";
+            realm = "personal";
+            authorizedKeys = [
+              # cat ~/.ssh/id_ed25519.pub | pbcopy
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
+            ];
+          };
         };
       };
       darwinConfigurations = processConfigurations {
