@@ -50,8 +50,8 @@ Commands:
 Auth / config via env:
   DIGITALOCEAN_ACCESS_TOKEN (or DO_TOKEN)
   DO_SSH_KEY
-  SPACES_BUCKET SPACES_KEY SPACES_SECRET
-  DO_REGION SPACES_REGION (optional)
+  DO_REGION (optional)
+  IMAGE_HTTP_PORT (optional, default 8765)
 `)
 }
 

@@ -18,13 +18,10 @@ type HostState struct {
 }
 
 type ImageState struct {
-	ID            string `json:"id"`
-	Name          string `json:"name"`
-	Region        string `json:"region"`
-	Status        string `json:"status"`
-	SpacesURL     string `json:"spaces_url,omitempty"`
-	SpacesObject  string `json:"spaces_object,omitempty"`
-	SpacesDeleted bool   `json:"spaces_deleted,omitempty"`
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Region string `json:"region"`
+	Status string `json:"status"`
 }
 
 type FirewallState struct {
@@ -33,10 +30,10 @@ type FirewallState struct {
 	DropletID string `json:"droplet_id"`
 }
 
-func (c *Config) buildHostPath() string  { return filepath.Join(c.StateDir, "build-host.json") }
-func (c *Config) devHostPath() string    { return filepath.Join(c.StateDir, "dev-host.json") }
-func (c *Config) imagePath() string      { return filepath.Join(c.StateDir, "image.json") }
-func (c *Config) firewallPath() string   { return filepath.Join(c.StateDir, "firewall.json") }
+func (c *Config) buildHostPath() string { return filepath.Join(c.StateDir, "build-host.json") }
+func (c *Config) devHostPath() string   { return filepath.Join(c.StateDir, "dev-host.json") }
+func (c *Config) imagePath() string     { return filepath.Join(c.StateDir, "image.json") }
+func (c *Config) firewallPath() string  { return filepath.Join(c.StateDir, "firewall.json") }
 
 func writeJSON(path string, v any) error {
 	b, err := json.MarshalIndent(v, "", "  ")

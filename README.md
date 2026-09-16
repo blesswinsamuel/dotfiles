@@ -158,30 +158,23 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-Bootstrap custom image via a small Go CLI (`go run ./do`) + DigitalOcean Spaces, then converge with the full flake on the droplet.
+Bootstrap custom image via a small Go CLI (`go run ./do`), then converge with the full flake on the droplet.
 
 | Piece | Role |
 | --- | --- |
 | [`do/nix`](do/nix) | Minimal bootstrap flake (SSH, flakes, Tailscale) — rsynced to the builder |
 | `do-cloud-dev` | Full system in the root flake — run `task switch` after the droplet is up |
-| [`do/`](do) Go module | Orchestrates droplets, Spaces upload, image import (godo + AWS SDK) |
+| [`do/`](do) Go module | Orchestrates droplets + custom image import (godo); serves the image with `nix run nixpkgs#miniserve` |
 
-**Prereqs:** Go, `rsync`, `ssh`, 1Password CLI (`op`), a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket.
+**Prereqs:** Go, `rsync`, `ssh`, 1Password CLI (`op`).
 
-`task do:*` sets `DIGITALOCEAN_ACCESS_TOKEN` from 1Password and `DO_SSH_KEY` to the personal SSH key fingerprint.
-
-```bash
-export SPACES_BUCKET='your-bucket'
-export SPACES_KEY='...'
-export SPACES_SECRET='...'
-# Taskfile sets DO_REGION=blr1 and SPACES_REGION=sgp1
-```
+`task do:*` sets `DIGITALOCEAN_ACCESS_TOKEN` from 1Password, `DO_SSH_KEY`, and `DO_REGION=blr1`.
 
 ```bash
 # 1) Ephemeral Ubuntu builder
 task do:build-host:up
 
-# 2) Rsync do/nix → build on droplet → upload Spaces from droplet → DO custom image
+# 2) Rsync do/nix → build on droplet → miniserve → DO custom image
 task do:image:build
 # or also destroy the builder when done:
 task do:image:build-and-teardown

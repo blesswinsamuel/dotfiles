@@ -3,15 +3,17 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/digitalocean/godo"
+)
+
+const (
+	remoteImageDir  = "/root/nixos-do-image"
+	remoteImageFile = "nixos-do-dev.qcow2.gz"
+	miniservePID    = "/tmp/nixos-image-http.pid"
 )
 
 func cmdImage(ctx context.Context, cfg *Config, args []string) error {
@@ -39,9 +41,6 @@ func imageBuild(ctx context.Context, cfg *Config) error {
 	if err := cfg.requireToken(); err != nil {
 		return err
 	}
-	if err := cfg.requireSpaces(); err != nil {
-		return err
-	}
 	if err := cfg.ensureStateDir(); err != nil {
 		return err
 	}
@@ -57,18 +56,19 @@ func imageBuild(ctx context.Context, cfg *Config) error {
 	if err := cfg.ensureNix(host.IP); err != nil {
 		return err
 	}
-
 	if err := buildBootstrapImage(cfg, host.IP); err != nil {
 		return err
 	}
 
-	objectKey := fmt.Sprintf("nixos-do-images/%s-%s.qcow2.gz", cfg.ImageName, time.Now().UTC().Format("20060102T150405Z"))
-	imageURL := cfg.spacesPublicURL(objectKey)
-
-	fmt.Printf("Uploading to Spaces from build host (%s / %s) ...\n", cfg.SpacesBucket, objectKey)
-	if err := uploadSpacesFromBuilder(cfg, host.IP, objectKey); err != nil {
+	imageURL := fmt.Sprintf("http://%s:%s/%s", host.IP, cfg.ImageHTTPPort, remoteImageFile)
+	fmt.Printf("Serving image with miniserve on build host :%s ...\n", cfg.ImageHTTPPort)
+	if err := startMiniserve(cfg, host.IP); err != nil {
 		return err
 	}
+	defer func() {
+		fmt.Println("Stopping miniserve on build host...")
+		_ = stopMiniserve(cfg, host.IP)
+	}()
 
 	client := cfg.doClient(ctx)
 	if err := deleteNamedImages(ctx, client, cfg.ImageName); err != nil {
@@ -90,24 +90,14 @@ func imageBuild(ctx context.Context, cfg *Config) error {
 	fmt.Printf("Waiting for custom image %d to become available...\n", created.ID)
 	status, err := waitImageAvailable(ctx, client, created.ID)
 	if err != nil {
-		fmt.Printf("Spaces object left in place for retry/debug: %s\n", imageURL)
 		return err
 	}
 
-	fmt.Printf("Image available — removing Spaces object s3://%s/%s ...\n", cfg.SpacesBucket, objectKey)
-	if err := deleteSpaces(ctx, cfg, objectKey); err != nil {
-		return fmt.Errorf("image is available but Spaces cleanup failed: %w", err)
-	}
-	fmt.Println("Spaces object deleted.")
-
 	st := ImageState{
-		ID:            strconv.Itoa(created.ID),
-		Name:          created.Name,
-		Region:        host.Region,
-		Status:        status,
-		SpacesURL:     imageURL,
-		SpacesObject:  objectKey,
-		SpacesDeleted: true,
+		ID:     strconv.Itoa(created.ID),
+		Name:   created.Name,
+		Region: host.Region,
+		Status: status,
 	}
 	if err := writeJSON(cfg.imagePath(), st); err != nil {
 		return err
@@ -140,51 +130,50 @@ if [ -z "$img" ]; then
   ls -laR result >&2 || true
   exit 1
 fi
-cp -L "$img" /root/nixos-do-dev.qcow2.gz
-ls -lh /root/nixos-do-dev.qcow2.gz
-`, remoteNixDir)
+rm -rf %s
+mkdir -p %s
+cp -L "$img" %s/%s
+ls -lh %s/%s
+`, remoteNixDir, remoteImageDir, remoteImageDir, remoteImageDir, remoteImageFile, remoteImageDir, remoteImageFile)
 	if err := cfg.runSSH(buildHostIP, remoteScript); err != nil {
 		return fmt.Errorf("remote image build: %w", err)
 	}
 	return nil
 }
 
-// uploadSpacesFromBuilder uploads the built image from the droplet (faster than laptop→Spaces).
-func uploadSpacesFromBuilder(cfg *Config, ip, objectKey string) error {
+func startMiniserve(cfg *Config, ip string) error {
 	script := fmt.Sprintf(`
 set -euo pipefail
 if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
-nix shell nixpkgs#awscli2 -c aws s3 cp \
-  /root/nixos-do-dev.qcow2.gz \
-  "s3://%s/%s" \
-  --endpoint-url "%s" \
-  --acl public-read
-`, cfg.SpacesBucket, objectKey, cfg.SpacesEndpoint)
-
-	args := append(cfg.sshOpts(),
-		"root@"+ip,
-		"env",
-		"AWS_ACCESS_KEY_ID="+cfg.SpacesKey,
-		"AWS_SECRET_ACCESS_KEY="+cfg.SpacesSecret,
-		"AWS_DEFAULT_REGION="+cfg.SpacesRegion,
-		"bash", "-s",
-	)
-	cmd := exec.Command("ssh", args...)
-	cmd.Stdin = strings.NewReader(script)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
+if [ -f %s ]; then
+  kill "$(cat %s)" 2>/dev/null || true
+  rm -f %s
+fi
+cd %s
+nohup nix run nixpkgs#miniserve -- \
+  --interfaces 0.0.0.0 \
+  --port %s \
+  --hide-version-footer \
+  . >/tmp/nixos-image-http.log 2>&1 &
+echo $! > %s
+sleep 2
+# Confirm the file is reachable locally
+curl -fsS -o /dev/null -I "http://127.0.0.1:%s/%s"
+`, miniservePID, miniservePID, miniservePID, remoteImageDir, cfg.ImageHTTPPort, miniservePID, cfg.ImageHTTPPort, remoteImageFile)
+	return cfg.runSSH(ip, script)
 }
 
-func deleteSpaces(ctx context.Context, cfg *Config, objectKey string) error {
-	client := cfg.s3Client(ctx)
-	_, err := client.DeleteObject(ctx, &s3.DeleteObjectInput{
-		Bucket: aws.String(cfg.SpacesBucket),
-		Key:    aws.String(objectKey),
-	})
-	return err
+func stopMiniserve(cfg *Config, ip string) error {
+	script := fmt.Sprintf(`
+set -euo pipefail
+if [ -f %s ]; then
+  kill "$(cat %s)" 2>/dev/null || true
+  rm -f %s
+fi
+`, miniservePID, miniservePID, miniservePID)
+	return cfg.runSSH(ip, script)
 }
 
 func deleteNamedImages(ctx context.Context, client *godo.Client, name string) error {

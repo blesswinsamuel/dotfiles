@@ -9,9 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	awscreds "github.com/aws/aws-sdk-go-v2/credentials"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/digitalocean/godo"
 	"golang.org/x/oauth2"
 )
@@ -33,12 +30,7 @@ type Config struct {
 	DevSize      string
 	ImageName    string
 	FirewallName string
-
-	SpacesBucket   string
-	SpacesRegion   string
-	SpacesKey      string
-	SpacesSecret   string
-	SpacesEndpoint string
+	ImageHTTPPort string
 }
 
 func loadConfig() (*Config, error) {
@@ -49,28 +41,21 @@ func loadConfig() (*Config, error) {
 
 	stateDir := filepath.Join(repoDir, ".local", "do")
 	cfg := &Config{
-		RepoDir:        repoDir,
-		NixDir:         filepath.Join(repoDir, "do", "nix"),
-		StateDir:       stateDir,
-		KnownHosts:     filepath.Join(stateDir, "known_hosts"),
-		DOToken:        env("DIGITALOCEAN_ACCESS_TOKEN", env("DO_TOKEN", "")),
-		DORegion:       env("DO_REGION", "blr1"),
-		DOSSHKey:       env("DO_SSH_KEY", ""),
-		BuildName:      env("DO_BUILD_NAME", "nixos-build"),
-		BuildSize:      env("DO_BUILD_SIZE", "s-4vcpu-8gb"),
-		BuildImage:     env("DO_BUILD_IMAGE", "ubuntu-24-04-x64"),
-		DevName:        env("DO_DEV_NAME", "nixos-dev"),
-		DevSize:        env("DO_DEV_SIZE", "s-4vcpu-8gb"),
-		ImageName:      env("DO_IMAGE_NAME", "nixos-do-dev"),
-		FirewallName:   env("DO_FIREWALL_NAME", "nixos-dev-tailscale-only"),
-		SpacesBucket:   env("SPACES_BUCKET", ""),
-		SpacesRegion:   env("SPACES_REGION", "sgp1"),
-		SpacesKey:      env("SPACES_KEY", ""),
-		SpacesSecret:   env("SPACES_SECRET", ""),
-		SpacesEndpoint: env("SPACES_ENDPOINT", ""),
-	}
-	if cfg.SpacesEndpoint == "" {
-		cfg.SpacesEndpoint = fmt.Sprintf("https://%s.digitaloceanspaces.com", cfg.SpacesRegion)
+		RepoDir:       repoDir,
+		NixDir:        filepath.Join(repoDir, "do", "nix"),
+		StateDir:      stateDir,
+		KnownHosts:    filepath.Join(stateDir, "known_hosts"),
+		DOToken:       env("DIGITALOCEAN_ACCESS_TOKEN", env("DO_TOKEN", "")),
+		DORegion:      env("DO_REGION", "blr1"),
+		DOSSHKey:      env("DO_SSH_KEY", ""),
+		BuildName:     env("DO_BUILD_NAME", "nixos-build"),
+		BuildSize:     env("DO_BUILD_SIZE", "s-4vcpu-8gb"),
+		BuildImage:    env("DO_BUILD_IMAGE", "ubuntu-24-04-x64"),
+		DevName:       env("DO_DEV_NAME", "nixos-dev"),
+		DevSize:       env("DO_DEV_SIZE", "s-4vcpu-8gb"),
+		ImageName:     env("DO_IMAGE_NAME", "nixos-do-dev"),
+		FirewallName:  env("DO_FIREWALL_NAME", "nixos-dev-tailscale-only"),
+		ImageHTTPPort: env("IMAGE_HTTP_PORT", "8765"),
 	}
 	return cfg, nil
 }
@@ -116,13 +101,6 @@ func (c *Config) requireSSHKey() error {
 	return nil
 }
 
-func (c *Config) requireSpaces() error {
-	if c.SpacesBucket == "" || c.SpacesKey == "" || c.SpacesSecret == "" {
-		return fmt.Errorf("SPACES_BUCKET, SPACES_KEY, and SPACES_SECRET are required")
-	}
-	return nil
-}
-
 func (c *Config) ensureStateDir() error {
 	return os.MkdirAll(c.StateDir, 0o755)
 }
@@ -130,20 +108,6 @@ func (c *Config) ensureStateDir() error {
 func (c *Config) doClient(ctx context.Context) *godo.Client {
 	ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: c.DOToken})
 	return godo.NewClient(oauth2.NewClient(ctx, ts))
-}
-
-func (c *Config) s3Client(ctx context.Context) *s3.Client {
-	_ = ctx
-	creds := awscreds.NewStaticCredentialsProvider(c.SpacesKey, c.SpacesSecret, "")
-	return s3.New(s3.Options{
-		Region:       c.SpacesRegion,
-		Credentials:  creds,
-		BaseEndpoint: aws.String(c.SpacesEndpoint),
-	})
-}
-
-func (c *Config) spacesPublicURL(objectKey string) string {
-	return fmt.Sprintf("https://%s.%s.digitaloceanspaces.com/%s", c.SpacesBucket, c.SpacesRegion, objectKey)
 }
 
 func (c *Config) sshOpts() []string {
