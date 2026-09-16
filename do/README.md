@@ -110,7 +110,7 @@ State lives under `.local/do/` (gitignored). Builds on DO droplets are slow (no 
 
 ## Remote desktop (Hyprland + Quickshell)
 
-After a full `task switch` / `nixos-rebuild switch --flake .#do-cloud-dev`, the droplet auto-logs into an Omarchy-inspired **Hyprland** session with a **Quickshell** bar on a headless virtual monitor. Remoting is **Tailscale-only** (keep `task do:dev:block-ports`); do not open these ports on the DO cloud firewall.
+After a full `task switch` / `nixos-rebuild switch --flake .#do-cloud-dev`, the droplet auto-logs into an Omarchy-inspired **Hyprland** session with a **Quickshell** bar on a headless virtual monitor (includes **1Password** CLI + GUI). Remoting is **Tailscale-only** (keep `task do:dev:block-ports`); do not open these ports on the DO cloud firewall.
 
 | Protocol | Client (Mac) | Connect |
 | --- | --- | --- |

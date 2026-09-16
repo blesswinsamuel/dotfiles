@@ -1,4 +1,4 @@
-{ lib, pkgs, systemConfig, ... }:
+{ lib, pkgs, pkgsUnstable, systemConfig, ... }:
 let
   username = systemConfig.username;
   homeDir = "/home/${username}";
@@ -11,6 +11,12 @@ in
     withUWSM = true;
     xwayland.enable = true;
   };
+
+  # Same 1Password stack as personal Linux desktops (CLI + GUI over remoting).
+  programs._1password.enable = true;
+  programs._1password.package = pkgsUnstable._1password-cli;
+  programs._1password-gui.enable = true;
+  programs._1password-gui.package = pkgsUnstable._1password-gui;
 
   hardware.graphics.enable = true;
 
