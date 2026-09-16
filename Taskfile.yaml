@@ -125,7 +125,13 @@ tasks:
           echo "Secrets cache missing; unlocking…"
           task secrets:unlock
         fi
-      - go run .
+      - |
+        if command -v go >/dev/null 2>&1; then
+          go run .
+        else
+          echo "go not on PATH; using nixpkgs go…"
+          nix shell nixpkgs#go -c go run .
+        fi
 
   switch:
     deps: [_require-host-id]
