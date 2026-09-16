@@ -11,7 +11,8 @@ Ubuntu droplet, then boot a lasting dev droplet and converge with the full flake
 | `*.go` / `go.mod` | Separate Go module (`go -C do run . …`) using [godo](https://github.com/digitalocean/godo) |
 | [`../Taskfile.do.yaml`](../Taskfile.do.yaml) | Thin `task do:*` wrappers |
 
-After boot, switch to root flake attr `do-cloud-dev` for the full system.
+After boot, converge the droplet to root flake attr `do-cloud-dev` with a
+**remote** `nixos-rebuild` (local `task switch` only affects this machine).
 
 ## Prerequisites
 
@@ -37,9 +38,12 @@ task do:image:build
 task do:dev:up
 task do:dev:ssh   # then: sudo tailscale up
 
-# 4) Full config
-task set-host-id -- do-cloud-dev
-task switch
+# 4) Converge to full flake attr do-cloud-dev (from your laptop — not `task switch`)
+ip=$(jq -r .ip .local/do/dev-host.json)
+export NIX_SSHOPTS="-o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=$PWD/.local/do/known_hosts"
+nixos-rebuild switch --flake .#do-cloud-dev \
+  --target-host "root@$ip" --build-host "root@$ip"
+# Optional: SSH in, set host-id, unlock secrets, and `task run-home` for dotfiles.
 
 # 5) Public inbound: UDP 41641 only (Tailscale direct)
 task do:dev:block-ports

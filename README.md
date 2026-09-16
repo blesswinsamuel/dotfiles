@@ -158,7 +158,7 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-See **[`do/README.md`](do/README.md)** for getting started (builder → custom image → dev droplet → `task switch`).
+See **[`do/README.md`](do/README.md)** for getting started (builder → custom image → dev droplet → remote `nixos-rebuild`).
 
 Short path from the repo root:
 
@@ -166,7 +166,7 @@ Short path from the repo root:
 task do:build-host:up
 task do:image:build          # resumable; --force to rebuild
 task do:dev:up && task do:dev:ssh   # then: sudo tailscale up
-task set-host-id -- do-cloud-dev && task switch
+# then remote switch — see do/README.md (not `task switch` on your Mac)
 task do:dev:block-ports
 ```
 
