@@ -158,44 +158,17 @@ Other reasons that contributed:
 
 ## DigitalOcean NixOS (dev)
 
-Bootstrap custom image via a small Go CLI (`go -C do run .`) + DigitalOcean, then converge with the full flake on the droplet.
+See **[`do/README.md`](do/README.md)** for getting started (builder → custom image → dev droplet → `task switch`).
 
-| Piece | Role |
-| --- | --- |
-| [`do/nix`](do/nix) | Minimal bootstrap flake (SSH, flakes, Tailscale) — rsynced to the builder |
-| `do-cloud-dev` | Full system in the root flake — run `task switch` after the droplet is up |
-| [`do/`](do) Go module | Orchestrates droplets + custom image import (godo); serves the image with `nix run nixpkgs#miniserve` |
-
-**Prereqs:** Go, `rsync`, `ssh`, 1Password CLI (`op`).
-
-`task do:*` sets `DIGITALOCEAN_ACCESS_TOKEN` from 1Password, `DO_SSH_KEY`, and `DO_REGION=blr1`.
+Short path from the repo root:
 
 ```bash
-# 1) Ephemeral Ubuntu builder
 task do:build-host:up
-
-# 2) Rsync do/nix → build on droplet → miniserve → DO custom image
-task do:image:build
-# or also destroy the builder when done:
-task do:image:build-and-teardown
-
-# 3) Dev droplet from the custom image
-task do:dev:up
-task do:dev:ssh   # then: sudo tailscale up
-
-# 4) Converge to the full config
-task set-host-id -- do-cloud-dev
-task switch
-
-# 5) Block public inbound except UDP 41641 (Tailscale)
+task do:image:build          # resumable; --force to rebuild
+task do:dev:up && task do:dev:ssh   # then: sudo tailscale up
+task set-host-id -- do-cloud-dev && task switch
 task do:dev:block-ports
-
-# Tear down
-task do:dev:down
-task do:build-host:down   # if still running
 ```
-
-State under `.local/do/` is gitignored. Only `do/nix` is copied to the builder (not the whole repo). Image builds on DO droplets are slow (no nested KVM).
 
 ## Brew commands
 
