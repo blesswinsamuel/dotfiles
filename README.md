@@ -166,7 +166,7 @@ Bootstrap custom image via a small Go CLI (`go run ./do`) + DigitalOcean Spaces,
 | `do-cloud-dev` | Full system in the root flake — run `task switch` after the droplet is up |
 | [`do/`](do) Go module | Orchestrates droplets, Spaces upload, image import (godo + AWS SDK) |
 
-**Prereqs:** Go, `rsync`, `ssh`/`scp`, a DO API token, a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket:
+**Prereqs:** Go, `rsync`, `ssh`, a DO API token, a DO SSH key fingerprint/ID, and a [Spaces](https://cloud.digitalocean.com/spaces) bucket:
 
 ```bash
 export DIGITALOCEAN_ACCESS_TOKEN='...'
@@ -182,7 +182,7 @@ export SPACES_SECRET='...'
 # 1) Ephemeral Ubuntu builder
 task do:build-host:up
 
-# 2) Rsync do/nix → build → Spaces → DO custom image
+# 2) Rsync do/nix → build on droplet → upload Spaces from droplet → DO custom image
 task do:image:build
 # or also destroy the builder when done:
 task do:image:build-and-teardown

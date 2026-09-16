@@ -4,14 +4,13 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path/filepath"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/digitalocean/godo"
 )
 
@@ -59,17 +58,15 @@ func imageBuild(ctx context.Context, cfg *Config) error {
 		return err
 	}
 
-	imgPath, err := buildBootstrapImage(cfg, host.IP)
-	if err != nil {
+	if err := buildBootstrapImage(cfg, host.IP); err != nil {
 		return err
 	}
-	fmt.Printf("Built image: %s\n", imgPath)
 
 	objectKey := fmt.Sprintf("nixos-do-images/%s-%s.qcow2.gz", cfg.ImageName, time.Now().UTC().Format("20060102T150405Z"))
 	imageURL := cfg.spacesPublicURL(objectKey)
 
-	fmt.Printf("Uploading to Spaces %s / %s ...\n", cfg.SpacesBucket, objectKey)
-	if err := uploadSpaces(ctx, cfg, imgPath, objectKey); err != nil {
+	fmt.Printf("Uploading to Spaces from build host (%s / %s) ...\n", cfg.SpacesBucket, objectKey)
+	if err := uploadSpacesFromBuilder(cfg, host.IP, objectKey); err != nil {
 		return err
 	}
 
@@ -121,9 +118,9 @@ func imageBuild(ctx context.Context, cfg *Config) error {
 	return nil
 }
 
-func buildBootstrapImage(cfg *Config, buildHostIP string) (string, error) {
+func buildBootstrapImage(cfg *Config, buildHostIP string) error {
 	if err := cfg.rsyncNix(buildHostIP); err != nil {
-		return "", err
+		return err
 	}
 
 	fmt.Println("Building DigitalOcean bootstrap image on build host (this can take a long time)...")
@@ -147,32 +144,38 @@ cp -L "$img" /root/nixos-do-dev.qcow2.gz
 ls -lh /root/nixos-do-dev.qcow2.gz
 `, remoteNixDir)
 	if err := cfg.runSSH(buildHostIP, remoteScript); err != nil {
-		return "", fmt.Errorf("remote image build: %w", err)
+		return fmt.Errorf("remote image build: %w", err)
 	}
-
-	localImg := filepath.Join(cfg.StateDir, "nixos-do-dev.qcow2.gz")
-	fmt.Printf("Copying image back to %s ...\n", localImg)
-	if err := cfg.scpFrom(buildHostIP, "/root/nixos-do-dev.qcow2.gz", localImg); err != nil {
-		return "", fmt.Errorf("scp image: %w", err)
-	}
-	return localImg, nil
+	return nil
 }
 
-func uploadSpaces(ctx context.Context, cfg *Config, localPath, objectKey string) error {
-	f, err := os.Open(localPath)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
+// uploadSpacesFromBuilder uploads the built image from the droplet (faster than laptop→Spaces).
+func uploadSpacesFromBuilder(cfg *Config, ip, objectKey string) error {
+	script := fmt.Sprintf(`
+set -euo pipefail
+if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+nix shell nixpkgs#awscli2 -c aws s3 cp \
+  /root/nixos-do-dev.qcow2.gz \
+  "s3://%s/%s" \
+  --endpoint-url "%s" \
+  --acl public-read
+`, cfg.SpacesBucket, objectKey, cfg.SpacesEndpoint)
 
-	client := cfg.s3Client(ctx)
-	_, err = client.PutObject(ctx, &s3.PutObjectInput{
-		Bucket: aws.String(cfg.SpacesBucket),
-		Key:    aws.String(objectKey),
-		Body:   f,
-		ACL:    types.ObjectCannedACLPublicRead,
-	})
-	return err
+	args := append(cfg.sshOpts(),
+		"root@"+ip,
+		"env",
+		"AWS_ACCESS_KEY_ID="+cfg.SpacesKey,
+		"AWS_SECRET_ACCESS_KEY="+cfg.SpacesSecret,
+		"AWS_DEFAULT_REGION="+cfg.SpacesRegion,
+		"bash", "-s",
+	)
+	cmd := exec.Command("ssh", args...)
+	cmd.Stdin = strings.NewReader(script)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 func deleteSpaces(ctx context.Context, cfg *Config, objectKey string) error {

@@ -82,17 +82,6 @@ func (c *Config) rsyncNix(ip string) error {
 	return cmd.Run()
 }
 
-func (c *Config) scpFrom(ip, remotePath, localPath string) error {
-	if err := os.MkdirAll(filepath.Dir(localPath), 0o755); err != nil {
-		return err
-	}
-	args := append(c.sshOpts(), fmt.Sprintf("root@%s:%s", ip, remotePath), localPath)
-	cmd := exec.Command("scp", args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
-}
-
 func (c *Config) interactiveSSH(ip string, extra []string) error {
 	args := append(c.sshOpts(), "root@"+ip)
 	args = append(args, extra...)
