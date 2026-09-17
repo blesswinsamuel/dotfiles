@@ -150,4 +150,8 @@ systemctl --user status sunshine x11vnc rustdesk
 ls -l /dev/uinput   # expect group uinput, mode 0660
 id                  # expect uinput in groups (needs reboot after first enable)
 journalctl --user -u sunshine -b | rg -i 'virtual (mouse|keyboard)|uinput|Permission'
+
+# Input works but no visible pointer? XFCE uses Xorg SWCursor (deviceSection).
+# Confirm after display-manager restart:
+rg -i 'SWCursor|Using software cursor' /var/log/Xorg.0.log
 ```

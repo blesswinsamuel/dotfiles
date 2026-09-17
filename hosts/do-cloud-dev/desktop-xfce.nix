@@ -7,6 +7,11 @@ in
   services.xserver.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
+  # Virtio HW cursor lives on a separate plane Sunshine/KMS often can't
+  # capture — draw it into the framebuffer so Moonlight shows a pointer.
+  services.xserver.deviceSection = ''
+    Option "SWCursor" "true"
+  '';
   # Headless virtio default is 1024x768; prefer 1080p for remoting.
   services.xserver.resolutions = [{ x = 1920; y = 1080; }];
   services.xserver.virtualScreen = {
