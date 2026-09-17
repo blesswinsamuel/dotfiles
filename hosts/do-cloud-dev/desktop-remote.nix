@@ -37,6 +37,10 @@ assert lib.assertMsg (desktop == "xfce" || desktop == "hyprland")
     settings.csrf_allowed_origins = "https://do-cloud-dev,https://do-cloud-dev:47990";
   };
 
+  # Sunshine injects kbd/mouse via /dev/uinput. Without this, Moonlight streams
+  # video but input is a no-op ("Unable to create virtual keyboard/mouse").
+  hardware.uinput.enable = true;
+
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -47,7 +51,7 @@ assert lib.assertMsg (desktop == "xfce" || desktop == "hyprland")
   security.polkit.enable = true;
   programs.dconf.enable = true;
 
-  users.users.${username}.extraGroups = [ "video" "input" "render" ];
+  users.users.${username}.extraGroups = [ "video" "input" "uinput" "render" ];
 
   environment.systemPackages = with pkgs; [
     rustdesk

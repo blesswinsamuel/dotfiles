@@ -145,4 +145,9 @@ systemctl --user status sunshine x11vnc rustdesk
 # or, if desktop = "hyprland":
 # systemctl status greetd
 # systemctl --user status sunshine wayvnc rustdesk
+
+# Moonlight video OK but no mouse/keyboard? Confirm uinput access:
+ls -l /dev/uinput   # expect group uinput, mode 0660
+id                  # expect uinput in groups (needs reboot after first enable)
+journalctl --user -u sunshine -b | rg -i 'virtual (mouse|keyboard)|uinput|Permission'
 ```
