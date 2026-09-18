@@ -61,7 +61,6 @@ alias l='ls -CF'
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-
 # if [[ ! -v BASH_COMPLETION_VERSINFO ]]; then
 #   . "/nix/store/5zy0g7sf89vhcwf1ly2hcycfi2b67702-bash-completion-2.14.0/etc/profile.d/bash_completion.sh"
 # fi

@@ -33,8 +33,8 @@
 
     packages = [
       # Nix
-      pkgsUnstable.nixpkgs-fmt # deprecated
-      pkgsUnstable.nixfmt-rfc-style
+      pkgsUnstable.nixpkgs-fmt # deprecated - but I like this
+      # pkgsUnstable.nixfmt-rfc-style
       pkgsUnstable.nixos-rebuild
       pkgsUnstable.nil # nix language server
 

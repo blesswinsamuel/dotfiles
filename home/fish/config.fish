@@ -82,3 +82,6 @@ fish_add_path /Users/blesswinsamuel/.antigravity/antigravity/bin
 
 # Added by Antigravity IDE
 fish_add_path /Users/blesswinsamuel/.antigravity-ide/antigravity-ide/bin
+
+# Hermes Agent — ensure ~/.local/bin is on PATH
+fish_add_path "$HOME/.local/bin"
