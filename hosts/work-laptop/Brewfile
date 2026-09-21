@@ -6,6 +6,7 @@ tap "homebrew/cask-versions"
 # tap "wez/wezterm"
 
 brew "dockutil"
+brew "utiluti"
 brew "unison"
 # brew "grafana"
 # brew "zookeeper"
@@ -116,4 +117,4 @@ cask "gitify"
 # cask "devhub"
 cask "trailer"
 
-cask "swiftdefaultappsprefpane"
+brew "utiluti"
