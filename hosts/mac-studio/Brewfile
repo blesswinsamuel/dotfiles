@@ -17,6 +17,7 @@ tap "hashicorp/tap"
 # tap "vmware-tanzu/carvel"
 
 brew "dockutil"
+brew "utiluti"
 brew "llvm" # for ebpf xdp dev
 # brew "hashicorp/tap/terraform" # nix takes a lot of time
 # brew "cdktf" # nix takes a lot of time - use npm install --global cdktf-cli@latest
@@ -152,7 +153,7 @@ cask "hammerspoon"
 # Temp
 cask "blackhole-2ch"
 
-cask "swiftdefaultappsprefpane"
+# cask "swiftdefaultappsprefpane"
 cask "codexbar"
 cask "repobar"
 cask "codex"

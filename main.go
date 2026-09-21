@@ -537,26 +537,6 @@ func getCurrentDockEntries() ([]DockEntry, error) {
 
 func configureDefaultApplications(profile Profile) {
 	if len(profile.MacOS.DefaultApplications) > 0 {
-		currentSchemes := map[string]string{}
-		parseSwdaOut := func(out []byte, keyType string) {
-			for _, line := range strings.Split(string(out), "\n") {
-				if line == "" {
-					continue
-				}
-				parts := strings.Split(line, "\t\t\t\t")
-				currentSchemes[keyType+":"+parts[0]] = parts[1]
-			}
-		}
-		outSchemes, err := exec.Command("swda", "getSchemes").Output()
-		if err != nil {
-			log.Fatal().Err(err).Msgf("failed to get schemes")
-		}
-		parseSwdaOut(outSchemes, "scheme")
-		outUTIs, err := exec.Command("swda", "getUTIs").Output()
-		if err != nil {
-			log.Fatal().Err(err).Msgf("failed to get schemes")
-		}
-		parseSwdaOut(outUTIs, "uti")
 		for key, application := range profile.MacOS.DefaultApplications {
 			key := strings.Split(key, ":")
 			if len(key) != 2 {
@@ -564,31 +544,36 @@ func configureDefaultApplications(profile Profile) {
 			}
 			keyType := key[0]
 			schemeOrUTI := key[1]
-			argName := ""
+
+			var getArgs []string
+			var setArgs []string
 			switch keyType {
 			case "scheme":
-				argName = "--URL"
+				getArgs = []string{"url", schemeOrUTI}
+				setArgs = []string{"url", "set", schemeOrUTI}
 			case "uti":
-				argName = "--UTI"
+				getArgs = []string{"type", schemeOrUTI}
+				setArgs = []string{"type", "set", schemeOrUTI}
 			default:
 				log.Fatal().Msgf("unsupported key type")
 			}
-			// var currentApplication string
-			// out, err := exec.Command("swda", "getHandler", argName, schemeOrUTI).Output()
-			// if err == nil {
-			// 	currentApplication = strings.TrimSpace(string(out))
-			// 	if currentApplication == application {
-			// 		log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
-			// 		continue
-			// 	}
-			// }
-			currentApplication := currentSchemes[keyType+":"+schemeOrUTI]
+
+			out, err := exec.Command("utiluti", getArgs...).Output()
+			if err != nil {
+				log.Fatal().Err(err).Msgf("failed to get current handler for %s", schemeOrUTI)
+			}
+			currentApplication := strings.TrimSpace(string(out))
 			if currentApplication == application {
 				log.Debug().Str("uti", schemeOrUTI).Str("application", application).Msgf("default application already set")
 				continue
 			}
+			bundleID, err := exec.Command("utiluti", "app", "identifier", application).Output()
+			if err != nil {
+				log.Fatal().Err(err).Msgf("failed to get bundle id for %s", application)
+			}
 			log.Info().Str("uti", schemeOrUTI).Str("application", application).Str("currentApplication", currentApplication).Msgf("setting default application")
-			if out, err := exec.Command("swda", "setHandler", argName, schemeOrUTI, "--app", application).CombinedOutput(); err != nil {
+			setArgs = append(setArgs, strings.TrimSpace(string(bundleID)))
+			if out, err := exec.Command("utiluti", setArgs...).CombinedOutput(); err != nil {
 				log.Fatal().Err(err).Msgf("failed to set default application: %s", out)
 			}
 		}

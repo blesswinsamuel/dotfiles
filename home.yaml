@@ -153,6 +153,13 @@ hosts:
           - { path: "/Applications/Firefox.app/" }
           - { path: "/Applications/IINA.app/" }
           - { options: { type: spacer } }
+          - { path: "/Applications/OpenChamber.app/" }
+          - { path: "/Applications/Hermes.app/" }
+          - { path: "/Applications/Paseo.app/" }
+          - { path: "/Applications/Antigravity.app/" }
+          - { path: "/Applications/Antigravity IDE.app/" }
+          - { path: "/Applications/cmux.app/" }
+          - { options: { type: spacer } }
           - { path: "/Applications/Obsidian.app/" }
           - { path: "/Applications/OrbStack.app/" }
           - { path: "/Applications/Visual Studio Code.app/" }
