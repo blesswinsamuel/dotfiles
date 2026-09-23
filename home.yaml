@@ -151,10 +151,12 @@ hosts:
           - { path: "/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/" }
           - { path: "/Applications/Google Chrome.app/" }
           - { path: "/Applications/Firefox.app/" }
+          - { path: "/Applications/Zen.app/" }
           - { path: "/Applications/IINA.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/OpenChamber.app/" }
-          - { path: "/Applications/Hermes.app/" }
+          - { path: "/System/Applications/Siri AI.app/" }
+          - { path: "/Users/blesswinsamuel/.hermes/hermes-agent/apps/desktop/release/mac-arm64/Hermes.app/" }
           - { path: "/Applications/Paseo.app/" }
           - { path: "/Applications/Antigravity.app/" }
           - { path: "/Applications/Antigravity IDE.app/" }
