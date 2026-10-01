@@ -1,11 +1,15 @@
+set -g is_darwin false
+if string match -q '*-darwin*' (status buildinfo)
+    set -g is_darwin true
+end
+
 if status is-login
     # Login shell initialisation
-    switch (status buildinfo | string collect)
-        case '*-darwin*'
-            # fix path variable order - https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
-            # https://d12frosted.io/posts/2021-05-21-path-in-fish-with-nix-darwin.html
-            fish_add_path --move --prepend --path "$HOME/.nix-profile/bin" "/etc/profiles/per-user/$USER/bin" /run/current-system/sw/bin /nix/var/nix/profiles/default/bin
-            set fish_user_paths $fish_user_paths
+    if $is_darwin
+        # fix path variable order - https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
+        # https://d12frosted.io/posts/2021-05-21-path-in-fish-with-nix-darwin.html
+        fish_add_path --move --prepend --path "$HOME/.nix-profile/bin" "/etc/profiles/per-user/$USER/bin" /run/current-system/sw/bin /nix/var/nix/profiles/default/bin
+        set fish_user_paths $fish_user_paths
     end
 end
 

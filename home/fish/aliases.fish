@@ -97,26 +97,24 @@ if type -q ncdu
     alias ncdu 'ncdu --color dark'
 end
 
-switch (status buildinfo | string collect)
-    case '*-darwin*'
-        # Mac Quick Look
-        alias ql "qlmanage -p"
-        alias dont-index "touch .metadata_never_index"
+if $is_darwin
+    # Mac Quick Look
+    alias ql "qlmanage -p"
+    alias dont-index "touch .metadata_never_index"
 
-        # cd to open Finder directory
-        alias cdf "cd (osascript -e 'tell application \"Finder\" to get the POSIX path of (target of front window as alias)')"
-    case '*'
-        # alias pbcopy 'xsel --clipboard --input'
-        # alias pbpaste 'xsel --clipboard --output'
-        alias pbcopy 'xclip -selection clipboard'
-        alias pbpaste 'xclip -selection clipboard -o'
+    # cd to open Finder directory
+    alias cdf "cd (osascript -e 'tell application \"Finder\" to get the POSIX path of (target of front window as alias)')"
+else
+    # alias pbcopy 'xsel --clipboard --input'
+    # alias pbpaste 'xsel --clipboard --output'
+    alias pbcopy 'xclip -selection clipboard'
+    alias pbpaste 'xclip -selection clipboard -o'
 end
 
-switch (status buildinfo | string collect)
-    case '*-darwin*'
-        # keep open alias
-    case '*'
-        alias open xdg-open
+if $is_darwin
+    # keep open alias
+else
+    alias open xdg-open
 end
 
 alias fish-reload "source ~/.config/fish/config.fish"
