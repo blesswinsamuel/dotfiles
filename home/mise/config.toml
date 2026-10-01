@@ -1,5 +1,6 @@
 [tools]
 biome = "latest"
+trivy = "latest"
 bun = "latest"
 deno = "latest"
 go = "latest"

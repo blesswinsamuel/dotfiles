@@ -23,6 +23,7 @@ brew "llvm" # for ebpf xdp dev
 # brew "cdktf" # nix takes a lot of time - use npm install --global cdktf-cli@latest
 brew "unison"
 brew "switchaudio-osx"
+brew "sox"
 
 mas "Xcode", id: 497799835
 mas "The Unarchiver", id: 425424353
@@ -156,7 +157,6 @@ cask "blackhole-2ch"
 # cask "swiftdefaultappsprefpane"
 cask "codexbar"
 cask "repobar"
-cask "codex"
 cask "codex-app"
 cask "opencode-desktop"
 cask "antigravity"

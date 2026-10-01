@@ -48,7 +48,7 @@
       pkgsUnstable.devbox
       # pkgsUnstable.uv
       # pkgsUnstable.go
-      pkgsUnstable.biome
+      # biome - managed by mise (home/mise/config.toml)
 
       # Better tools
       pkgsUnstable.prettyping # Better ping
