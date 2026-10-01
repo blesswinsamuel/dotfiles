@@ -8,8 +8,8 @@ end
 
 if test -z "$SSH_CLIENT"
     set -gx EDITOR "subl -nw"
-    switch (uname)
-        case Darwin
+    switch (status buildinfo | string collect)
+        case '*-darwin*'
             # set -gx EDITOR "zed -w"
     end
 end

@@ -1,7 +1,7 @@
 if status is-login
     # Login shell initialisation
-    switch (uname)
-        case Darwin
+    switch (status buildinfo | string collect)
+        case '*-darwin*'
             # fix path variable order - https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
             # https://d12frosted.io/posts/2021-05-21-path-in-fish-with-nix-darwin.html
             fish_add_path --move --prepend --path "$HOME/.nix-profile/bin" "/etc/profiles/per-user/$USER/bin" /run/current-system/sw/bin /nix/var/nix/profiles/default/bin
@@ -43,7 +43,7 @@ if status is-interactive
     # set -g fish_color_search_match purple
     set -g fish_color_status red
 
-    if type -q direnv
+    if type -q direnv; and not functions -q __direnv_export_eval
         direnv hook fish | source
     end
 
@@ -64,7 +64,7 @@ if status is-interactive
     end
 
     if type -q starship
-        starship init fish | source
+        starship init fish --print-full-init | source
         functions -e fish_right_prompt
         function fish_right_prompt
         end

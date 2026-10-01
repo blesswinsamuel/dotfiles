@@ -97,8 +97,8 @@ if type -q ncdu
     alias ncdu 'ncdu --color dark'
 end
 
-switch (uname)
-    case Darwin
+switch (status buildinfo | string collect)
+    case '*-darwin*'
         # Mac Quick Look
         alias ql "qlmanage -p"
         alias dont-index "touch .metadata_never_index"
@@ -112,8 +112,8 @@ switch (uname)
         alias pbpaste 'xclip -selection clipboard -o'
 end
 
-switch (uname)
-    case Darwin
+switch (status buildinfo | string collect)
+    case '*-darwin*'
         # keep open alias
     case '*'
         alias open xdg-open
