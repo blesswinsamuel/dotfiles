@@ -23,12 +23,12 @@
     # victoriametrics
 
     # Kubernetes
-    pkgsUnstable.kapp
+    pkgsUnstable.stern
     pkgsUnstable.kubectl
     pkgsUnstable.kubernetes-helm
     # pkgs.kopia
     pkgsUnstable.krew
-    pkgsUnstable.stern
+    # kapp - managed by mise (home/mise/config.toml)
     pkgsUnstable.kubie
 
     # Docker
@@ -49,7 +49,7 @@
     pkgsUnstable.autossh
     pkgsUnstable.direnv
     pkgsUnstable.atuin
-    pkgsUnstable.just
+    # just - already in commons.nix
     pkgsUnstable.gojq
     pkgsUnstable.hey # HTTP load generator, ApacheBench (ab) replacement
     pkgsUnstable.rclone
@@ -59,7 +59,7 @@
     # pkgs.gnutar
     # pkgs.gzip
     # pkgs.unzip
-    pkgsUnstable.tree
+    # tree - already in commons.nix
     pkgsUnstable.websocat
     # pkgsMaster.unison
     pkgsUnstable.hexyl # command line hex viewer
@@ -77,7 +77,7 @@
     pkgsUnstable.git-secrets
     pkgsUnstable.gitleaks
 
-    pkgsUnstable.buf
+    # buf - managed by mise (home/mise/config.toml)
 
     # pkgs.home-assistant-cli
   ];
