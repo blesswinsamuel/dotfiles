@@ -60,7 +60,7 @@ if status is-interactive
     # end
 
     if type -q mise
-        eval (mise activate fish)
+        eval (mise activate fish --shims)
     end
 
     if type -q zoxide

@@ -70,6 +70,6 @@ if [[ $TERM != "dumb" ]]; then
 fi
 
 if type "mise" > /dev/null; then
-  eval "$(mise activate bash)"
+  eval "$(mise activate bash --shims)"
 fi
 

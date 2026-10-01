@@ -33,5 +33,5 @@ if [[ $TERM != "dumb" ]]; then
 fi
 
 if type "mise" > /dev/null; then
-  eval "$(mise activate zsh)"
+  eval "$(mise activate zsh --shims)"
 fi
