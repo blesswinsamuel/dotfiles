@@ -29,3 +29,10 @@ kapp = "latest"
 "pipx:hermes-agent" = "latest"
 "go:github.com/mitranim/gow" = "latest"
 "npm:@openhands/agent-canvas" = "latest"
+
+[settings]
+use_versions_host = true
+
+[env]
+GOBIN = "/Users/blesswinsamuel/go/bin"
+_.path = ["/Users/blesswinsamuel/go/bin"]
