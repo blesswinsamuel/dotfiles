@@ -22,24 +22,17 @@ profiles:
       # ── AI coding agents ─────────────────────────────────────────────────
       # Claude Code
       .claude/CLAUDE.md: { source: ./home/agents/AGENTS.md }
-      .claude/skills: { source: ./home/agents/skills }
+      # Skills now live as real files in ~/.claude/skills (not managed here)
       # OpenCode
       .config/opencode/AGENTS.md: { source: ./home/agents/AGENTS.md }
-      .config/opencode/skills: { source: ./home/agents/skills }
       .config/opencode/commands: { source: ./home/agents/commands }
       # Gemini CLI + Antigravity CLI
       .gemini/GEMINI.md: { source: ./home/agents/AGENTS.md }
-      .gemini/skills: { source: ./home/agents/skills }
-      .gemini/antigravity-cli/skills: { source: ./home/agents/skills }
       # Pi (pi.dev)
       .pi/agent/AGENTS.md: { source: ./home/agents/AGENTS.md }
-      .pi/agent/skills: { source: ./home/agents/skills }
       .pi/agent/prompts: { source: ./home/agents/commands }
       # Cursor
       .cursor/rules/agents.mdc: { source: ./home/agents/AGENTS.md }
-      .cursor/skills: { source: ./home/agents/skills }
-      # Agent Skills standard — shared across all harnesses
-      .agents/skills: { source: ./home/agents/skills }
   commons-darwin:
     files:
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }
