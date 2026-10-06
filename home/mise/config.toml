@@ -34,5 +34,5 @@ kapp = "latest"
 use_versions_host = true
 
 [env]
-GOBIN = "/Users/blesswinsamuel/go/bin"
-_.path = ["/Users/blesswinsamuel/go/bin"]
+GOBIN = "$HOME/go/bin"
+_.path = ["$HOME/go/bin"]
