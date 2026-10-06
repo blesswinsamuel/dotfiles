@@ -41,20 +41,12 @@ profiles:
       Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings: { source: ./home/sublime-text/Preferences.sublime-settings }
       Library/Application Support/Sublime Merge/Packages/User/Default (OSX).sublime-keymap: { source: ./home/sublime-merge/Default (OSX).sublime-keymap }
     macos:
-      # /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -dump | grep '[[:space:]]uti:' | awk '{ print $2 }' | sort | uniq
-      # swda getUTIs
-      # swda getSchemes
-      # touch /tmp/file.ts && mdls -name kMDItemContentType /tmp/file.ts && rm /tmp/file.ts
-      # touch /tmp/file.ts && mdls -name kMDItemContentTypeTree /tmp/file.ts && rm /tmp/file.ts
-      # touch /tmp/file.ts && mdls -name kMDItemKind /tmp/file.ts && rm /tmp/file.ts
+      # Confirm with: utiluti get-uti <ext>
+      # .ts is Apple's public.mpeg-2-transport-stream (video), not TypeScript.
+      # .go and .tsx have no registered UTType on this OS.
       defaultApplications:
-        # org.yaml.yaml: /Applications/Visual Studio Code.app
-        # public.yaml: /Applications/Visual Studio Code.app
         uti:net.daringfireball.markdown: /Applications/Visual Studio Code.app
         uti:public.plain-text: /Applications/Visual Studio Code.app
-        uti:public.typescript: /Applications/Visual Studio Code.app
-        uti:public.tsx: /Applications/Visual Studio Code.app
-        uti:org.go.source: /Applications/Visual Studio Code.app
         uti:public.python-script: /Applications/Visual Studio Code.app
         uti:public.mpeg-4: /Applications/IINA.app # mp4
         uti:com.apple.m4a-audio: /Applications/IINA.app # m4a
