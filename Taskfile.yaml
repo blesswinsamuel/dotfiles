@@ -153,6 +153,26 @@ tasks:
     cmds:
       - brew bundle install --file ~/.Brewfile
 
+  sync-up:
+    desc: Start the mutagen two-way sync of this repo to the dev box
+    cmds:
+      - mutagen project start
+
+  sync-down:
+    desc: Terminate the mutagen sync sessions
+    cmds:
+      - mutagen project terminate
+
+  sync-flush:
+    desc: Force one sync pass
+    cmds:
+      - mutagen project flush
+
+  sync-status:
+    desc: Show sync session status
+    cmds:
+      - mutagen sync list
+
   doctor:
     desc: Check system health (brew drift, nix flake staleness, mise, git status)
     cmds:

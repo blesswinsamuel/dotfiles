@@ -1,3 +1,4 @@
 .DS_Store
 .local/
 /dotfiles
+mutagen.yml.lock

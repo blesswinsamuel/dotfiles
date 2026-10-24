@@ -1,0 +1,23 @@
+# Mutagen project file: two-way sync of this dotfiles repo to the personal
+# NixOS dev box. Start with `mutagen project start`, stop with
+# `mutagen project terminate`, force one sync pass with `mutagen project flush`.
+#
+# Beta is addressed by mDNS name, not IP: the host takes its address from DHCP
+# and has already moved (10.100.10.142 -> .143).
+sync:
+  defaults:
+    mode: two-way-resolved
+    flushOnCreate: true
+    ignore:
+      vcs: true
+      paths:
+        - "**/.DS_Store"
+        - "**/Thumbs.db"
+        # Repo-local build/state output (gitignored, machine-specific).
+        - "/.local"
+        - "/dotfiles"
+
+  dotfiles:
+    # Run mutagen from the repo root, so the paths below are repo-relative.
+    alpha: .
+    beta: blesswinsamuel@hp-chromebox-g2.local:/home/blesswinsamuel/dotfiles
