@@ -19,11 +19,10 @@ in
     };
   };
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgsUnstable.xdg-desktop-portal-gtk ];
-    config.common.default = [ "gtk" ];
-  };
+  # The XFCE desktop-manager module already enables the portal and provides
+  # xdg-desktop-portal-gtk in extraPortals. Adding it again duplicates the
+  # package and breaks the user-units build with a symlink collision.
+  xdg.portal.config.common.default = [ "gtk" ];
 
   environment.systemPackages = with pkgsUnstable; [
     xfce4-terminal
