@@ -3,7 +3,7 @@ let
   username = systemConfig.username;
 in
 {
-  # Remoting over Tailscale only; wired LAN stays firewalled.
+  # Remoting over Tailscale only; the wired LAN stays firewalled.
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
   programs._1password.enable = true;
@@ -14,17 +14,32 @@ in
   programs.firefox.enable = true;
   programs.firefox.package = pkgsUnstable.firefox;
 
-  hardware.graphics.enable = true;
+  programs.chromium.enablePlasmaBrowserIntegration = true;
 
-  # Sunshine/Moonlight is the low-latency path; x11vnc is the fallback.
-  # The i3 has no hardware encoder, so Sunshine uses CPU encode at 1080p.
+  # UHD 620 (Kaby Lake-R): VAAPI gives hardware H.264/HEVC encode for Sunshine,
+  # which the do-cloud-dev droplet had to do on CPU.
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgsUnstable; [
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      vpl-gpu-rt # oneVPL / QuickSync runtime
+      libvdpau-va-gl
+    ];
+  };
+
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
+
+  # No `settings` here on purpose: the module only renders sunshine.conf when
+  # more than one setting is given, which also disables web UI configuration.
+  # Leaving it unset keeps https://<host>:47990 usable for credentials + PIN pairing.
   services.sunshine = {
     enable = true;
     autoStart = true;
+    # DRM/KMS capture needs this on Wayland; required for the KMS grab path on X11 too.
     capSysAdmin = true;
     openFirewall = false;
-    # Web UI is reached over Tailscale, not localhost; CSRF blocks PIN submit otherwise.
-    settings.csrf_allowed_origins = "https://hp-450-laptop,https://hp-450-laptop:47990";
   };
 
   # Sunshine injects kbd/mouse via /dev/uinput; without this, video streams but input is a no-op.
@@ -32,7 +47,6 @@ in
 
   security.rtkit.enable = true;
   security.polkit.enable = true;
-  programs.dconf.enable = true;
 
   services.pipewire = {
     enable = true;

@@ -93,11 +93,9 @@ profiles:
   work-darwin:
   work-linux:
 hosts:
-  hp-chromebox:
+  hp-chromebox-g2:
     realm: personal
   hp-laptop:
-    realm: personal
-  hp-450-laptop:
     realm: personal
   mac-studio:
     realm: personal

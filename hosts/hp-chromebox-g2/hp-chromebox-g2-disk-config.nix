@@ -5,10 +5,13 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Chromebox firmware boots with a short timeout; keep the menu reachable.
+  boot.loader.timeout = 5;
+
   disko.devices = {
     disk = {
       disk1 = {
-        device = "/dev/disk/by-id/ata-EVM_SSD_AA000000000000030296";
+        device = "/dev/disk/by-id/ata-Matrix_256GB_DH20230620114000";
         type = "disk";
         content = {
           type = "gpt";
@@ -24,10 +27,10 @@
                 mountOptions = [ "umask=0077" ];
               };
             };
+            # Leave room for the swap partition at the end of the disk.
             root = {
               name = "root";
-              # size = "100%";
-              end = "-6G";
+              end = "-16G";
               content = {
                 type = "filesystem";
                 format = "ext4";
@@ -40,7 +43,7 @@
               type = "8200"; # https://github.com/nix-community/disko/issues/391
               content = {
                 type = "swap";
-                resumeDevice = true; # resume from hiberation from this device
+                resumeDevice = true;
               };
             };
           };
@@ -49,11 +52,8 @@
     };
   };
 
-  # Laptop power settings: this machine is a plugged-in fixed node (battery is dead).
+  # Always-on desktop-class node: never suspend or hibernate.
   services.logind.extraConfig = ''
-    HandleLidSwitch=ignore
-    HandleLidSwitchExternalPower=ignore
-    HandleLidSwitchDocked=ignore
     IdleAction=ignore
   '';
 

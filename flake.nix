@@ -104,39 +104,20 @@
             userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
           };
         };
-        hp-450-laptop = nixosSystem {
+        hp-chromebox-g2 = nixosSystem {
           system = "x86_64-linux";
           extraModules = [
             disko.nixosModules.disko
             ./commons/linux.nix
             ./commons/personal-linux-desktop.nix
-            ./hosts/hp-450-laptop/hp-450-laptop-hardware-configuration.nix
-            ./hosts/hp-450-laptop/hp-450-laptop-disk-config.nix
-            ./hosts/hp-450-laptop/hp-450-laptop.nix
+            ./hosts/hp-chromebox-g2/hp-chromebox-g2-hardware-configuration.nix
+            ./hosts/hp-chromebox-g2/hp-chromebox-g2-disk-config.nix
+            ./hosts/hp-chromebox-g2/hp-chromebox-g2.nix
           ];
           systemConfig = {
             username = "blesswinsamuel";
             realm = "personal";
             desktop = "xfce";
-            authorizedKeys = [
-              # cat ~/.ssh/id_ed25519.pub | pbcopy
-              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
-            ];
-            rootHashedPassword = "$y$j9T$Qnv1FPJ76Q2.nY6U2d/m..$JzPVeJwn9X/q9K2OjcZMVXqke/AJ7DuLmAzgKX6oQR4"; # nix run nixpkgs#mkpasswd --command 'mkpasswd xxx'
-            userHashedPassword = "$y$j9T$7vegI80UKMuJ8fLOitraF/$6C1BYMnljFjsQInlBaxjP.e6n3cSBkIhOSFDv6WaCP5";
-          };
-        };
-        hp-chromebox = nixosSystem {
-          system = "x86_64-linux";
-          extraModules = [
-            ./commons/linux.nix
-            ./commons/personal-linux-desktop.nix
-            ./hosts/hp-chromebox/hp-chromebox-hardware-configuration.nix
-            ./hosts/hp-chromebox/hp-chromebox.nix
-          ];
-          systemConfig = {
-            username = "blesswinsamuel";
-            realm = "personal";
             authorizedKeys = [
               # cat ~/.ssh/id_ed25519.pub | pbcopy
               "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBv5qmX429IPSo2TsFywtCr9w7kprutEYCBS1c291jZv blesswinsamuel@bless-mac-wired.home.lan"
