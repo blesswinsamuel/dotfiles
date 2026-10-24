@@ -6,15 +6,7 @@ in
   # Remoting over Tailscale only; the wired LAN stays firewalled.
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
-  programs._1password.enable = true;
-  programs._1password.package = pkgsUnstable._1password-cli;
-  programs._1password-gui.enable = true;
-  programs._1password-gui.package = pkgsUnstable._1password-gui;
-
-  programs.firefox.enable = true;
-  programs.firefox.package = pkgsUnstable.firefox;
-
-  programs.chromium.enablePlasmaBrowserIntegration = true;
+  # firefox, 1Password and polkit come from commons/personal-linux-desktop.nix.
 
   # UHD 620 (Kaby Lake-R): VAAPI gives hardware H.264/HEVC encode for Sunshine,
   # which the do-cloud-dev droplet had to do on CPU.
@@ -37,22 +29,14 @@ in
   services.sunshine = {
     enable = true;
     autoStart = true;
-    # DRM/KMS capture needs this on Wayland; required for the KMS grab path on X11 too.
+    # DRM/KMS capture needs this; also required for the KMS grab path on X11.
     capSysAdmin = true;
     openFirewall = false;
   };
 
   # Sunshine injects kbd/mouse via /dev/uinput; without this, video streams but input is a no-op.
+  # (The module sets this too, but keep it explicit for the x11vnc/sunshine pair.)
   hardware.uinput.enable = true;
-
-  security.rtkit.enable = true;
-  security.polkit.enable = true;
-
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-  };
 
   users.users.${username}.extraGroups = [ "video" "input" "uinput" "render" ];
 

@@ -53,12 +53,12 @@
   };
 
   # Always-on desktop-class node: never suspend or hibernate.
-  services.logind.extraConfig = ''
-    IdleAction=ignore
-  '';
+  services.logind.settings.Login = {
+    IdleAction = "ignore";
+  };
 
-  systemd.sleep.extraConfig = ''
-    AllowSuspend=no
-    AllowHibernation=no
-  '';
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = "no";
+    AllowHibernation = "no";
+  };
 }

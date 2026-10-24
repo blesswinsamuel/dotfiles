@@ -27,6 +27,5 @@ in
 
   environment.systemPackages = with pkgsUnstable; [
     xfce4-terminal
-    libsForQt5.kconfig
   ];
 }
