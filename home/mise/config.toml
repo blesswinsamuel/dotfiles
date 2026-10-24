@@ -8,7 +8,6 @@ python = "latest"
 pulumi = "latest"
 uv = "latest"
 crane = "latest"
-opencode = "latest"
 claude = "latest"
 "github:can1357/oh-my-pi" = "latest"
 "cargo:https://github.com/blesswinsamuel/pretty-log" = "latest"
@@ -29,6 +28,8 @@ kapp = "latest"
 "pipx:hermes-agent" = "latest"
 "go:github.com/mitranim/gow" = "latest"
 "npm:@openhands/agent-canvas" = "latest"
+opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
+pi = "latest"
 
 [settings]
 use_versions_host = true
