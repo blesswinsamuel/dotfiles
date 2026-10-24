@@ -97,7 +97,7 @@ hosts:
     realm: personal
   hp-laptop:
     realm: personal
-  do-cloud-dev:
+  hp-450-laptop:
     realm: personal
   mac-studio:
     realm: personal

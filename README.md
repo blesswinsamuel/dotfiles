@@ -31,7 +31,7 @@ sudo nixos-rebuild switch
 
 nix run nixpkgs#git clone https://github.com/blesswinsamuel/dotfiles
 cd dotfiles
-task set-host-id -- hp-laptop   # or hp-chromebox, do-cloud-dev, …
+task set-host-id -- hp-laptop   # or hp-chromebox, hp-450-laptop, …
 task secrets:unlock
 
 nix run nixpkgs#go-task -- init # first run
@@ -61,8 +61,8 @@ Repo configs use **logical host ids**, not OS hostnames/serials:
 | `mac-studio` | Personal Mac (nix-darwin) |
 | `work-laptop` | Work Mac (nix-darwin) |
 | `hp-laptop` | Personal Linux laptop (NixOS) |
+| `hp-450-laptop` | Personal Linux dev machine (NixOS, XFCE) |
 | `hp-chromebox` | Personal Linux desktop (NixOS) |
-| `do-cloud-dev` | Personal DO cloud NixOS (full config after switch) |
 | `work-management-droplet` | Work Ubuntu droplet (home tool only) |
 
 Identity comes from `~/.config/dotfiles/host-id` (one line, e.g. `mac-studio`). Missing or empty → fail with a clear error.
@@ -127,7 +127,9 @@ commons/work-linux.nix
 hosts/<logical-id>/
 ```
 
-Personal NixOS hosts (`hp-laptop`, `hp-chromebox`, `do-cloud-dev`) enable Tailscale via `personal-linux`. One-time: `sudo tailscale up`.
+Personal NixOS hosts (`hp-laptop`, `hp-chromebox`, `hp-450-laptop`) enable Tailscale via `personal-linux`. One-time: `sudo tailscale up`.
+
+`hp-450-laptop` is the primary personal dev machine. It uses XFCE with Sunshine + x11vnc remoting over Tailscale; hosts opt into a desktop via `systemConfig.desktop` (`plasma` default, or `xfce` → [commons/linux-xfce.nix](commons/linux-xfce.nix)).
 
 ### Why not Home Manager?
 
@@ -155,19 +157,6 @@ Other reasons that contributed:
 - Shell completions and program modules must be wired manually in dotfiles
 - System changes still require a Nix rebuild; only dotfile edits are fast
 - Two apply steps for a full sync (`darwin-rebuild` + `go run .`), but dotfile-only changes skip the rebuild entirely
-
-## DigitalOcean NixOS (dev)
-
-See **[`do/README.md`](do/README.md)** for getting started (builder → custom image → dev droplet → clone + `nixos-rebuild switch`).
-
-Short path from the repo root:
-
-```bash
-task do:build-host:up
-task do:image:build          # resumable; --force to rebuild
-task do:dev:up && task do:dev:ssh   # then on the droplet: clone + nixos-rebuild switch
-task do:dev:block-ports
-```
 
 ## Brew commands
 

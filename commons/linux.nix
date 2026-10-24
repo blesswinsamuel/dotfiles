@@ -1,4 +1,9 @@
-{ self, pkgsUnstable, lib, config, systemConfig, ... }: {
+{ self, pkgsUnstable, lib, config, systemConfig, ... }:
+let
+  # Desktop environment is host-selectable via systemConfig.desktop (see flake.nix).
+  plasma = (systemConfig.desktop or "plasma") == "plasma";
+in
+{
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${systemConfig.username} = {
     isNormalUser = true;
@@ -19,16 +24,13 @@
     pciutils
     usbutils
     lm_sensors
-
-    # KDE
-    libsForQt5.kconfig
-    kdePackages.plasma-browser-integration
   ];
 
+  # Desktop environment is host-selectable via systemConfig.desktop (see flake.nix).
   services.xserver.enable = true; # optional
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  services.displayManager.sddm.enable = lib.mkDefault plasma;
+  services.displayManager.sddm.wayland.enable = lib.mkDefault plasma;
+  services.desktopManager.plasma6.enable = lib.mkDefault plasma;
 
   # services.displayManager.sddm.settings.General.DisplayServer = "wayland";
 
