@@ -3,8 +3,13 @@ let
   username = systemConfig.username;
 in
 {
-  # Remoting over Tailscale only; the wired LAN stays firewalled.
+  # Remoting is reachable over Tailscale (trusted below) and, until Tailscale is
+  # joined, over the wired LAN. Only the remoting ports are opened, not the
+  # whole interface.
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  networking.firewall.allowedTCPPorts = [
+    5900 # x11vnc
+  ];
 
   # firefox, 1Password and polkit come from commons/personal-linux-desktop.nix.
 
@@ -31,7 +36,9 @@ in
     autoStart = true;
     # DRM/KMS capture needs this; also required for the KMS grab path on X11.
     capSysAdmin = true;
-    openFirewall = false;
+    # Publish the Sunshine ports; the web UI on 47990 must be reachable to set
+    # credentials and pair a Moonlight client.
+    openFirewall = true;
   };
 
   # Sunshine injects kbd/mouse via /dev/uinput; without this, video streams but input is a no-op.
@@ -39,6 +46,29 @@ in
   hardware.uinput.enable = true;
 
   users.users.${username}.extraGroups = [ "video" "input" "uinput" "render" ];
+
+  # XFCE is not a "systemd-aware" session: NixOS only activates
+  # graphical-session.target for KDE/GNOME/Hyprland/niri or XDG_CURRENT_DESKTOP
+  # containing X-NIXOS-SYSTEMD-AWARE (see the nixos xsession wrapper). Anything
+  # wantedBy that target therefore never starts under XFCE, so start the units
+  # from the XDG autostart dir instead.
+  environment.etc."xdg/autostart/x11vnc.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=x11vnc
+    Exec=${pkgs.systemd}/bin/systemctl --user start x11vnc.service
+    X-GNOME-Autostart-enabled=true
+    NoDisplay=true
+  '';
+
+  environment.etc."xdg/autostart/sunshine.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=Sunshine
+    Exec=${pkgs.systemd}/bin/systemctl --user start sunshine.service
+    X-GNOME-Autostart-enabled=true
+    NoDisplay=true
+  '';
 
   environment.systemPackages = with pkgsUnstable; [
     x11vnc
