@@ -20,7 +20,14 @@
     "vm.max_map_count" = 2147483642; # elasticsearch / some dev tooling
   };
 
-  # Kaby Lake-R stability on this fanless Chromebox (carried over from the lab config).
+  # Kaby Lake-R stability (carried over from the lab config).
+  #
+  # Do not remove these to lower idle temps: idle sits warm (~53-56C) because
+  # max_cstate=1 blocks deep sleep states, which looks like an easy win. It is
+  # not. This box has power delivery quirks and has historically struggled to
+  # wake up from suspend/deep idle. Raising max_cstate risks wake hangs for a
+  # few degrees, and the replaced fan handles load fine (66C held flat under a
+  # full 8-thread run).
   boot.kernelParams = [ "intel_idle.max_cstate=1" "processor.max_cstate=1" ];
 
   users.users.${systemConfig.username}.packages = [
