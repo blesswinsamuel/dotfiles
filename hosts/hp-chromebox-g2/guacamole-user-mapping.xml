@@ -2,10 +2,11 @@
 <!--
   Guacamole static authentication: one user, connections defined inline.
 
-  The password below is a SHA-256 digest. Guacamole's file provider accepts
-  only PLAIN, MD5 or SHA256; note that this build rejects MD5 at parse time
-  with "Invalid encoding: 'MD5'", so SHA256 is the usable hashed option.
-  To change it:
+  The password below is a SHA-256 digest. The encoding attribute takes the
+  lowercase keyword; "md5", "plain" and "sha256" are the accepted values.
+  The Java enum names (MD5, PLAIN_TEXT, SHA_256) are NOT valid here and are
+  rejected with "Invalid encoding".
+  To change the password:
       printf '%s' 'new-password' | sha256sum
   then replace the authorize element's password attribute and rebuild.
 
@@ -14,7 +15,7 @@
   need its own password.
 -->
 <user-mapping>
-  <authorize username="blesswinsamuel" password="23a7b63446589ba00aae7e008a5824dd750c8426df03181ddf8d9127041a3e7b" encoding="SHA256">
+  <authorize username="blesswinsamuel" password="23a7b63446589ba00aae7e008a5824dd750c8426df03181ddf8d9127041a3e7b" encoding="sha256">
     <connection name="XFCE desktop (local VNC)">
       <protocol>vnc</protocol>
       <param name="hostname">127.0.0.1</param>
