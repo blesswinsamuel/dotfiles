@@ -14,7 +14,8 @@
       guacd-hostname = "127.0.0.1";
       guacd-port = 4822;
     };
-    # Static file auth (PLAIN/MD5 only); the MD5 digest lives in the XML.
+    # Static file auth. The encoding attribute takes a lowercase keyword
+    # (md5/plain/sha256); the Java enum names are rejected.
     # The client module enables Tomcat and installs the WAR into it.
     userMappingXml = ./guacamole-user-mapping.xml;
   };

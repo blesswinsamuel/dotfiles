@@ -4,6 +4,7 @@
   imports = [
     ./desktop-remote.nix
     ./guacamole.nix
+    ./rustdesk.nix
   ];
 
   # Guacamole web UI. The firewall trusts tailscale0, so this port is reachable
