@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Guacamole static authentication: one user, connections defined inline.
+
+  The password below is an MD5 digest (Guacamole's file provider supports only
+  PLAIN or MD5). To change it:
+      printf '%s' 'new-password' | md5sum
+  then replace the authorize element's password attribute and rebuild.
+
+  hostname/port refer to the X server on this machine, reached from guacd over
+  loopback. Only the tailnet can reach the web UI, so the VNC layer does not
+  need its own password.
+-->
+<user-mapping>
+  <authorize username="blesswinsamuel" password="1e21e7206b13f85b13a01d401841a6c3" encoding="MD5">
+    <connection name="XFCE desktop (local VNC)">
+      <protocol>vnc</protocol>
+      <param name="hostname">127.0.0.1</param>
+      <param name="port">5900</param>
+      <param name="password">xdnjq2Ck</param>
+      <param name="enable-sftp">true</param>
+      <param name="sftp-root">/home/blesswinsamuel</param>
+    </connection>
+  </authorize>
+</user-mapping>

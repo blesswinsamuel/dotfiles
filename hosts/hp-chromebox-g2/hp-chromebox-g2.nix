@@ -3,7 +3,12 @@
 
   imports = [
     ./desktop-remote.nix
+    ./guacamole.nix
   ];
+
+  # Guacamole web UI. The firewall trusts tailscale0, so this port is reachable
+  # over the tailnet but not on the wired LAN.
+  networking.firewall.allowedTCPPorts = [ 8080 ];
 
   # Wired only (eno0). wlp2s0 exists but is left unconfigured.
   networking.networkmanager.enable = true;
