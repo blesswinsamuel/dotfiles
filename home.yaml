@@ -20,19 +20,9 @@ profiles:
       .config/nvim: { source: ./home/nvim }
       .config/mise/config.toml: { source: ./home/mise/config.toml }
       # ── AI coding agents ─────────────────────────────────────────────────
-      # Claude Code
-      .claude/CLAUDE.md: { source: ./home/agents/AGENTS.md }
-      # Skills now live as real files in ~/.claude/skills (not managed here)
-      # OpenCode
-      .config/opencode/AGENTS.md: { source: ./home/agents/AGENTS.md }
-      .config/opencode/commands: { source: ./home/agents/commands }
-      # Gemini CLI + Antigravity CLI
-      .gemini/GEMINI.md: { source: ./home/agents/AGENTS.md }
-      # Pi (pi.dev)
-      .pi/agent/AGENTS.md: { source: ./home/agents/AGENTS.md }
-      .pi/agent/prompts: { source: ./home/agents/commands }
-      # Cursor
-      .cursor/rules/agents.mdc: { source: ./home/agents/AGENTS.md }
+      # Not managed here: global rules and skills are owned outside dotfiles.
+      # Skills come from skills-manager (~/.skills-manager, linked into each
+      # tool's skills dir). ~/.claude/CLAUDE.md is a real file.
   commons-darwin:
     files:
       .config/yabai/yabairc: { source: ./home/yabai/yabairc }
