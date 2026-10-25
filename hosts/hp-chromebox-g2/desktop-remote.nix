@@ -70,6 +70,18 @@ in
     NoDisplay=true
   '';
 
+  # X11 selections are owned by whichever app holds them and vanish when it
+  # closes, which breaks copy/paste over VNC. autocutsel keeps CLIPBOARD in
+  # sync with the PRIMARY selection and holds ownership itself.
+  environment.etc."xdg/autostart/autocutsel.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=autocutsel
+    Exec=${lib.getExe pkgsUnstable.autocutsel} -selection CLIPBOARD
+    X-GNOME-Autostart-enabled=true
+    NoDisplay=true
+  '';
+
   environment.systemPackages = with pkgsUnstable; [
     x11vnc
     tigervnc
