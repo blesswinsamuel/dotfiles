@@ -141,7 +141,6 @@ hosts:
           - { path: "/Applications/Paseo.app/" }
           - { path: "/Applications/Antigravity.app/" }
           - { path: "/Applications/Antigravity IDE.app/" }
-          - { path: "/Applications/cmux.app/" }
           - { options: { type: spacer } }
           - { path: "/Applications/Obsidian.app/" }
           - { path: "/Applications/OrbStack.app/" }
@@ -149,8 +148,6 @@ hosts:
           - { path: "/Applications/Visual Studio Code - Insiders.app/" }
           - { path: "/Applications/Sublime Text.app/" }
           - { path: "/Applications/Zed.app/" }
-          - { path: "/Applications/Cursor.app/" }
-          - { path: "/Applications/Windsurf.app/" }
           # - { path: "/Applications/Lapce.app/" }
           - { path: "/Applications/Sublime Merge.app/" }
           # - { path: "/Applications/Fork.app/" }
